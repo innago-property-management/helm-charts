@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions: 
       contents: read
+      
     strategy:
       matrix: 
         chart:
@@ -28,11 +29,13 @@ jobs:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       with: 
         fetch-depth: '0'
+        submodules: 'true'
+        token: '${{ secrets.SEMVER_TOKEN }}'
     - name: Configure Git
       run: |
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-        git submodule update --init
+        git submodule update --init --recursive
     - uses: azure/setup-helm@b9e51907a09c216f16ebe8536097933489208112 #v4.3.0
     - name: Prepare GPG key 
       run: |
