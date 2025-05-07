@@ -1,0 +1,1 @@
+version 0.2.1 fixes an issue with a leading `*` in a schedule

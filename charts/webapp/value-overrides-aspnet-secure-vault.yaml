@@ -1,0 +1,100 @@
+# Sample values for WebApp - secure, ASP.NET, vault, HPA.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# replicaCount is only used if HPA is not enabled -- keep in case someone toggles HPA off
+replicaCount: 2
+
+image:
+  repository: REPO/PROJECT/APP # replace PROJECT, APP
+  pullPolicy: IfNotPresent
+  tag: "1.0.0" # set to the version you want
+
+imagePullSecrets:
+  - name: regcred # this secret is a Docker config and must exist in the deployment namespace
+
+podAnnotations:
+  vault.security.banzaicloud.io/vault-addr: "http://vault.default.svc:8200" # optional, the address of the Vault service, default values is https://vault:8200
+#  vault.security.banzaicloud.io/vault-role: "default" # optional, the default value is the name of the ServiceAccount the Pod runs in, in case of Secrets and ConfigMaps it is "default"
+#  vault.security.banzaicloud.io/vault-skip-verify: "false" # optional, skip TLS verification of the Vault server certificate
+#  vault.security.banzaicloud.io/vault-tls-secret: "vault-tls" # optional, the name of the Secret where the Vault CA cert is, if not defined it is not mounted
+#  vault.security.banzaicloud.io/vault-agent: "false" # optional, if true, a Vault Agent will be started to do Vault authentication, by default not needed and vault-env will do Kubernetes Service Account based Vault authentication
+#  vault.security.banzaicloud.io/vault-path: "kubernetes" # optional, the Kubernetes Auth mount path in Vault the default value is "kubernetes"
+
+podSecurityContext:
+#  runAsNonRoot: true # do NOT set this if you use sidecars (e.g. a service mesh, vault, ...)
+
+containerSecurityContext:
+  runAsUser: 10001 # must exist in Dockerfile
+  runAsGroup: 10001 # must exist in Dockerfile
+  allowPrivilegeEscalation: false
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+
+httpContainerPort: 8080 # must match app port; see containerEnvironmentVariables
+
+resources:
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  requests: # this improves QoS, but please be aware that your pods will NOT be scheduled if there are no nodes with room -- choose values based on data
+    cpu: 10m
+    memory: 128Mi
+
+autoscaling:
+  enabled: yes
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+
+health:
+  livenessProbe:
+    httpGet:
+      path: /healthz/live
+      port: http
+  readinessProbe:
+    httpGet:
+      path: /healthz/ready
+      port: http
+
+metrics:
+  path: /metricsz
+  port: http
+
+containerEnvironmentVariables:
+  - name: ASPNETCORE_URLS
+    value: "http://+:8080" # app will run on this port
+  - name: COMPlus_EnableDiagnostics
+    value: "0" # allows for read-only file system
+  - name: ASPNETCORE_HOSTBUILDER_RELOADCONFIGONCHANGE
+    value: "false" # disables inotify usage
+# do NOT put passwords in this file -- if you need a password put it in a kubernetes secret
+# or [BETTER] use vault
+# from secret example
+#  - name: POSTGRES_PASSWORD
+#    valueFrom:
+#      secretKeyRef:
+#        name: postgres-secret
+#        key: postgres-password
+# from vault example
+#  - name: REDIS__PASSWORD
+#    value: "vault:/secret/data/project#redisPassword" # everything after data is specific to your secret
+
+
+migrationJob:
+  enabled: true
+  image:
+    repository: REPO/PROJECT/MIGRATIONS_APP # replace PROJECT, MIGRATIONS_APP
+    pullPolicy: IfNotPresent
+    tag: "1.0.0"
+  annotations:
+    linkerd.io/inject: disabled
+    vault.security.banzaicloud.io/vault-addr: "http://vault.default.svc:8200"
+  environmentVariables: []
+#    - name: ConnectionStrings__DefaultConnection
+#      value: vault:/secret/data/postgresql#connectionString

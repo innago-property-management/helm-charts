@@ -1,0 +1,32 @@
+# Default values for registry-container-webhook.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+harbor-container-webhook:
+  # -- rules is an array -- to change one or add one, you MUST copy all the others that you want
+  rules:
+    - name: 'docker.io rewrite rule'
+      # -- image refs must match at least one of the rules, and not match any excludes
+      matches:
+        - '^docker.io'        
+        #    excludes:
+        #      # for example, exclude ubuntu from harbor's proxy cache
+        #      - '^docker.io/(library/)?ubuntu:.*$'
+      # -- replacement value
+      replace: 'REPO/dockerhub'
+      checkUpstream: false
+    - name: 'mcr.microsoft.com rewrite rule'
+      matches:
+        - '^mcr.microsoft.com'
+      replace: 'REPO/microsoft'
+      checkUpstream: false
+    - name: 'quay.io rewrite rule'
+      matches:
+        - '^quay.io'
+      replace: 'REPO/quay'
+      checkUpstream: false
+    - name: 'gcr.io rewrite rule'
+      matches:
+        - '^gcr.io'
+      replace: 'REPO/gcr'
+      checkUpstream: false
