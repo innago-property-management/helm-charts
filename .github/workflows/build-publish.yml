@@ -58,6 +58,8 @@ jobs:
       with: 
         charts_dir: 'charts'
         skip_upload: 'true'
+        pages_branch: ${{ github.head_ref || github.ref_name }}
+        skip_existing: 'true'
         packages_with_index: 'true'
     - name: Login to GHCR
       uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
