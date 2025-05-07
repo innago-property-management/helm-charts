@@ -25,5 +25,5 @@ appVersion: "1.16.0"
 
 dependencies:
   - name: harbor-container-webhook
-    version: 0.6.2
-    repository: file://../../harbor-container-webhook/deploy/charts/harbor-container-webhook
+    version: 0.8.1
+    repository: "https://indeedeng.github.io/harbor-container-webhook"

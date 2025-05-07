@@ -1,3 +1,0 @@
-[submodule "harbor-container-webhook"]
-	path = harbor-container-webhook
-	url = git@github.com:indeedeng/harbor-container-webhook.git

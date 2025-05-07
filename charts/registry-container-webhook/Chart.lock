@@ -1,6 +1,6 @@
 dependencies:
 - name: harbor-container-webhook
-  repository: file://../harbor-container-webhook/deploy/charts/harbor-container-webhook
-  version: 0.6.2
-digest: sha256:56560d61c4117f66a56ac14b9c6818977a3bb3410970625c5ced7e9eb6139b8b
-generated: "2023-12-27T11:06:16.281275-05:00"
+  repository: https://indeedeng.github.io/harbor-container-webhook
+  version: 0.8.1
+digest: sha256:49319b17b096a2c952da417b970fddd23891079f1f322c65732fea2fa1a725f6
+generated: "2025-05-07T17:45:42.882585-04:00"
