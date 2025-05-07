@@ -1,0 +1,41 @@
+apiVersion: v1
+entries:
+  cronjob:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-05-07T22:25:30.591498459Z"
+    description: Innago Helm Chart for deploying a CronJob
+    digest: ef8482101c1b0b7db7d27a2337b79e1c70146492c87b060fd9e6e3cd929f94c9
+    name: cronjob
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/cronjob-1.0.0/cronjob-1.0.0.tgz
+    version: 1.0.0
+  registry-container-webhook:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-05-07T22:25:30.802156897Z"
+    dependencies:
+    - name: harbor-container-webhook
+      repository: https://indeedeng.github.io/harbor-container-webhook
+      version: 0.8.1
+    description: App to rewrite image repos to use specified caching registry
+    digest: a0d1f6eafbd70486676e21aca540cf3e2803dab57b99d0b9013e5acf618f9860
+    name: registry-container-webhook
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/registry-container-webhook-1.0.0/registry-container-webhook-1.0.0.tgz
+    version: 1.0.0
+  webapp:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-05-07T22:25:30.951386155Z"
+    description: Taazaa Helm chart for a WebApp in Kubernetes
+    digest: d84c6e4ed8b6fac55058a1e5974c4cb4007f91db577b0aec63989b621be854ea
+    icon: https://cncf-branding.netlify.app/img/projects/helm/icon/color/helm-icon-color.png
+    name: webapp
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/webapp-1.0.0/webapp-1.0.0.tgz
+    version: 1.0.0
+generated: "2025-05-07T22:25:30.951398588Z"
