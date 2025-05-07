@@ -1,0 +1,12 @@
+harbor-container-webhook:
+  rules:
+    - name: 'docker.io rewrite rule'
+      matches:
+        - '^docker.io'
+      replace: '{AWS_ACCOUNT_ID}.dkr.ecr.{REGION}.amazonaws.com/dockerhub'
+      checkUpstream: false
+    - name: 'quay.io rewrite rule'
+      matches:
+        - '^quay.io'
+      replace: '{AWS_ACCOUNT_ID}.dkr.ecr.{REGION}.amazonaws.com/quay'
+      checkUpstream: false

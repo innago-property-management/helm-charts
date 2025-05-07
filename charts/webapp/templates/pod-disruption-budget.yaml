@@ -1,0 +1,17 @@
+{{- if not .Values.podDisruptionBudget.disabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "WebApp.fullname" . | lower }}-pdb
+spec:
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable | default 1 }}
+  {{- if .Values.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
+  {{- end }}
+  {{- if ge (int .Capabilities.KubeVersion.Minor) 27 }}
+  unhealthyPodEvictionPolicy: {{ .Values.podDisruptionBudget.unhealthyPodEvictionPolicy | default "IfHealthyBudget" }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{ include "WebApp.selectorLabels" . | nindent 6 }}
+  {{- end }}

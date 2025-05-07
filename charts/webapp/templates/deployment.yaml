@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "WebApp.fullname" . | lower }}
+  labels:
+    {{- include "WebApp.labels" . | nindent 4 }}
+    {{- if .Values.deploymentLabels }}
+    {{- toYaml .Values.deploymentLabels | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- toYaml .Values.deploymentAnnotations | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ max 2 .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "WebApp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "WebApp.selectorLabels" . | nindent 8 }}
+        {{- if .Values.podLabels }}
+          {{- toYaml .Values.podLabels | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets | default }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}ui
+      serviceAccountName: {{ include "WebApp.serviceAccountName" . | lower }}
+      {{- if .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- end }}
+      {{- if not .Values.topologySpreadConstraints.disabled }}
+      topologySpreadConstraints:
+        - maxSkew: {{ .Values.topologySpreadConstraints.maxSkew | default 1 }}
+          topologyKey: {{ .Values.topologySpreadConstraints.topologyKey | default "kubernetes.io/hostname" }}
+          whenUnsatisfiable: {{ .Values.topologySpreadConstraints.whenUnsatisfiable | default "ScheduleAnyway" }}
+          labelSelector:
+            matchLabels:
+              {{ include "WebApp.selectorLabels" . | nindent 14}}
+          {{- if ge (int .Capabilities.KubeVersion.Minor) 27 }}
+          matchLabelKeys:
+            - pod-template-hash
+          {{- end }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name | lower }}
+          env:
+            - name: MY_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MY_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: MY_POD_SERVICE_ACCOUNT
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.serviceAccountName
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            {{- with .Values.containerEnvironmentVariables }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.containerEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.containerSecurityContext }}
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.httpContainerPort | default 80 }}
+              protocol: TCP
+            {{- if .Values.additionalContainerPorts }}
+              {{- toYaml .Values.additionalContainerPorts | nindent 12 }}
+            {{- end }}
+          livenessProbe: {{- toYaml .Values.health.livenessProbe | nindent 14 }}
+          readinessProbe: {{- toYaml .Values.health.readinessProbe | nindent 14 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        {{- if .Values.additionalContainers }}
+          {{- toYaml .Values.additionalContainers | nindent 8 }}
+        {{- end }}
+      {{- if  and .Values.migrationJob.enabled .Values.migrationJob.waitForItInInitContainer }}
+      initContainers:
+        - name: k8s-wait-for
+          image: "groundnuty/k8s-wait-for:v2.0"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - "job"
+            - {{ include "WebApp.migrationJobName" . }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

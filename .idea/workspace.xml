@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;stand-sure&quot;
+  }
+}</component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="feat/cronjob-annotations" />
+                    <option name="lastUsedInstant" value="1745339402" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1732221620" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:indeedeng/harbor-container-webhook.git&quot;,
+    &quot;accountId&quot;: &quot;d8daed25-c645-422e-9b62-bc939738183b&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file:///private/var/folders/v5/rmqnwk1n2b78sv02_xfywpwr0000gp/T/prod" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///regional/webacl/k8s/3d2c105d-f230-40d2-b629-ff9c54297aed" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///repository/innago-repos/innago" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2l4IRhTKIvuP3famBBoLdbSFtWa" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/cronjob-annotations&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.grazie&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;stardust.markdown.MarkdownSplitEditorSuppressor:keyList&quot;: []
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="" />
+      <created>1724432916692</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1724432916692</updated>
+      <workItem from="1724432919399" duration="1728000" />
+      <workItem from="1727359170903" duration="1377000" />
+      <workItem from="1727543105959" duration="1832000" />
+      <workItem from="1727781668759" duration="1454000" />
+      <workItem from="1727785320152" duration="346000" />
+      <workItem from="1732213619516" duration="3102000" />
+      <workItem from="1732544080930" duration="1345000" />
+      <workItem from="1736246278204" duration="500000" />
+      <workItem from="1738099412466" duration="728000" />
+      <workItem from="1738101082627" duration="42000" />
+      <workItem from="1738190636027" duration="1716000" />
+      <workItem from="1741182513074" duration="76000" />
+      <workItem from="1741182620947" duration="1421000" />
+      <workItem from="1745510184536" duration="1190000" />
+    </task>
+    <task id="LOCAL-00001" summary="cronjob - fix schedule quoting&#10;docs - use helm-docs utility to generate chart readme">
+      <option name="closed" value="true" />
+      <created>1724433884798</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1724433884798</updated>
+    </task>
+    <task id="LOCAL-00002" summary="cronjob - fix schedule quoting&#10;docs - use helm-docs utility to generate chart readme">
+      <option name="closed" value="true" />
+      <created>1724434013502</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1724434013502</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Added `additionalLabels` to `secret-with-random` Helm chart and incremented its version to 0.2.0.">
+      <option name="closed" value="true" />
+      <created>1727359633315</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1727359633315</updated>
+    </task>
+    <task id="LOCAL-00004" summary="webapp(1.3.4): Add Image Pull Secrets to migrations job">
+      <option name="closed" value="true" />
+      <created>1727359976454</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1727359976454</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Add .gitleaksignore">
+      <option name="closed" value="true" />
+      <created>1727360304349</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1727360304349</updated>
+    </task>
+    <task id="LOCAL-00006" summary="webapp(hpa): update to hpa v2 -- docs for all">
+      <option name="closed" value="true" />
+      <created>1727544659229</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1727544659229</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Update Helm chart creation timestamps&#10;&#10;This commit updates the 'created' timestamps in the Helm charts listed in index.yaml to their latest values. Additionally, it updates IntelliJ IDEA workspace settings related to the recent 'webapp-hpa-v2' changes.">
+      <option name="closed" value="true" />
+      <created>1727544709311</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1727544709311</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Update Helm chart signatures and timestamps&#10;&#10;Updated SHA256 checksums and PGP signatures for webapp-1.4.0.tgz. Adjusted the creation timestamps in index.yaml to reflect the new version deployment.">
+      <option name="closed" value="true" />
+      <created>1727544751247</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1727544751247</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Enable migration job and update Helm chart to 1.4.1&#10;&#10;Enabled the migration job in the values.yaml file and updated the chart version to 1.4.1. Additionally, created a new Helm chart file webapp-1.4.1.tgz and its corresponding .prov file. Updated timestamps and metadata in index.yaml and workspace.xml accordingly.">
+      <option name="closed" value="true" />
+      <created>1727785628449</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1727785628450</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Upgrade Helm chart to version 1.5.0&#10;&#10;Updated the webapp Helm chart to version 1.5.0, including modifications to templating logic for version labels.">
+      <option name="closed" value="true" />
+      <created>1732221338317</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1732221338317</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Upgrade Helm chart to version 1.6.0&#10;&#10;Updated the webapp Helm chart to version 1.6.0, adjusting creation timestamps, SHA256 checksums, and metadata in index.yaml. Added new Helm chart files (webapp-1.6.0.tgz and its .prov file) and aligned IntelliJ IDEA workspace settings accordingly.">
+      <option name="closed" value="true" />
+      <created>1738099903081</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1738099903081</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Update .semgrepignore to refine excluded CRD paths&#10;&#10;Adjusted the glob patterns to ensure proper exclusion of CRD files, adding recursive matching for directories. Included a specific vault CRD file to the ignore list for better coverage.">
+      <option name="closed" value="true" />
+      <created>1738100116240</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1738100116240</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Update WebApp chart to version 1.7.0 with migration enhancements&#10;&#10;Bumped the WebApp chart version to 1.7.0 and added support for custom migration job commands. Minor improvements were made to whitespace and comments in values.yaml and migration-job.yaml for better readability. Generated the provenance file for the new chart version.">
+      <option name="closed" value="true" />
+      <created>1738191354293</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1738191354296</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Update Helm chart to version 1.8.0 with migration job enhancements&#10;&#10;Bumped Helm chart version to 1.8.0 and introduced improvements to the migration job configuration. Added support for specifying volumes and volume mounts, as well as added placeholders for customizable commands. Adjusted related template logic to accommodate these changes.">
+      <option name="closed" value="true" />
+      <created>1738192413347</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1738192413348</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Adds container environment variables to CronJob chart.">
+      <option name="closed" value="true" />
+      <created>1745510431429</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1745510431429</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="cronjob - fix schedule quoting&#10;docs - use helm-docs utility to generate chart readme" />
+    <MESSAGE value="Added `additionalLabels` to `secret-with-random` Helm chart and incremented its version to 0.2.0." />
+    <MESSAGE value="webapp(1.3.4): Add Image Pull Secrets to migrations job" />
+    <MESSAGE value="Add .gitleaksignore" />
+    <MESSAGE value="webapp(hpa): update to hpa v2 -- docs for all" />
+    <MESSAGE value="Update Helm chart creation timestamps&#10;&#10;This commit updates the 'created' timestamps in the Helm charts listed in index.yaml to their latest values. Additionally, it updates IntelliJ IDEA workspace settings related to the recent 'webapp-hpa-v2' changes." />
+    <MESSAGE value="Update Helm chart signatures and timestamps&#10;&#10;Updated SHA256 checksums and PGP signatures for webapp-1.4.0.tgz. Adjusted the creation timestamps in index.yaml to reflect the new version deployment." />
+    <MESSAGE value="Enable migration job and update Helm chart to 1.4.1&#10;&#10;Enabled the migration job in the values.yaml file and updated the chart version to 1.4.1. Additionally, created a new Helm chart file webapp-1.4.1.tgz and its corresponding .prov file. Updated timestamps and metadata in index.yaml and workspace.xml accordingly." />
+    <MESSAGE value="Upgrade Helm chart to version 1.5.0&#10;&#10;Updated the webapp Helm chart to version 1.5.0, including modifications to templating logic for version labels." />
+    <MESSAGE value="Upgrade Helm chart to version 1.6.0&#10;&#10;Updated the webapp Helm chart to version 1.6.0, adjusting creation timestamps, SHA256 checksums, and metadata in index.yaml. Added new Helm chart files (webapp-1.6.0.tgz and its .prov file) and aligned IntelliJ IDEA workspace settings accordingly." />
+    <MESSAGE value="Update .semgrepignore to refine excluded CRD paths&#10;&#10;Adjusted the glob patterns to ensure proper exclusion of CRD files, adding recursive matching for directories. Included a specific vault CRD file to the ignore list for better coverage." />
+    <MESSAGE value="Update WebApp chart to version 1.7.0 with migration enhancements&#10;&#10;Bumped the WebApp chart version to 1.7.0 and added support for custom migration job commands. Minor improvements were made to whitespace and comments in values.yaml and migration-job.yaml for better readability. Generated the provenance file for the new chart version." />
+    <MESSAGE value="Update Helm chart to version 1.8.0 with migration job enhancements&#10;&#10;Bumped Helm chart version to 1.8.0 and introduced improvements to the migration job configuration. Added support for specifying volumes and volume mounts, as well as added placeholders for customizable commands. Adjusted related template logic to accommodate these changes." />
+    <MESSAGE value="feat: Add fake-job chart&#10;&#10;Overview&#10;This change introduces a new Helm chart for a fake job. This includes the chart itself, along with supporting files for packaging and verification." />
+    <MESSAGE value="Adds container environment variables to CronJob chart." />
+    <option name="LAST_COMMIT_MESSAGE" value="Adds container environment variables to CronJob chart." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="3" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
