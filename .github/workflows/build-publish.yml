@@ -17,9 +17,8 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     permissions: 
-      contents: read
+      contents: write
       packages: write
-      id-token: write
       pages: write
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -66,8 +65,6 @@ jobs:
         CR_SIGN: true
       with: 
         charts_dir: 'charts'
-#        skip_upload: true
-        skip_existing: true
     - name: Push chart to GHCR
       run: |
         shopt -s nullglob
