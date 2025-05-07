@@ -1,0 +1,6 @@
+dependencies:
+- name: harbor-container-webhook
+  repository: https://indeedeng.github.io/harbor-container-webhook
+  version: 0.8.1
+digest: sha256:49319b17b096a2c952da417b970fddd23891079f1f322c65732fea2fa1a725f6
+generated: "2025-05-07T17:45:42.882585-04:00"
