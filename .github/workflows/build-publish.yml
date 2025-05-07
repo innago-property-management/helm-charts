@@ -66,9 +66,8 @@ jobs:
         CR_SIGN: true
       with: 
         charts_dir: 'charts'
-        skip_upload: true
+#        skip_upload: true
         skip_existing: true
-        pages_branch: ${{ github.head_ref || github.ref_name }}        
     - name: Push chart to GHCR
       run: |
         shopt -s nullglob
