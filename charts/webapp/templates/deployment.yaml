@@ -31,7 +31,7 @@ spec:
       {{- with .Values.imagePullSecrets | default }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-      {{- end }}ui
+      {{- end }}
       serviceAccountName: {{ include "WebApp.serviceAccountName" . | lower }}
       {{- if .Values.podSecurityContext }}
       securityContext:

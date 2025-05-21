@@ -65,6 +65,7 @@ jobs:
         CR_SIGN: true
       with: 
         charts_dir: 'charts'
+        skip_existing: 'true'
     - name: Push chart to GHCR
       run: |
         shopt -s nullglob

@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="" />
+    <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -34,12 +37,12 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="feat/cronjob-annotations" />
-                    <option name="lastUsedInstant" value="1745339402" />
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1746656901" />
                   </RecentBranch>
                   <RecentBranch>
-                    <option name="branchName" value="main" />
-                    <option name="lastUsedInstant" value="1732221620" />
+                    <option name="branchName" value="gh-pages" />
+                    <option name="lastUsedInstant" value="1746656361" />
                   </RecentBranch>
                 </list>
               </option>
@@ -52,7 +55,7 @@
   </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:indeedeng/harbor-container-webhook.git&quot;,
+    &quot;url&quot;: &quot;git@github.com:innago-property-management/helm-charts.git&quot;,
     &quot;accountId&quot;: &quot;d8daed25-c645-422e-9b62-bc939738183b&quot;
   }
 }</component>
@@ -67,7 +70,7 @@
 }</component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
+  &quot;customColor&quot;: &quot;0e158997&quot;,
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="2l4IRhTKIvuP3famBBoLdbSFtWa" />
@@ -82,7 +85,8 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feat/cronjob-annotations&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -117,6 +121,8 @@
       <workItem from="1741182513074" duration="76000" />
       <workItem from="1741182620947" duration="1421000" />
       <workItem from="1745510184536" duration="1190000" />
+      <workItem from="1746624003732" duration="11580000" />
+      <workItem from="1746722606252" duration="653000" />
     </task>
     <task id="LOCAL-00001" summary="cronjob - fix schedule quoting&#10;docs - use helm-docs utility to generate chart readme">
       <option name="closed" value="true" />
@@ -238,7 +244,111 @@
       <option name="project" value="LOCAL" />
       <updated>1745510431429</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="init, ci">
+      <option name="closed" value="true" />
+      <created>1746652571337</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1746652571337</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Initializes Git submodules before Helm setup.">
+      <option name="closed" value="true" />
+      <created>1746652822110</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1746652822110</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Adds submodule checkout with token and recursive init.">
+      <option name="closed" value="true" />
+      <created>1746653126392</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1746653126392</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Fixes relative path to harbor-container-webhook chart.">
+      <option name="closed" value="true" />
+      <created>1746653364085</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1746653364085</updated>
+    </task>
+    <task id="LOCAL-00020" summary="remove submodule">
+      <option name="closed" value="true" />
+      <created>1746654438355</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1746654438355</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Updates dependency installation to target chart subdirectories.">
+      <option name="closed" value="true" />
+      <created>1746654924998</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1746654924998</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Publishes Helm charts to GHCR using OCI.">
+      <option name="closed" value="true" />
+      <created>1746655459710</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1746655459710</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Adds pages_branch and skip_existing to helm-docs action.">
+      <option name="closed" value="true" />
+      <created>1746655752148</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1746655752148</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Adds write permissions for packages, ID token, and pages.">
+      <option name="closed" value="true" />
+      <created>1746655851004</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1746655851004</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Moves GHCR login step before chart-releaser execution.">
+      <option name="closed" value="true" />
+      <created>1746656021144</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1746656021145</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Adds skip_existing flag to chart-releaser action.">
+      <option name="closed" value="true" />
+      <created>1746656157890</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1746656157890</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Removes skip_upload and pages_branch from chart-releaser action.">
+      <option name="closed" value="true" />
+      <created>1746656514787</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1746656514787</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Enables write permissions and removes skip flags.">
+      <option name="closed" value="true" />
+      <created>1746656698169</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1746656698169</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -248,9 +358,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="cronjob - fix schedule quoting&#10;docs - use helm-docs utility to generate chart readme" />
-    <MESSAGE value="Added `additionalLabels` to `secret-with-random` Helm chart and incremented its version to 0.2.0." />
-    <MESSAGE value="webapp(1.3.4): Add Image Pull Secrets to migrations job" />
     <MESSAGE value="Add .gitleaksignore" />
     <MESSAGE value="webapp(hpa): update to hpa v2 -- docs for all" />
     <MESSAGE value="Update Helm chart creation timestamps&#10;&#10;This commit updates the 'created' timestamps in the Helm charts listed in index.yaml to their latest values. Additionally, it updates IntelliJ IDEA workspace settings related to the recent 'webapp-hpa-v2' changes." />
@@ -263,7 +370,20 @@
     <MESSAGE value="Update Helm chart to version 1.8.0 with migration job enhancements&#10;&#10;Bumped Helm chart version to 1.8.0 and introduced improvements to the migration job configuration. Added support for specifying volumes and volume mounts, as well as added placeholders for customizable commands. Adjusted related template logic to accommodate these changes." />
     <MESSAGE value="feat: Add fake-job chart&#10;&#10;Overview&#10;This change introduces a new Helm chart for a fake job. This includes the chart itself, along with supporting files for packaging and verification." />
     <MESSAGE value="Adds container environment variables to CronJob chart." />
-    <option name="LAST_COMMIT_MESSAGE" value="Adds container environment variables to CronJob chart." />
+    <MESSAGE value="init, ci" />
+    <MESSAGE value="Initializes Git submodules before Helm setup." />
+    <MESSAGE value="Adds submodule checkout with token and recursive init." />
+    <MESSAGE value="Fixes relative path to harbor-container-webhook chart." />
+    <MESSAGE value="remove submodule" />
+    <MESSAGE value="Updates dependency installation to target chart subdirectories." />
+    <MESSAGE value="Publishes Helm charts to GHCR using OCI." />
+    <MESSAGE value="Adds pages_branch and skip_existing to helm-docs action." />
+    <MESSAGE value="Adds write permissions for packages, ID token, and pages." />
+    <MESSAGE value="Moves GHCR login step before chart-releaser execution." />
+    <MESSAGE value="Adds skip_existing flag to chart-releaser action." />
+    <MESSAGE value="Removes skip_upload and pages_branch from chart-releaser action." />
+    <MESSAGE value="Enables write permissions and removes skip flags." />
+    <option name="LAST_COMMIT_MESSAGE" value="Enables write permissions and removes skip flags." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
