@@ -230,8 +230,8 @@ migrationJob:
 
 podDisruptionBudget:
   disabled: false
-  minAvailable: 1
-  maxUnavailable:
+  minAvailable: 0
+  maxUnavailable: 1
   unhealthyPodEvictionPolicy: IfHealthyBudget
 
 topologySpreadConstraints:
