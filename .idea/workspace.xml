@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/charts/webapp/Chart.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/Chart.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/charts/webapp/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/charts/webapp/templates/pod-disruption-budget.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/templates/pod-disruption-budget.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +38,10 @@
             <RecentBranchesForRepo>
               <option name="branches">
                 <list>
+                  <RecentBranch>
+                    <option name="branchName" value="feat/pdb-update" />
+                    <option name="lastUsedInstant" value="1751367320" />
+                  </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="main" />
                     <option name="lastUsedInstant" value="1746656901" />
@@ -82,23 +88,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.grazie&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.google.cloudcode.ide_session_index": "20250701_0000",
+    "git-widget-placeholder": "feat/pdb-update",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.grazie",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;stardust.markdown.MarkdownSplitEditorSuppressor:keyList&quot;: []
+  "keyToStringList": {
+    "stardust.markdown.MarkdownSplitEditorSuppressor:keyList": []
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -123,6 +130,8 @@
       <workItem from="1745510184536" duration="1190000" />
       <workItem from="1746624003732" duration="11580000" />
       <workItem from="1746722606252" duration="653000" />
+      <workItem from="1747823799729" duration="1947000" />
+      <workItem from="1751366259870" duration="1138000" />
     </task>
     <task id="LOCAL-00001" summary="cronjob - fix schedule quoting&#10;docs - use helm-docs utility to generate chart readme">
       <option name="closed" value="true" />
@@ -348,7 +357,31 @@
       <option name="project" value="LOCAL" />
       <updated>1746656698169</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Update WebApp chart to 1.0.1">
+      <option name="closed" value="true" />
+      <created>1747824008363</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1747824008363</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Adds skip_existing flag to chart-releaser action.">
+      <option name="closed" value="true" />
+      <created>1747824466232</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1747824466232</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Bumps chart version to 1.0.1.">
+      <option name="closed" value="true" />
+      <created>1747827325361</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1747827325361</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -358,10 +391,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Add .gitleaksignore" />
-    <MESSAGE value="webapp(hpa): update to hpa v2 -- docs for all" />
-    <MESSAGE value="Update Helm chart creation timestamps&#10;&#10;This commit updates the 'created' timestamps in the Helm charts listed in index.yaml to their latest values. Additionally, it updates IntelliJ IDEA workspace settings related to the recent 'webapp-hpa-v2' changes." />
-    <MESSAGE value="Update Helm chart signatures and timestamps&#10;&#10;Updated SHA256 checksums and PGP signatures for webapp-1.4.0.tgz. Adjusted the creation timestamps in index.yaml to reflect the new version deployment." />
     <MESSAGE value="Enable migration job and update Helm chart to 1.4.1&#10;&#10;Enabled the migration job in the values.yaml file and updated the chart version to 1.4.1. Additionally, created a new Helm chart file webapp-1.4.1.tgz and its corresponding .prov file. Updated timestamps and metadata in index.yaml and workspace.xml accordingly." />
     <MESSAGE value="Upgrade Helm chart to version 1.5.0&#10;&#10;Updated the webapp Helm chart to version 1.5.0, including modifications to templating logic for version labels." />
     <MESSAGE value="Upgrade Helm chart to version 1.6.0&#10;&#10;Updated the webapp Helm chart to version 1.6.0, adjusting creation timestamps, SHA256 checksums, and metadata in index.yaml. Added new Helm chart files (webapp-1.6.0.tgz and its .prov file) and aligned IntelliJ IDEA workspace settings accordingly." />
@@ -380,10 +409,14 @@
     <MESSAGE value="Adds pages_branch and skip_existing to helm-docs action." />
     <MESSAGE value="Adds write permissions for packages, ID token, and pages." />
     <MESSAGE value="Moves GHCR login step before chart-releaser execution." />
-    <MESSAGE value="Adds skip_existing flag to chart-releaser action." />
     <MESSAGE value="Removes skip_upload and pages_branch from chart-releaser action." />
     <MESSAGE value="Enables write permissions and removes skip flags." />
-    <option name="LAST_COMMIT_MESSAGE" value="Enables write permissions and removes skip flags." />
+    <MESSAGE value="Update WebApp chart to 1.0.1" />
+    <MESSAGE value="Adds skip_existing flag to chart-releaser action." />
+    <MESSAGE value="Bumps chart version to 1.0.1." />
+    <MESSAGE value="Release" />
+    <MESSAGE value="Release WebApp chart version 2.0.0&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Release WebApp chart version 2.0.0&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
