@@ -4,8 +4,9 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ include "WebApp.fullname" . | lower }}-pdb
 spec:
-  minAvailable: {{ .Values.podDisruptionBudget.minAvailable | default 1 }}
-  {{- if .Values.podDisruptionBudget.maxUnavailable }}
+  {{- if .Values.podDisruptionBudget.minAvailable }}
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  {{- else }}
   maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
   {{- end }}
   {{- if ge (int .Capabilities.KubeVersion.Minor) 27 }}

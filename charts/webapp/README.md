@@ -1,6 +1,6 @@
 # webapp
 
-![Version: 1.4.0](https://img.shields.io/badge/Version-1.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Taazaa Helm chart for a WebApp in Kubernetes
 
@@ -17,9 +17,11 @@ Taazaa Helm chart for a WebApp in Kubernetes
 | autoscaling.maxReplicas | int | `4` |  |
 | autoscaling.minReplicas | int | `2` |  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
+| containerEnvFrom | list | `[]` |  |
 | containerEnvironmentVariables | list | `[]` |  |
 | containerSecurityContext | string | `nil` |  |
 | deploymentAnnotations | object | `{}` | Annotations to add to the deployment |
+| deploymentLabels | object | `{}` | Labels to add to the deployment |
 | fullnameOverride | string | `""` |  |
 | health.livenessProbe.httpGet.path | string | `"/healthz/live"` |  |
 | health.livenessProbe.httpGet.port | string | `"http"` |  |
@@ -29,7 +31,7 @@ Taazaa Helm chart for a WebApp in Kubernetes
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"nginx"` |  |
 | image.tag | string | `""` | this is generally the only value you will change between releases |
-| imagePullSecrets | list | `[]` | name of secret in the namespace that contains docker config for image repository  |
+| imagePullSecrets | list | `[]` | name of secret in the namespace that contains docker config for image repository |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` |  |
 | ingress.enabled | bool | `false` |  |
@@ -40,11 +42,15 @@ Taazaa Helm chart for a WebApp in Kubernetes
 | metrics.path | string | `"/metricsz"` |  |
 | metrics.port | string | `"http"` |  |
 | migrationJob.annotations | object | `{}` |  |
+| migrationJob.command | string | `nil` |  |
+| migrationJob.containerEnvFrom | list | `[]` |  |
 | migrationJob.enabled | bool | `false` |  |
 | migrationJob.environmentVariables | list | `[]` |  |
 | migrationJob.image.pullPolicy | string | `"IfNotPresent"` |  |
 | migrationJob.image.repository | string | `""` |  |
 | migrationJob.image.tag | string | `""` | this value is independent of the version of the image used in the deployment of the core app |
+| migrationJob.volumeMounts | list | `[]` |  |
+| migrationJob.volumes | list | `[]` |  |
 | migrationJob.waitForItInInitContainer | bool | `false` | use true if your migrations take a long time, causing the helm hook to fail |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
@@ -53,6 +59,7 @@ Taazaa Helm chart for a WebApp in Kubernetes
 | podDisruptionBudget.maxUnavailable | string | `nil` |  |
 | podDisruptionBudget.minAvailable | int | `1` |  |
 | podDisruptionBudget.unhealthyPodEvictionPolicy | string | `"IfHealthyBudget"` |  |
+| podLabels | string | `nil` | Labels to add to the pod |
 | podSecurityContext | string | `nil` |  |
 | replicaCount | int | `2` | replicaCount is only used if HPA is not enabled |
 | resources.requests.cpu | string | `"100m"` |  |
