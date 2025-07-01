@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/webapp/Chart.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/Chart.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/webapp/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/webapp/templates/pod-disruption-budget.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/templates/pod-disruption-budget.yaml" afterDir="false" />
-    </list>
+    <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -131,7 +126,7 @@
       <workItem from="1746624003732" duration="11580000" />
       <workItem from="1746722606252" duration="653000" />
       <workItem from="1747823799729" duration="1947000" />
-      <workItem from="1751366259870" duration="1138000" />
+      <workItem from="1751366259870" duration="1340000" />
     </task>
     <task id="LOCAL-00001" summary="cronjob - fix schedule quoting&#10;docs - use helm-docs utility to generate chart readme">
       <option name="closed" value="true" />
@@ -381,7 +376,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747827325361</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Release WebApp chart version 2.0.0">
+      <option name="closed" value="true" />
+      <created>1751367590380</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1751367590380</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -391,7 +394,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Enable migration job and update Helm chart to 1.4.1&#10;&#10;Enabled the migration job in the values.yaml file and updated the chart version to 1.4.1. Additionally, created a new Helm chart file webapp-1.4.1.tgz and its corresponding .prov file. Updated timestamps and metadata in index.yaml and workspace.xml accordingly." />
     <MESSAGE value="Upgrade Helm chart to version 1.5.0&#10;&#10;Updated the webapp Helm chart to version 1.5.0, including modifications to templating logic for version labels." />
     <MESSAGE value="Upgrade Helm chart to version 1.6.0&#10;&#10;Updated the webapp Helm chart to version 1.6.0, adjusting creation timestamps, SHA256 checksums, and metadata in index.yaml. Added new Helm chart files (webapp-1.6.0.tgz and its .prov file) and aligned IntelliJ IDEA workspace settings accordingly." />
     <MESSAGE value="Update .semgrepignore to refine excluded CRD paths&#10;&#10;Adjusted the glob patterns to ensure proper exclusion of CRD files, adding recursive matching for directories. Included a specific vault CRD file to the ignore list for better coverage." />
@@ -416,7 +418,8 @@
     <MESSAGE value="Bumps chart version to 1.0.1." />
     <MESSAGE value="Release" />
     <MESSAGE value="Release WebApp chart version 2.0.0&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Release WebApp chart version 2.0.0&#10;" />
+    <MESSAGE value="Release WebApp chart version 2.0.0" />
+    <option name="LAST_COMMIT_MESSAGE" value="Release WebApp chart version 2.0.0" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

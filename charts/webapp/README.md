@@ -56,8 +56,8 @@ Taazaa Helm chart for a WebApp in Kubernetes
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{"vault.security.banzaicloud.io/vault-addr":"http://vault.default.svc:8200"}` | Annotations to add to the primary pod |
 | podDisruptionBudget.disabled | bool | `false` |  |
-| podDisruptionBudget.maxUnavailable | string | `nil` |  |
-| podDisruptionBudget.minAvailable | int | `1` |  |
+| podDisruptionBudget.maxUnavailable | int | `1` |  |
+| podDisruptionBudget.minAvailable | int | `0` |  |
 | podDisruptionBudget.unhealthyPodEvictionPolicy | string | `"IfHealthyBudget"` |  |
 | podLabels | string | `nil` | Labels to add to the pod |
 | podSecurityContext | string | `nil` |  |
