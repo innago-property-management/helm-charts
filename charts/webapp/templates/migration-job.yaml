@@ -25,7 +25,8 @@ spec:
       labels:
         {{- include "WebAppMigrations.labels" . | nindent 8 }}
 
-    spec:{{- with .Values.imagePullSecrets | default }}
+    spec:
+      {{- with .Values.imagePullSecrets | default }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
