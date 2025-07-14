@@ -34,8 +34,8 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="feat/pdb-update" />
-                    <option name="lastUsedInstant" value="1751367320" />
+                    <option name="branchName" value="fix/migrations-job" />
+                    <option name="lastUsedInstant" value="1752505605" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="main" />
@@ -88,7 +88,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "com.google.cloudcode.ide_session_index": "20250701_0000",
-    "git-widget-placeholder": "feat/pdb-update",
+    "git-widget-placeholder": "fix/migrations-job",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -127,6 +127,7 @@
       <workItem from="1746722606252" duration="653000" />
       <workItem from="1747823799729" duration="1947000" />
       <workItem from="1751366259870" duration="1340000" />
+      <workItem from="1752505121911" duration="631000" />
     </task>
     <task id="LOCAL-00001" summary="cronjob - fix schedule quoting&#10;docs - use helm-docs utility to generate chart readme">
       <option name="closed" value="true" />
@@ -384,7 +385,31 @@
       <option name="project" value="LOCAL" />
       <updated>1751367590380</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="add line break on image pull secrets in migration job">
+      <option name="closed" value="true" />
+      <created>1752505426404</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1752505426404</updated>
+    </task>
+    <task id="LOCAL-00034" summary="add line break on image pull secrets in migration job">
+      <option name="closed" value="true" />
+      <created>1752505613406</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1752505613406</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Bumps chart and app version to 2.0.2.">
+      <option name="closed" value="true" />
+      <created>1752505641146</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1752505641146</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -394,12 +419,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Upgrade Helm chart to version 1.5.0&#10;&#10;Updated the webapp Helm chart to version 1.5.0, including modifications to templating logic for version labels." />
-    <MESSAGE value="Upgrade Helm chart to version 1.6.0&#10;&#10;Updated the webapp Helm chart to version 1.6.0, adjusting creation timestamps, SHA256 checksums, and metadata in index.yaml. Added new Helm chart files (webapp-1.6.0.tgz and its .prov file) and aligned IntelliJ IDEA workspace settings accordingly." />
-    <MESSAGE value="Update .semgrepignore to refine excluded CRD paths&#10;&#10;Adjusted the glob patterns to ensure proper exclusion of CRD files, adding recursive matching for directories. Included a specific vault CRD file to the ignore list for better coverage." />
-    <MESSAGE value="Update WebApp chart to version 1.7.0 with migration enhancements&#10;&#10;Bumped the WebApp chart version to 1.7.0 and added support for custom migration job commands. Minor improvements were made to whitespace and comments in values.yaml and migration-job.yaml for better readability. Generated the provenance file for the new chart version." />
-    <MESSAGE value="Update Helm chart to version 1.8.0 with migration job enhancements&#10;&#10;Bumped Helm chart version to 1.8.0 and introduced improvements to the migration job configuration. Added support for specifying volumes and volume mounts, as well as added placeholders for customizable commands. Adjusted related template logic to accommodate these changes." />
-    <MESSAGE value="feat: Add fake-job chart&#10;&#10;Overview&#10;This change introduces a new Helm chart for a fake job. This includes the chart itself, along with supporting files for packaging and verification." />
     <MESSAGE value="Adds container environment variables to CronJob chart." />
     <MESSAGE value="init, ci" />
     <MESSAGE value="Initializes Git submodules before Helm setup." />
@@ -419,7 +438,13 @@
     <MESSAGE value="Release" />
     <MESSAGE value="Release WebApp chart version 2.0.0&#10;" />
     <MESSAGE value="Release WebApp chart version 2.0.0" />
-    <option name="LAST_COMMIT_MESSAGE" value="Release WebApp chart version 2.0.0" />
+    <MESSAGE value="Adds" />
+    <MESSAGE value="Adds imagePullSecrets configuration to migration job.&#10;" />
+    <MESSAGE value="add line break on image pull secrets in migration job" />
+    <MESSAGE value="B" />
+    <MESSAGE value="Bumps chart and app version to 2.0.2.&#10;" />
+    <MESSAGE value="Bumps chart and app version to 2.0.2." />
+    <option name="LAST_COMMIT_MESSAGE" value="Bumps chart and app version to 2.0.2." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
