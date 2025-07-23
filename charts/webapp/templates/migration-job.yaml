@@ -26,6 +26,7 @@ spec:
         {{- include "WebAppMigrations.labels" . | nindent 8 }}
 
     spec:
+      serviceAccountName: {{ include "WebApp.serviceAccountName" . | lower }}
       {{- with .Values.imagePullSecrets | default }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
