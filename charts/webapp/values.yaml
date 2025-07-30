@@ -76,10 +76,10 @@ service:
   port: 80
 
 additionalServicePorts: []
-#  - name: https
-#    targetPort: https
-#    port: 443
-#    protocol: TCP
+  - name: https
+    targetPort: https
+    port: 8443
+    protocol: TCP
 
 ingress:
   enabled: false
