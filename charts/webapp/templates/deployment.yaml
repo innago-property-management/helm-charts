@@ -90,6 +90,11 @@ spec:
             - name: http
               containerPort: {{ .Values.httpContainerPort | default 80 }}
               protocol: TCP
+            {{- if .Values.service.enableHttps }}
+            - name: https
+              containerPort: {{ .Values.httpsContainerPort | default 443 }}
+              protocol: TCP
+            {{- end }}
             {{- if .Values.additionalContainerPorts }}
               {{- toYaml .Values.additionalContainerPorts | nindent 12 }}
             {{- end }}
