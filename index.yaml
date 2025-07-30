@@ -28,6 +28,17 @@ entries:
     version: 1.0.0
   webapp:
   - apiVersion: v2
+    appVersion: 2.2.0
+    created: "2025-07-30T09:24:58.650547025Z"
+    description: Taazaa Helm chart for a WebApp in Kubernetes
+    digest: 616acaa5603c9678ddb303988245df092d8307c665efc4da06f41de7e6f5c2c9
+    icon: https://cncf-branding.netlify.app/img/projects/helm/icon/color/helm-icon-color.png
+    name: webapp
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/webapp-2.2.0/webapp-2.2.0.tgz
+    version: 2.2.0
+  - apiVersion: v2
     appVersion: 2.1.0
     created: "2025-07-23T17:24:01.903694278Z"
     description: Taazaa Helm chart for a WebApp in Kubernetes
@@ -93,4 +104,4 @@ entries:
     urls:
     - https://github.com/innago-property-management/helm-charts/releases/download/webapp-1.0.0/webapp-1.0.0.tgz
     version: 1.0.0
-generated: "2025-07-23T17:24:01.903718333Z"
+generated: "2025-07-30T09:24:58.650574296Z"
