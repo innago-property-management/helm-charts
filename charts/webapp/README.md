@@ -1,6 +1,6 @@
 # webapp
 
-![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 2.2.0](https://img.shields.io/badge/Version-2.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
 
 Taazaa Helm chart for a WebApp in Kubernetes
 
@@ -8,18 +8,15 @@ Taazaa Helm chart for a WebApp in Kubernetes
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| additionalContainerPorts | list | `[]` | to expose more than one port, add entries here. follows pod port syntax |
-| additionalContainers | list | `[]` |  |
+| additionalContainerPorts | list | `[]` | if `service.enableHttps` is true, then a port named https will be added to the main container |
+| additionalContainers | list | `[]` | this follows the pod spec on containers. see https://kubernetes.io/docs/concepts/workloads/pods/ |
 | additionalServicePorts | list | `[]` |  |
 | affinity | object | `{}` |  |
 | appsettings | object | `{}` |  |
-| autoscaling.enabled | string | `"no"` |  |
-| autoscaling.maxReplicas | int | `4` |  |
-| autoscaling.minReplicas | int | `2` |  |
-| autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
+| autoscaling | object | `{"enabled":"no","maxReplicas":4,"minReplicas":2,"targetCPUUtilizationPercentage":80}` | see https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/ |
 | containerEnvFrom | list | `[]` |  |
 | containerEnvironmentVariables | list | `[]` |  |
-| containerSecurityContext | string | `nil` |  |
+| containerSecurityContext | string | `nil` | see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | deploymentAnnotations | object | `{}` | Annotations to add to the deployment |
 | deploymentLabels | object | `{}` | Labels to add to the deployment |
 | fullnameOverride | string | `""` |  |
@@ -27,7 +24,8 @@ Taazaa Helm chart for a WebApp in Kubernetes
 | health.livenessProbe.httpGet.port | string | `"http"` |  |
 | health.readinessProbe.httpGet.path | string | `"/healthz/ready"` |  |
 | health.readinessProbe.httpGet.port | string | `"http"` |  |
-| httpContainerPort | int | `80` | just the port number |
+| httpContainerPort | int | `80` | just the port number. the recommended value is 8080 if you control the image. |
+| httpsContainerPort | int | `443` | just the port number. the recommended value is 8443 if you control the image. this is only used if `service.enableHttps` is true |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"nginx"` |  |
 | image.tag | string | `""` | this is generally the only value you will change between releases |
@@ -53,23 +51,24 @@ Taazaa Helm chart for a WebApp in Kubernetes
 | migrationJob.volumes | list | `[]` |  |
 | migrationJob.waitForItInInitContainer | bool | `false` | use true if your migrations take a long time, causing the helm hook to fail |
 | nameOverride | string | `""` |  |
-| nodeSelector | object | `{}` |  |
+| nodeSelector | object | `{}` | see https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/ |
 | podAnnotations | object | `{"vault.security.banzaicloud.io/vault-addr":"http://vault.default.svc:8200"}` | Annotations to add to the primary pod |
 | podDisruptionBudget.disabled | bool | `false` |  |
 | podDisruptionBudget.maxUnavailable | int | `1` |  |
 | podDisruptionBudget.minAvailable | int | `0` |  |
 | podDisruptionBudget.unhealthyPodEvictionPolicy | string | `"IfHealthyBudget"` |  |
 | podLabels | string | `nil` | Labels to add to the pod |
-| podSecurityContext | string | `nil` |  |
+| podSecurityContext | string | `nil` | see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | replicaCount | int | `2` | replicaCount is only used if HPA is not enabled |
-| resources.requests.cpu | string | `"100m"` |  |
-| resources.requests.memory | string | `"128Mi"` |  |
+| resources | object | `{"requests":{"cpu":"100m","memory":"128Mi"}}` | see https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| service.enableHttps | bool | `false` | the port will target a container port with the same name |
+| service.httpsPort | int | `443` |  |
 | service.port | int | `80` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | If not set and create is true, a name is generated using the fullname template |
-| tolerations | list | `[]` |  |
+| tolerations | list | `[]` | see https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/ |
 | topologySpreadConstraints.disabled | bool | `false` |  |
 | topologySpreadConstraints.maxSkew | int | `1` |  |
 | topologySpreadConstraints.topologyKey | string | `"kubernetes.io/hostname"` |  |
