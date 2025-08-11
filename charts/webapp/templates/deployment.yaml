@@ -69,6 +69,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.serviceAccountName
+            - name: MY_APP_VERSION
+              value: {{ .Values.image.tag | default .Chart.AppVersion }}                  
             - name: MY_POD_IP
               valueFrom:
                 fieldRef:
