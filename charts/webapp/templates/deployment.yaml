@@ -70,7 +70,7 @@ spec:
                 fieldRef:
                   fieldPath: spec.serviceAccountName
             - name: MY_APP_VERSION
-              value: {{ .Values.image.tag | default .Chart.AppVersion }}                  
+              value: {{ .Values.image.tag }}                  
             - name: MY_POD_IP
               valueFrom:
                 fieldRef:
