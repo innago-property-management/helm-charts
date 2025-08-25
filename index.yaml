@@ -11,6 +11,28 @@ entries:
     urls:
     - https://github.com/innago-property-management/helm-charts/releases/download/cronjob-1.0.0/cronjob-1.0.0.tgz
     version: 1.0.0
+  innago-vault-k8s-role-operator:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-08-25T05:59:57.418864658Z"
+    dependencies:
+    - alias: innago-webapp
+      import-values:
+      - child: serviceAccount
+        parent: serviceAccount
+      name: webapp
+      repository: oci://ghcr.io/innago-property-management/helm-charts
+      tags:
+      - webapp
+      - innago
+      version: 2.3.1
+    description: A Helm chart for Kubernetes
+    digest: 5b5e4c1a421c849991a1acb5f31949d055d382e92adc19ce64b5c1569b948e63
+    name: innago-vault-k8s-role-operator
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/innago-vault-k8s-role-operator-0.1.0/innago-vault-k8s-role-operator-0.1.0.tgz
+    version: 0.1.0
   registry-container-webhook:
   - apiVersion: v2
     appVersion: 1.16.0
@@ -126,4 +148,4 @@ entries:
     urls:
     - https://github.com/innago-property-management/helm-charts/releases/download/webapp-1.0.0/webapp-1.0.0.tgz
     version: 1.0.0
-generated: "2025-08-19T08:24:18.919241886Z"
+generated: "2025-08-25T05:59:57.698140073Z"
