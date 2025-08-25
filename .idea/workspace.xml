@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="Uses `app.kubernetes.io/part-of` label instead of `app.k8s.io`.">
-      <change beforePath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/templates/cluster-role-binding.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/templates/cluster-role-binding.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/templates/cluster-role.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/templates/cluster-role.yaml" afterDir="false" />
+    <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/charts/webapp/templates/innago-vault-k8s-role-operator-cm.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/charts/webapp/Chart.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/Chart.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/charts/webapp/values.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/values.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,7 +151,7 @@
       <workItem from="1753907035651" duration="33000" />
       <workItem from="1755839886956" duration="3861000" />
       <workItem from="1755852588980" duration="2447000" />
-      <workItem from="1756097072597" duration="4508000" />
+      <workItem from="1756097072597" duration="6375000" />
     </task>
     <task id="LOCAL-00001" summary="cronjob - fix schedule quoting&#10;docs - use helm-docs utility to generate chart readme">
       <option name="closed" value="true" />
@@ -463,7 +465,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756101579375</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Uses `app.kubernetes.io/part-of` label instead of `app.k8s.io`.">
+      <option name="closed" value="true" />
+      <created>1756102479635</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1756102479635</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -471,6 +481,17 @@
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Bumps chart version to 1.0.1." />
