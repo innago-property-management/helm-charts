@@ -1,6 +1,6 @@
 # cronjob
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 Innago Helm Chart for deploying a CronJob
 
@@ -12,6 +12,8 @@ Innago Helm Chart for deploying a CronJob
 | command[0] | string | `"/bin/sh"` |  |
 | command[1] | string | `"-c"` |  |
 | command[2] | string | `"date; echo Hello!"` |  |
+| containerEnvFrom | list | `[]` |  |
+| containerEnvironmentVariables | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"busybox"` |  |

@@ -1,14 +1,14 @@
 # registry-container-webhook
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
-App to rewrite image repos to use REPO
+App to rewrite image repos to use specified caching registry
 
 ## Requirements
 
 | Repository | Name | Version |
 |------------|------|---------|
-| file://../harbor-container-webhook/deploy/charts/harbor-container-webhook | harbor-container-webhook | 0.6.2 |
+| https://indeedeng.github.io/harbor-container-webhook | harbor-container-webhook | 0.8.1 |
 
 ## Values
 

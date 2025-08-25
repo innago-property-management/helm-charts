@@ -5,19 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/build-publish.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build-publish.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/webapp/Chart.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/Chart.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/webapp/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/webapp/templates/deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/templates/deployment.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/webapp/templates/service.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/templates/service.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/webapp/values.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/values.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/Chart.lock" beforeDir="false" afterPath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/Chart.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ChangesViewManager">
+  <component name="ChangesViewManager" show_ignored="true">
     <option name="groupingKeys">
       <option value="directory" />
     </option>
@@ -41,8 +38,8 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="BlackStarTLM-patch-1" />
-                    <option name="lastUsedInstant" value="1753866255" />
+                    <option name="branchName" value="feat/vault-role-operator" />
+                    <option name="lastUsedInstant" value="1755839952" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="main" />
@@ -77,6 +74,9 @@
   &quot;isMigrated&quot;: true
 }</component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="AISelfReview" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;0e158997&quot;,
   &quot;associatedIndex&quot;: 4
@@ -90,24 +90,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "com.google.cloudcode.ide_session_index": "20250701_0000",
-    "git-widget-placeholder": "#11 on BlackStarTLM-patch-1",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.grazie",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;KUBERNETES_SUPPRESS_CONFIG_CLUSTER_SUGGESTION&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.google.cloudcode.ide_session_index&quot;: &quot;20250701_0000&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/vault-role-operator&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "stardust.markdown.MarkdownSplitEditorSuppressor:keyList": []
+  &quot;keyToStringList&quot;: {
+    &quot;stardust.markdown.MarkdownSplitEditorSuppressor:keyList&quot;: []
   }
-}]]></component>
+}</component>
+  <component name="RunManager">
+    <configuration default="true" type="OPA_RUN_CONFIGURATION" factoryName="Opa configuration factory">
+      <option name="query" value="" />
+      <option name="additionalargs" value="" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -137,6 +147,10 @@
       <workItem from="1752505121911" duration="1727000" />
       <workItem from="1753291265913" duration="256000" />
       <workItem from="1753866228327" duration="763000" />
+      <workItem from="1753907035651" duration="33000" />
+      <workItem from="1755839886956" duration="3861000" />
+      <workItem from="1755852588980" duration="2447000" />
+      <workItem from="1756097072597" duration="3811000" />
     </task>
     <task id="LOCAL-00001" summary="cronjob - fix schedule quoting&#10;docs - use helm-docs utility to generate chart readme">
       <option name="closed" value="true" />
@@ -434,7 +448,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753291408985</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="Release Vault Role Operator&#10;&#10;Adds Vault Role Operator chart to manage&#10;Vault roles.">
+      <option name="closed" value="true" />
+      <created>1756099148177</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1756099148177</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -444,8 +466,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="remove submodule" />
-    <MESSAGE value="Updates dependency installation to target chart subdirectories." />
     <MESSAGE value="Publishes Helm charts to GHCR using OCI." />
     <MESSAGE value="Adds pages_branch and skip_existing to helm-docs action." />
     <MESSAGE value="Adds write permissions for packages, ID token, and pages." />
@@ -455,7 +475,6 @@
     <MESSAGE value="Update WebApp chart to 1.0.1" />
     <MESSAGE value="Adds skip_existing flag to chart-releaser action." />
     <MESSAGE value="Bumps chart version to 1.0.1." />
-    <MESSAGE value="Release" />
     <MESSAGE value="Release WebApp chart version 2.0.0&#10;" />
     <MESSAGE value="Release WebApp chart version 2.0.0" />
     <MESSAGE value="Adds imagePullSecrets configuration to migration job.&#10;" />
@@ -469,7 +488,10 @@
     <MESSAGE value="Update" />
     <MESSAGE value="Update chart and app versions to 2.1.0&#10;" />
     <MESSAGE value="Update chart and app versions to 2.1.0&#10;&#10;Add missing service account name in migrations job" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update chart and app versions to 2.1.0&#10;&#10;Add missing service account name in migrations job" />
+    <MESSAGE value="Release" />
+    <MESSAGE value="Release Vault Role Operator&#10;&#10;Adds Vault Role Operator chart to manage&#10;Vault roles.&#10;" />
+    <MESSAGE value="Release Vault Role Operator&#10;&#10;Adds Vault Role Operator chart to manage&#10;Vault roles." />
+    <option name="LAST_COMMIT_MESSAGE" value="Release Vault Role Operator&#10;&#10;Adds Vault Role Operator chart to manage&#10;Vault roles." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
