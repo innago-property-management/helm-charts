@@ -3,7 +3,7 @@ kind: ClusterRoleBinding
 metadata:
   name: {{ include "innago-vault-k8s-role-operator.serviceAccountName" . }}
   labels:
-    app.k8s.io/part-of: {{ .Release.Name }}
+    app.kubernetes.io/part-of: {{ .Release.Name }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   name: {{ include "innago-vault-k8s-role-operator.serviceAccountName" . }}
