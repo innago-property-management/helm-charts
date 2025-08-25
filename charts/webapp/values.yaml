@@ -165,6 +165,7 @@ additionalContainers: []
 #        cpu: 100m
 #        memory: 128Mi
 
+# -- see https://kubernetes.io/docs/concepts/storage/volumes/
 volumes: []
 #  - name: config-vol
 #    configMap:
@@ -173,6 +174,7 @@ volumes: []
 #    secret:
 #      secretName: my-secret
 
+# -- see https://kubernetes.io/docs/concepts/storage/volumes/
 volumeMounts: []
 #  - name: my-config
 #    mountPath: /app/appsettings.production.json
@@ -223,6 +225,7 @@ migrationJob:
 #    - sh
 #    - -c
 #    - something
+
   volumes: []
 #    - name: config-vol
 #      configMap:
@@ -241,15 +244,39 @@ migrationJob:
 #      subPath: appsettings.secret.json
 #      readOnly: true
 
+  # -- Pod Disruption Budget settings.
+  # See https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets
 
 podDisruptionBudget:
+  # -- If true, a PodDisruptionBudget will not be created.
   disabled: false
+  # -- The minimum number of pods that must be available after an eviction.
   minAvailable: 0
+  # -- The maximum number of pods that can be unavailable after an eviction.
   maxUnavailable: 1
+  # -- The policy for evicting unhealthy pods.
   unhealthyPodEvictionPolicy: IfHealthyBudget
 
+# -- Topology spread constraints settings.
+# See https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
 topologySpreadConstraints:
+  # -- If true, topology spread constraints will not be applied.
   disabled: false
+  # -- The maximum skew between topologies.
   maxSkew: 1
+  # -- The key for topology domain.
   topologyKey: kubernetes.io/hostname
+  # -- What to do when a pod doesn't satisfy the spread constraint.
   whenUnsatisfiable: ScheduleAnyway
+
+innagoVaultK8sRoleOperator:
+  # -- whether a config map to trigger vault role and policy should be created.
+  # if the https://github.com/innago-property-management/innago-vault-k8s-role-operator is present in the cluster,
+  # including this will create a config map which will then be used by the operator
+  # to create a policy and role for the service account used by your app.
+  use: true
+  # -- an array of additional policy names.
+  # you would use this if dynamic secrets for a database, messaging system, etc. are in use.
+  additionalPolicies: []
+
+
