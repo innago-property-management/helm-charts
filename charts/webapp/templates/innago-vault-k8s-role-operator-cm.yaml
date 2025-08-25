@@ -1,0 +1,12 @@
+{{- if .Values.innagoVaultK8sRoleOperator.use -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  generateName: {{ include "WebApp.fullname" . | lower | trunc 50 }}-vault-
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    innago.com/vault-k8s-role: ""
+data:
+  serviceAccountName: "{{ include "WebApp.serviceAccountName" . }}"
+  additionalPolicies: "{{ .Values.innagoVaultK8sRoleOperator.additionalPolicies | join "," }}"
+{{- end -}}
