@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="">
+    <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="# Title: Summary, imperative, start upper case, don't end with a period&#10;# No more than 50 chars. #### 50 chars is here:  #&#10;&#10;# Remember blank line between title and body.&#10;&#10;# Body: Explain *what* and *why* (not *how*). Include task ID (Jira issue).&#10;# Wrap at 72 chars. ################################## which is here:  #&#10;&#10;&#10;# At the end: Include Co-authored-by for all contributors. &#10;# Include at least one empty line before it. Format: &#10;# Co-authored-by: name &lt;user@users.noreply.github.com&gt;&#10;#&#10;# 1. Separate subject from body with a blank line&#10;# 2. Limit the subject line to 50 characters&#10;# 3. Capitalize the subject line&#10;# 4. Do not end the subject line with a period&#10;# 5. Use the imperative mood in the subject line&#10;# 6. Wrap the body at 72 characters&#10;# 7. Use the body to explain what and why vs. how">
+      <change afterPath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/templates/cluster-role-binding.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/templates/cluster-role.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/webapp/Chart.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/Chart.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/charts/cronjob/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/charts/cronjob/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/charts/registry-container-webhook/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/charts/registry-container-webhook/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/charts/webapp/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/webapp/templates/deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/templates/deployment.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/webapp/templates/service.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/templates/service.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/webapp/values.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/values.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,8 +41,8 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="BlackStarTLM-patch-1" />
-                    <option name="lastUsedInstant" value="1753866255" />
+                    <option name="branchName" value="feat/vault-role-operator" />
+                    <option name="lastUsedInstant" value="1755839952" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="main" />
@@ -90,24 +90,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "com.google.cloudcode.ide_session_index": "20250701_0000",
-    "git-widget-placeholder": "#11 on BlackStarTLM-patch-1",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.grazie",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;KUBERNETES_SUPPRESS_CONFIG_CLUSTER_SUGGESTION&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.google.cloudcode.ide_session_index&quot;: &quot;20250701_0000&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/vault-role-operator&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "stardust.markdown.MarkdownSplitEditorSuppressor:keyList": []
+  &quot;keyToStringList&quot;: {
+    &quot;stardust.markdown.MarkdownSplitEditorSuppressor:keyList&quot;: []
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -137,6 +139,10 @@
       <workItem from="1752505121911" duration="1727000" />
       <workItem from="1753291265913" duration="256000" />
       <workItem from="1753866228327" duration="763000" />
+      <workItem from="1753907035651" duration="33000" />
+      <workItem from="1755839886956" duration="3861000" />
+      <workItem from="1755852588980" duration="2447000" />
+      <workItem from="1756097072597" duration="1951000" />
     </task>
     <task id="LOCAL-00001" summary="cronjob - fix schedule quoting&#10;docs - use helm-docs utility to generate chart readme">
       <option name="closed" value="true" />
