@@ -4,20 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="# Title: Summary, imperative, start upper case, don't end with a period&#10;# No more than 50 chars. #### 50 chars is here:  #&#10;&#10;# Remember blank line between title and body.&#10;&#10;# Body: Explain *what* and *why* (not *how*). Include task ID (Jira issue).&#10;# Wrap at 72 chars. ################################## which is here:  #&#10;&#10;&#10;# At the end: Include Co-authored-by for all contributors. &#10;# Include at least one empty line before it. Format: &#10;# Co-authored-by: name &lt;user@users.noreply.github.com&gt;&#10;#&#10;# 1. Separate subject from body with a blank line&#10;# 2. Limit the subject line to 50 characters&#10;# 3. Capitalize the subject line&#10;# 4. Do not end the subject line with a period&#10;# 5. Use the imperative mood in the subject line&#10;# 6. Wrap the body at 72 characters&#10;# 7. Use the body to explain what and why vs. how">
-      <change afterPath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/templates/cluster-role-binding.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/templates/cluster-role.yaml" afterDir="false" />
+    <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/build-publish.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build-publish.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/cronjob/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/charts/cronjob/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/registry-container-webhook/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/charts/registry-container-webhook/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/webapp/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/charts/webapp/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/Chart.lock" beforeDir="false" afterPath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/Chart.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ChangesViewManager">
+  <component name="ChangesViewManager" show_ignored="true">
     <option name="groupingKeys">
       <option value="directory" />
     </option>
@@ -77,6 +74,9 @@
   &quot;isMigrated&quot;: true
 }</component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="AISelfReview" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;0e158997&quot;,
   &quot;associatedIndex&quot;: 4
@@ -110,6 +110,14 @@
     &quot;stardust.markdown.MarkdownSplitEditorSuppressor:keyList&quot;: []
   }
 }</component>
+  <component name="RunManager">
+    <configuration default="true" type="OPA_RUN_CONFIGURATION" factoryName="Opa configuration factory">
+      <option name="query" value="" />
+      <option name="additionalargs" value="" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -142,7 +150,7 @@
       <workItem from="1753907035651" duration="33000" />
       <workItem from="1755839886956" duration="3861000" />
       <workItem from="1755852588980" duration="2447000" />
-      <workItem from="1756097072597" duration="1951000" />
+      <workItem from="1756097072597" duration="3811000" />
     </task>
     <task id="LOCAL-00001" summary="cronjob - fix schedule quoting&#10;docs - use helm-docs utility to generate chart readme">
       <option name="closed" value="true" />
@@ -440,7 +448,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753291408985</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="Release Vault Role Operator&#10;&#10;Adds Vault Role Operator chart to manage&#10;Vault roles.">
+      <option name="closed" value="true" />
+      <created>1756099148177</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1756099148177</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -450,8 +466,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="remove submodule" />
-    <MESSAGE value="Updates dependency installation to target chart subdirectories." />
     <MESSAGE value="Publishes Helm charts to GHCR using OCI." />
     <MESSAGE value="Adds pages_branch and skip_existing to helm-docs action." />
     <MESSAGE value="Adds write permissions for packages, ID token, and pages." />
@@ -461,7 +475,6 @@
     <MESSAGE value="Update WebApp chart to 1.0.1" />
     <MESSAGE value="Adds skip_existing flag to chart-releaser action." />
     <MESSAGE value="Bumps chart version to 1.0.1." />
-    <MESSAGE value="Release" />
     <MESSAGE value="Release WebApp chart version 2.0.0&#10;" />
     <MESSAGE value="Release WebApp chart version 2.0.0" />
     <MESSAGE value="Adds imagePullSecrets configuration to migration job.&#10;" />
@@ -475,7 +488,10 @@
     <MESSAGE value="Update" />
     <MESSAGE value="Update chart and app versions to 2.1.0&#10;" />
     <MESSAGE value="Update chart and app versions to 2.1.0&#10;&#10;Add missing service account name in migrations job" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update chart and app versions to 2.1.0&#10;&#10;Add missing service account name in migrations job" />
+    <MESSAGE value="Release" />
+    <MESSAGE value="Release Vault Role Operator&#10;&#10;Adds Vault Role Operator chart to manage&#10;Vault roles.&#10;" />
+    <MESSAGE value="Release Vault Role Operator&#10;&#10;Adds Vault Role Operator chart to manage&#10;Vault roles." />
+    <option name="LAST_COMMIT_MESSAGE" value="Release Vault Role Operator&#10;&#10;Adds Vault Role Operator chart to manage&#10;Vault roles." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

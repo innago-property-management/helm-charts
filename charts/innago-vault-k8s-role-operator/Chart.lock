@@ -2,5 +2,5 @@ dependencies:
 - name: webapp
   repository: oci://ghcr.io/innago-property-management/helm-charts
   version: 2.3.1
-digest: sha256:0dba55a4cb9c7b94b3bf22da8483accdd97a22bdce006ba4362b39dc6dffc7bd
-generated: "2025-08-22T11:08:21.987064+05:30"
+digest: sha256:f2134737f72a0c682fb5eeaaa582fa30ce428fc6334653c68deeb3d3009ce3de
+generated: "2025-08-25T11:21:13.584978+05:30"
