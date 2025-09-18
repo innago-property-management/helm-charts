@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/Chart.lock" beforeDir="false" afterPath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/Chart.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/Chart.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/Chart.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/charts/webapp-2.3.1.tgz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/values.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/charts/innago-vault-k8s-role-operator/values.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +141,7 @@
       <workItem from="1755839886956" duration="3861000" />
       <workItem from="1755852588980" duration="2447000" />
       <workItem from="1756097072597" duration="7641000" />
-      <workItem from="1756112789900" duration="632000" />
+      <workItem from="1756112789900" duration="1476000" />
     </task>
     <task id="LOCAL-00001" summary="cronjob - fix schedule quoting&#10;docs - use helm-docs utility to generate chart readme">
       <option name="closed" value="true" />
@@ -475,7 +471,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756104332903</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="fix port number; Configure security context and Keptn annotations">
+      <option name="closed" value="true" />
+      <created>1756113568940</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1756113568940</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -496,9 +500,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Release WebApp chart version 2.0.0" />
-    <MESSAGE value="Adds imagePullSecrets configuration to migration job.&#10;" />
-    <MESSAGE value="add line break on image pull secrets in migration job" />
     <MESSAGE value="B" />
     <MESSAGE value="Bumps chart and app version to 2.0.2.&#10;" />
     <MESSAGE value="Bumps chart and app version to 2.0.2." />
@@ -521,7 +522,10 @@
     <MESSAGE value="Updates" />
     <MESSAGE value="Updates chart to 2.4.0 and integrates Innago vault operator.&#10;" />
     <MESSAGE value="Updates chart to 2.4.0 and integrates Innago vault operator." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updates chart to 2.4.0 and integrates Innago vault operator." />
+    <MESSAGE value="Configure" />
+    <MESSAGE value="Configure security context and Keptn annotations&#10;" />
+    <MESSAGE value="fix port number; Configure security context and Keptn annotations" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix port number; Configure security context and Keptn annotations" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

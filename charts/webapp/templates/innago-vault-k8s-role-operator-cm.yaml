@@ -6,6 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   annotations:
     innago.com/vault-k8s-role: ""
+    argocd.argoproj.io/sync-options: ServerSideApply=true
 data:
   serviceAccountName: "{{ include "WebApp.serviceAccountName" . }}"
   additionalPolicies: "{{ .Values.innagoVaultK8sRoleOperator.additionalPolicies | join "," }}"
