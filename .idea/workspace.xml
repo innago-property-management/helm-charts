@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="224fa381-1c18-4902-adaa-46e4f7c0975f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -108,6 +106,13 @@
     &quot;stardust.markdown.MarkdownSplitEditorSuppressor:keyList&quot;: []
   }
 }</component>
+  <component name="RunManager">
+    <configuration default="true" type="OPA_TEST_RUN_CONFIGURATION" factoryName="Opa configuration factory">
+      <option name="additionalargs" value="" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -142,6 +147,7 @@
       <workItem from="1755852588980" duration="2447000" />
       <workItem from="1756097072597" duration="7641000" />
       <workItem from="1756112789900" duration="1476000" />
+      <workItem from="1758228377846" duration="312000" />
     </task>
     <task id="LOCAL-00001" summary="cronjob - fix schedule quoting&#10;docs - use helm-docs utility to generate chart readme">
       <option name="closed" value="true" />
@@ -479,7 +485,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756113568940</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="Bump chart and app version to 2.4.1; Add ArgoCD sync annotation to Vault Role Operator config map">
+      <option name="closed" value="true" />
+      <created>1758228572973</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1758228572973</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -500,7 +514,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="B" />
     <MESSAGE value="Bumps chart and app version to 2.0.2.&#10;" />
     <MESSAGE value="Bumps chart and app version to 2.0.2." />
     <MESSAGE value="Adds" />
@@ -522,10 +535,11 @@
     <MESSAGE value="Updates" />
     <MESSAGE value="Updates chart to 2.4.0 and integrates Innago vault operator.&#10;" />
     <MESSAGE value="Updates chart to 2.4.0 and integrates Innago vault operator." />
+    <MESSAGE value="fix port number; Configure security context and Keptn annotations" />
     <MESSAGE value="Configure" />
     <MESSAGE value="Configure security context and Keptn annotations&#10;" />
-    <MESSAGE value="fix port number; Configure security context and Keptn annotations" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix port number; Configure security context and Keptn annotations" />
+    <MESSAGE value="Bump chart and app version to 2.4.1; Add ArgoCD sync annotation to Vault Role Operator config map" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bump chart and app version to 2.4.1; Add ArgoCD sync annotation to Vault Role Operator config map" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
