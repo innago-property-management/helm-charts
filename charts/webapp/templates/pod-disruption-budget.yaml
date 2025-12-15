@@ -1,4 +1,7 @@
 {{- if not .Values.podDisruptionBudget.disabled }}
+{{- if and .Values.podDisruptionBudget.minAvailable .Values.podDisruptionBudget.maxUnavailable }}
+{{- fail "podDisruptionBudget cannot have both minAvailable and maxUnavailable set. Choose one." }}
+{{- end }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
@@ -6,8 +9,18 @@ metadata:
 spec:
   {{- if .Values.podDisruptionBudget.minAvailable }}
   minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  {{- else if .Values.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
   {{- else }}
-  maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable | default 1 }}
+  {{- /* Calculate sensible default based on replica count */}}
+  {{- $replicas := max 2 .Values.replicaCount }}
+  {{- if eq $replicas 2 }}
+  {{- /* For 2 replicas, allow 1 down (keep 1 available) */}}
+  maxUnavailable: 1
+  {{- else }}
+  {{- /* For 3+ replicas, allow up to 1 down to preserve majority */}}
+  maxUnavailable: 1
+  {{- end }}
   {{- end }}
   {{- if ge (int .Capabilities.KubeVersion.Minor) 27 }}
   unhealthyPodEvictionPolicy: {{ .Values.podDisruptionBudget.unhealthyPodEvictionPolicy | default "IfHealthyBudget" }}

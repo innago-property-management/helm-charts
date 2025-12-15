@@ -2,101 +2,200 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# -- replicaCount is only used if HPA is not enabled
+# -- Number of replicas when HPA is disabled
+# -- Only used when autoscaling.enabled=false
+# -- Minimum value is 2 for high availability
+# -- For production, use HPA instead of fixed replica count
 replicaCount: 2
 
+# -- Deployment strategy configuration
+# -- See https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+strategy:
+  # -- Strategy type: RollingUpdate or Recreate
+  type: RollingUpdate
+  rollingUpdate:
+    # -- Maximum number of pods that can be created over desired replicas (can be absolute number or percentage)
+    maxSurge: 1
+    # -- Maximum number of pods that can be unavailable during update (can be absolute number or percentage)
+    maxUnavailable: 0
+
 image:
+  # -- Container image repository (change this to your application image)
   repository: nginx
+  # -- Image pull policy (IfNotPresent, Always, Never)
+  # -- IfNotPresent: Pull if image not present locally (recommended for production with pinned tags)
+  # -- Always: Pull on every pod start (useful for development with :latest tag)
   pullPolicy: IfNotPresent
-  # -- this is generally the only value you will change between releases
+  # -- Image tag (should match your application version)
+  # -- Leave empty to use Chart.AppVersion
+  # -- IMPORTANT: Always pin to specific version in production, never use "latest"
   tag: ""
 
-# -- name of secret in the namespace that contains docker config for image repository
+# -- Image pull secrets for private container registries
+# -- Create secret with: kubectl create secret docker-registry regcred \
+# --   --docker-server=myregistry.io --docker-username=user --docker-password=pass
 imagePullSecrets: []
 #  - name: regcred
+
+# -- Override the chart name (used in resource names)
+# -- Rarely needed, defaults to chart name "webapp"
 nameOverride: ""
+
+# -- Override the full resource name (release-name-chart-name)
+# -- Useful when migrating from another naming scheme
 fullnameOverride: ""
 
 serviceAccount:
-  # -- Specifies whether a service account should be created
+  # -- Create a ServiceAccount for the pods
+  # -- Required for Vault integration, IRSA (AWS), Workload Identity (GCP), or pod identity features
   create: true
-  # -- Annotations to add to the service account
+  # -- Annotations for the ServiceAccount
+  # -- Example for AWS IRSA: eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT:role/ROLE_NAME
+  # -- Example for GCP Workload Identity: iam.gke.io/gcp-service-account: SA_NAME@PROJECT.iam.gserviceaccount.com
   annotations: {}
-  # -- The name of the service account to use.
-  # -- If not set and create is true, a name is generated using the fullname template
+  # -- Name of the ServiceAccount to use
+  # -- If not set and create=true, a name is generated using the fullname template
+  # -- If not set and create=false, uses "default"
   name: ""
 
-# -- Annotations to add to the deployment
+# -- Annotations to add to the Deployment resource
+# -- Useful for external tools that watch Deployment metadata
 deploymentAnnotations: {}
+#  example.com/deployment-config: "special-handling"
 
-# -- Labels to add to the deployment
-deploymentLabels: {} 
-#  test: does-this-work
+# -- Labels to add to the Deployment resource
+# -- Separate from pod labels; applied to Deployment metadata only
+# -- Useful for organizational grouping or policy matching
+deploymentLabels: {}
+#  team: platform
+#  criticality: high
 
 # -- Annotations to add to the primary pod
-podAnnotations:
-  vault.security.banzaicloud.io/vault-addr: "http://vault.default.svc:8200" # optional, the address of the Vault service, default values is https://vault:8200
+podAnnotations: {}
+#  vault.security.banzaicloud.io/vault-addr: "http://vault.default.svc:8200" # optional, the address of the Vault service, default value is https://vault:8200. Configure per environment/namespace.
 #  vault.security.banzaicloud.io/vault-role: "default" # optional, the default value is the name of the ServiceAccount the Pod runs in, in case of Secrets and ConfigMaps it is "default"
 #  vault.security.banzaicloud.io/vault-skip-verify: "false" # optional, skip TLS verification of the Vault server certificate
 #  vault.security.banzaicloud.io/vault-tls-secret: "vault-tls" # optional, the name of the Secret where the Vault CA cert is, if not defined it is not mounted
 #  vault.security.banzaicloud.io/vault-agent: "false" # optional, if true, a Vault Agent will be started to do Vault authentication, by default not needed and vault-env will do Kubernetes Service Account based Vault authentication
 #  vault.security.banzaicloud.io/vault-path: "kubernetes" # optional, the Kubernetes Auth mount path in Vault the default value is "kubernetes"
 
-# -- Labels to add to the pod
-podLabels: #{}
-#  hello: world
+# -- Labels to add to pods
+# These labels are added in addition to standard app.kubernetes.io labels
+# Common use cases:
+# - Cost allocation: team, cost-center, environment
+# - Monitoring: prometheus.io/*, datadog/*
+# - Policy enforcement: policy.*/*, security/*
+# - Service mesh: version, traffic routing labels
+podLabels: {}
+#  team: platform
+#  cost-center: engineering
+#  version: v1.2.3
+#  environment: production
 
-# -- see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
-podSecurityContext:
+# -- Pod-level security context
+# -- Applied to all containers in the pod
+# -- See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+podSecurityContext: {}
 #  runAsNonRoot: true
+#  fsGroup: 10001  # Files created in volumes will be owned by this GID
+#  seccompProfile:
+#    type: RuntimeDefault
 
-# -- see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
-containerSecurityContext:
-#  runAsUser: 10001 # CAUTION: any value you set must be in the image
+# -- Container-level security context
+# -- Applied to the main application container
+# -- See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+# -- Production recommendation: Set all commented values below
+containerSecurityContext: {}
+#  runAsUser: 10001  # Must exist in your container image
+#  runAsNonRoot: true
 #  allowPrivilegeEscalation: false
-#  runAsNonRoot: true
+#  readOnlyRootFilesystem: true  # Requires writable volumes for /tmp, /var/log, etc.
 #  seccompProfile:
 #    type: RuntimeDefault
 #  capabilities:
 #    drop:
-#      - ALL
+#      - ALL  # Drop all capabilities by default
 #    add:
-#      - NET_BIND_SERVICE
+#      - NET_BIND_SERVICE  # Only add specific capabilities if needed
 
-# -- just the port number. the recommended value is 8080 if you control the image.
+# -- HTTP container port number
+# -- Recommended: 8080 for non-root users (ports <1024 require NET_BIND_SERVICE)
+# -- Default: 80 for compatibility with nginx base image
 httpContainerPort: 80
-# -- just the port number. the recommended value is 8443 if you control the image.
-# this is only used if `service.enableHttps` is true
+
+# -- HTTPS container port number
+# -- Only used when service.enableHttps=true
+# -- Recommended: 8443 for non-root users
 httpsContainerPort: 443
 
-# -- to expose more than one port, add entries here. follows pod port syntax
-# -- if `service.enableHttps` is true, then a port named https will be added to the main container
+# -- Additional container ports to expose
+# -- Useful for metrics endpoints, admin ports, or gRPC
+# -- Follows Kubernetes container port syntax
 additionalContainerPorts: []
-#  - name: https
-#    containerPort: 8443
+#  - name: metrics
+#    containerPort: 9090
+#    protocol: TCP
+#  - name: grpc
+#    containerPort: 50051
 #    protocol: TCP
 
 service:
+  # -- Service type (ClusterIP, NodePort, LoadBalancer)
+  # -- ClusterIP: Internal cluster access only (most common)
+  # -- LoadBalancer: External load balancer (cloud provider)
+  # -- NodePort: Expose on each node's IP at a static port
   type: ClusterIP
+  # -- HTTP service port (external port that clients connect to)
   port: 80
-  # -- if true, this will add a port on the service named `https`
-  # -- the port will target a container port with the same name
+  # -- Enable HTTPS port on the service
+  # -- Requires httpsContainerPort to be set
+  # -- Adds a port named "https" targeting the container's https port
   enableHttps: false
+  # -- HTTPS service port (when enableHttps=true)
   httpsPort: 443
+  # -- Service annotations for cloud provider integrations
+  # Example for AWS NLB:
+  #   service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+  #   service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+  # Example for GCP Internal Load Balancer:
+  #   cloud.google.com/load-balancer-type: "Internal"
+  # Example for Azure Internal LB:
+  #   service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+  annotations: {}
 
+# -- Additional service ports beyond http/https
+# -- Useful for exposing metrics, gRPC, or custom protocols
 additionalServicePorts: []
+#  - name: metrics
+#    port: 9090
+#    targetPort: metrics
+#    protocol: TCP
 
 ingress:
+  # -- Enable Ingress resource creation
+  # -- Exposes HTTP/HTTPS routes from outside the cluster to services
   enabled: false
+  # -- Ingress class name (e.g., "nginx", "traefik", "alb")
+  # -- Kubernetes 1.18+ uses ingressClassName instead of annotation
   className: ""
+  # -- Ingress annotations for controller-specific configuration
+  # -- Examples:
+  #    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # Automatic TLS with cert-manager
+  #    nginx.ingress.kubernetes.io/limit-rps: "10"         # Rate limiting
+  #    nginx.ingress.kubernetes.io/rewrite-target: /       # Path rewriting
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
+  # -- Ingress host configuration
+  # -- Each host can have multiple paths routing to this service
   hosts:
     - host: chart-example.local
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: ImplementationSpecific  # Prefix, Exact, or ImplementationSpecific
+  # -- TLS configuration for HTTPS
+  # -- Requires TLS secret with certificate and private key
+  # -- Secret can be created manually or via cert-manager
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -104,68 +203,276 @@ ingress:
 
 # -- resources for the primary container
 # -- see https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+#
+# Strategy Recommendations:
+# 1. Development: Set requests only (allows VPA to tune limits)
+# 2. Production (no VPA): Set both requests and limits based on profiling
+# 3. Production (with VPA): Set requests only, let VPA manage limits
+#
+# QoS Classes:
+# - Guaranteed: requests == limits (predictable, highest priority)
+# - Burstable: requests < limits (flexible, medium priority)
+# - BestEffort: no requests/limits (lowest priority, avoid in production)
+#
+# Sizing Guidelines:
+# - Requests: Based on P95 actual usage from profiling
+# - Limits: 1.5-2x requests for burst capacity
+# - Memory: Set limit to prevent runaway growth causing node pressure
+# - CPU: Consider omitting limit (avoid throttling) unless strict isolation needed
+#
+# Example sizing by workload:
+# - Small app (1-10 req/sec): cpu: 100m, memory: 128Mi
+# - Medium app (10-100 req/sec): cpu: 500m, memory: 512Mi
+# - Large app (100+ req/sec): cpu: 1000m, memory: 1Gi
 resources:
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
   requests:
     cpu: 100m
     memory: 128Mi
+  # Limits intentionally omitted to allow burst and VPA recommendations
+  # Set explicitly if:
+  # - VPA not available
+  # - Strict resource isolation required
+  # - Application has known maximum resource consumption
+  # limits:
+  #   cpu: 500m
+  #   memory: 512Mi
 
-# -- the HPA config
-# -- see https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+# -- Horizontal Pod Autoscaler configuration
+# -- Automatically scales pod count based on CPU/memory utilization
+# -- See https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+# -- Requires metrics-server to be installed in the cluster
 autoscaling:
+  # -- Enable HPA (disables fixed replicaCount)
   enabled: no
+  # -- Minimum number of replicas (recommended: 2+ for HA)
   minReplicas: 2
+  # -- Maximum number of replicas (set based on expected peak load)
   maxReplicas: 4
+  # -- Target CPU utilization percentage (scale up when exceeded)
+  # -- Example: 80 means scale up when average CPU > 80%
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  # -- Target memory utilization percentage (optional)
+  # -- Uncomment to enable memory-based scaling in addition to CPU
+  # -- Requires memory requests to be set
+  targetMemoryUtilizationPercentage: null
+  #  targetMemoryUtilizationPercentage: 80
+  # -- HPA scaling behavior (v2 API)
+  # -- Controls the rate of scaling up and down
+  # -- See https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#scaling-policies
+  behavior: {}
+  #  scaleUp:
+  #    stabilizationWindowSeconds: 0  # Scale up immediately
+  #    policies:
+  #      - type: Percent
+  #        value: 100  # Double pod count
+  #        periodSeconds: 60
+  #      - type: Pods
+  #        value: 4  # Or add max 4 pods
+  #        periodSeconds: 60
+  #    selectPolicy: Max  # Use the policy that scales up the most
+  #  scaleDown:
+  #    stabilizationWindowSeconds: 300  # Wait 5 minutes before scaling down
+  #    policies:
+  #      - type: Percent
+  #        value: 50  # Remove max 50% of pods
+  #        periodSeconds: 60
+  #      - type: Pods
+  #        value: 2  # Or remove max 2 pods
+  #        periodSeconds: 60
+  #    selectPolicy: Min  # Use the policy that scales down the least
 
-# -- see https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+# -- Node selector for pod assignment
+# -- Constrains pods to run only on nodes with specific labels
+# -- See https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+# -- Examples:
+#    disktype: ssd  # Only schedule on nodes with SSD storage
+#    nodepool: application-pool  # AWS Karpenter/GKE node pool selection
 nodeSelector: {}
 
-# -- see https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+# -- Tolerations for pod assignment
+# -- Allows pods to schedule on nodes with matching taints
+# -- See https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+# -- Example: Tolerate nodes with specific workload taint
+#  - key: "workload"
+#    operator: "Equal"
+#    value: "application"
+#    effect: "NoSchedule"
 tolerations: []
 
-# see https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+# -- Affinity and anti-affinity rules
+# -- Controls pod placement relative to other pods or nodes
+# -- See https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+# -- Example: Prefer spreading pods across different zones
+#  podAntiAffinity:
+#    preferredDuringSchedulingIgnoredDuringExecution:
+#      - weight: 100
+#        podAffinityTerm:
+#          labelSelector:
+#            matchExpressions:
+#              - key: app.kubernetes.io/name
+#                operator: In
+#                values:
+#                  - webapp
+#          topologyKey: topology.kubernetes.io/zone
 affinity: {}
 
 health:
+  # -- Startup probe (runs before liveness/readiness probes)
+  # -- Useful for slow-starting applications to prevent premature restarts
+  # -- If not set, no startup probe is configured
+  startupProbe: {}
+  #  httpGet:
+  #    path: /healthz/startup
+  #    port: http
+  #  initialDelaySeconds: 0
+  #  periodSeconds: 10
+  #  timeoutSeconds: 5
+  #  failureThreshold: 30
+  #  successThreshold: 1
   livenessProbe:
     httpGet:
       path: /healthz/live
       port: http
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
   readinessProbe:
     httpGet:
       path: /healthz/ready
       port: http
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+    successThreshold: 1
+
+# -- Lifecycle hooks and termination configuration
+lifecycle:
+  # -- Pod termination grace period (seconds)
+  # Time for graceful shutdown before SIGKILL
+  terminationGracePeriodSeconds: 30
+  # -- preStop hook configuration
+  preStop:
+    # -- Enable preStop hook for graceful shutdown
+    enabled: true
+    # -- Seconds to sleep in preStop hook (allows load balancer to deregister)
+    sleepSeconds: 5
 
 metrics:
+  # -- Enable metrics endpoint
+  enabled: true
+  # -- Metrics endpoint path
   path: /metricsz
+  # -- Metrics endpoint port name
   port: http
+  # -- ServiceMonitor configuration for Prometheus Operator
+  serviceMonitor:
+    # -- Enable ServiceMonitor creation
+    enabled: false
+    # -- ServiceMonitor namespace (defaults to release namespace)
+    namespace: ""
+    # -- Additional labels for ServiceMonitor
+    # -- Must match Prometheus serviceMonitorSelector
+    labels: {}
+    #   release: prometheus
+    # -- Scrape interval
+    interval: 30s
+    # -- Scrape timeout
+    scrapeTimeout: 10s
+    # -- Namespace selector for ServiceMonitor
+    namespaceSelector: {}
+    # -- Relabeling rules applied before scraping
+    # -- Modifies target labels before scrape (e.g., add environment label)
+    # -- See https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
+    relabelings: []
+    #  - sourceLabels: [__meta_kubernetes_pod_node_name]
+    #    targetLabel: node
+    #  - sourceLabels: [__meta_kubernetes_namespace]
+    #    targetLabel: namespace
+    #  - targetLabel: environment
+    #    replacement: production
+    # -- Metric relabeling rules applied after scraping
+    # -- Modifies metric labels and can drop metrics
+    # -- See https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
+    metricRelabelings: []
+    #  - sourceLabels: [__name__]
+    #    regex: 'go_.*'
+    #    action: drop  # Drop all Go runtime metrics
+    #  - sourceLabels: [http_status_code]
+    #    regex: '^2.*'
+    #    action: drop  # Drop all 2xx status code metrics
+    #  - sourceLabels: [endpoint]
+    #    targetLabel: api_endpoint
+    #    replacement: ${1}  # Rename label
 
-appsettings: {}
+# -- ConfigMaps managed by this chart
+# -- Each ConfigMap will be created with a checksum annotation on the deployment
+# -- triggering automatic rollouts when content changes
+# -- The ConfigMap name will be prefixed with the release fullname
+configMaps: []
+#  - name: app-config
+#    data:
+#      config.json: |
+#        {
+#          "database": "postgres",
+#          "feature": true
+#        }
+#  - name: feature-flags
+#    data:
+#      flags.yaml: |
+#        newFeature: true
+#        betaMode: false
 
-# -- allows you to add additional containers
-# -- this follows the pod spec on containers. see https://kubernetes.io/docs/concepts/workloads/pods/
+# -- Version identifier for external ConfigMaps (not managed by this chart)
+# -- Increment this value when you update external ConfigMaps to trigger pod rollout
+# -- Only needed if you manage ConfigMaps outside of Helm
+configVersion: ""
+#  configVersion: "v2"  # Bump this when external ConfigMaps change
+
+# -- Additional sidecar containers
+# -- Useful for proxies, log collectors, or monitoring agents
+# -- Follows Kubernetes container specification
+# -- See https://kubernetes.io/docs/concepts/workloads/pods/
+# -- Common patterns:
+#    - OAuth2 Proxy for authentication
+#    - Fluent Bit for log shipping
+#    - Cloud SQL Proxy for database connections
+#    - Envoy proxy for service mesh
 additionalContainers: []
-#  - name: "second-container"
-#    securityContext: {}
-#    image: ""
+#  - name: "oauth2-proxy"
+#    image: "quay.io/oauth2-proxy/oauth2-proxy:v7.4.0"
 #    imagePullPolicy: IfNotPresent
 #    ports:
-#      - name: http
-#        containerPort: 80
+#      - name: proxy
+#        containerPort: 4180
 #        protocol: TCP
 #    resources:
-#      # limits:
-#      #   cpu: 100m
-#      #   memory: 128Mi
 #      requests:
 #        cpu: 100m
 #        memory: 128Mi
 
-# -- see https://kubernetes.io/docs/concepts/storage/volumes/
+# -- Init containers to run before the main application container
+# -- See https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+# -- Common use cases: database migrations, configuration setup, dependency checks
+initContainers: []
+#  - name: init-config
+#    image: busybox:1.35
+#    command: ['sh', '-c', 'echo "Initializing..." && sleep 5']
+#    resources:
+#      requests:
+#        cpu: 50m
+#        memory: 64Mi
+
+# -- Pod volumes
+# -- Define volume sources that can be mounted into containers
+# -- See https://kubernetes.io/docs/concepts/storage/volumes/
+# -- Common volume types:
+#    - configMap: Mount config files from ConfigMap
+#    - secret: Mount sensitive data from Secret
+#    - emptyDir: Temporary storage (cleared on pod restart)
+#    - persistentVolumeClaim: Persistent storage
 volumes: []
 #  - name: config-vol
 #    configMap:
@@ -173,58 +480,115 @@ volumes: []
 #  - name: secret-vol
 #    secret:
 #      secretName: my-secret
+#  - name: temp-storage
+#    emptyDir: {}
+#  - name: data-vol
+#    persistentVolumeClaim:
+#      claimName: my-pvc
 
-# -- see https://kubernetes.io/docs/concepts/storage/volumes/
+# -- Volume mounts for the main container
+# -- Mounts volumes defined above into the container filesystem
+# -- See https://kubernetes.io/docs/concepts/storage/volumes/
+# -- Tips:
+#    - Use subPath to mount single files instead of entire volumes
+#    - Set readOnly: true for config/secret mounts (security best practice)
+#    - Ensure mountPath doesn't conflict with application directories
 volumeMounts: []
-#  - name: my-config
-#    mountPath: /app/appsettings.production.json
-#    subPath: appsettings.production.json
+#  - name: config-vol
+#    mountPath: /app/config/appsettings.json
+#    subPath: appsettings.json
 #    readOnly: true
-#  - name: my-secret
-#    mountPath: /app/appsettings.secret.json
-#    subPath: appsettings.secret.json
+#  - name: secret-vol
+#    mountPath: /app/secrets
 #    readOnly: true
+#  - name: temp-storage
+#    mountPath: /tmp
 
+# -- Environment variables for the main container
+# -- Use for non-sensitive configuration
+# -- For secrets, use Vault or Kubernetes Secrets via containerEnvFrom
+# -- Common patterns:
+#    - ASPNETCORE_ENVIRONMENT: "Production"
+#    - LOG_LEVEL: "Info"
+#    - Feature flags and toggles
 containerEnvironmentVariables: []
 #  - name: ASPNETCORE_URLS
 #    value: "http://*:8080"
-#  - name: COMPlus_EnableDiagnostics
-#    value: "0"
+#  - name: ASPNETCORE_ENVIRONMENT
+#    value: "Production"
+#  - name: LOG_LEVEL
+#    value: "Information"
+
+# -- Load all environment variables from ConfigMaps or Secrets
+# -- Useful for bulk environment variable injection
+# -- Alternative to listing each variable individually
+# -- Example: Load all variables from a ConfigMap or Secret
 containerEnvFrom: []
-  # - configMapRef:
-      # name: my-config
-  # - secretRef:
-      # name: my-secret
+#  - configMapRef:
+#      name: my-config  # All keys become environment variables
+#  - secretRef:
+#      name: my-secret  # All keys become environment variables
 
 
 migrationJob:
+  # -- Enable database migration job
+  # -- Creates a Kubernetes Job to run database migrations before app deployment
   enabled: false
-#  enabled: true
-  # -- if waitForItInInitContainer is true,
-  # -- then an init container is added to the pods in the deployment to wait for the job to complete
-  # -- if false, then a Helm pre-install/pre-upgrade hook is used
-  # -- use true if your migrations take a long time, causing the helm hook to fail
+
+  # -- Migration execution strategy
+  # -- false (default): Helm pre-install/pre-upgrade hook (blocks helm operation)
+  # -- true: Init container waits for job completion (pods wait, helm doesn't)
+  # -- Use true for long-running migrations (>5 minutes) to avoid Helm timeouts
   waitForItInInitContainer: false
+
+  # -- Init container image for waiting on migration job completion
+  # -- Only used when waitForItInInitContainer=true
+  # -- Production recommendation: Mirror this image to your private registry
+  initContainerImage:
+    repository: groundnuty/k8s-wait-for
+    tag: v2.0
+    pullPolicy: IfNotPresent
+
   image:
+    # -- Migration job container image repository
+    # -- Should contain your database migration tooling (e.g., dotnet ef, flyway, liquibase)
     repository: ""
     pullPolicy: IfNotPresent
-    # -- this value is independent of the version of the image used in the deployment of the core app
+    # -- Migration job image tag
+    # -- Can be different from main application image tag
+    # -- Allows independent versioning of migrations
     tag: ""
+
+  # -- Job annotations
+  # -- Example: Set TTL for automatic cleanup
+  #    ttlSecondsAfterFinished: "86400"  # Delete job after 24 hours
   annotations: {}
+
+  # -- Environment variables for migration job
+  # -- Typically includes database connection strings
+  # -- Use Vault syntax for secrets: vault:/secret/data/path#key
   environmentVariables: []
 #    - name: ConnectionStrings__DefaultConnection
 #      value: vault:/secret/data/postgresql#connectionString
-  containerEnvFrom: []
-  # - configMapRef:
-      # name: my-config
-  # - secretRef:
-      # name: my-secret
+#    - name: MIGRATION_TIMEOUT
+#      value: "300"
 
+  # -- Load environment variables from ConfigMaps or Secrets
+  containerEnvFrom: []
+#  - configMapRef:
+#      name: migration-config
+#  - secretRef:
+#      name: database-credentials
+
+  # -- Override default migration command
+  # -- If null, uses container's default command/entrypoint
+  # -- Example for EF Core: ["dotnet", "ef", "database", "update"]
   command: null
 #  command:
-#    - sh
-#    - -c
-#    - something
+#    - dotnet
+#    - ef
+#    - database
+#    - update
 
   volumes: []
 #    - name: config-vol
@@ -240,6 +604,13 @@ migrationJob:
 #      subPath: appsettings.production.json
 #      readOnly: true
 #    - name: my-secret
+
+  # -- Resource requests for migration job container
+  # Limits intentionally omitted to allow VPA recommendations
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
 #      mountPath: /app/appsettings.secret.json
 #      subPath: appsettings.secret.json
 #      readOnly: true
@@ -251,9 +622,12 @@ podDisruptionBudget:
   # -- If true, a PodDisruptionBudget will not be created.
   disabled: false
   # -- The minimum number of pods that must be available after an eviction.
-  minAvailable: 0
+  # If not set, defaults to calculated value based on replica count
+  # Set explicitly to override (e.g., minAvailable: 2)
+  minAvailable: null
   # -- The maximum number of pods that can be unavailable after an eviction.
-  maxUnavailable: 1
+  # If both minAvailable and maxUnavailable are null, maxUnavailable defaults to 1
+  maxUnavailable: null
   # -- The policy for evicting unhealthy pods.
   unhealthyPodEvictionPolicy: IfHealthyBudget
 
@@ -278,5 +652,46 @@ innagoVaultK8sRoleOperator:
   # -- an array of additional policy names.
   # you would use this if dynamic secrets for a database, messaging system, etc. are in use.
   additionalPolicies: []
+
+# -- Network policy configuration
+networkPolicy:
+  # -- Enable NetworkPolicy creation
+  enabled: false
+  # -- Ingress rules configuration
+  ingress:
+    # -- Allow external client connections (beyond pod-to-pod)
+    # Requires at least one of namespaceSelector or podSelector to be set
+    allowExternal: false
+    # -- Namespace selector for allowed clients
+    # Example: namespaceSelector: { matchLabels: { name: "app-namespace" } }
+    namespaceSelector: {}
+    # -- Pod selector for allowed clients
+    # Example: podSelector: { matchLabels: { app: "my-app" } }
+    podSelector: {}
+    # -- Namespace selector for Prometheus
+    # Example: prometheusNamespaceSelector: { matchLabels: { name: "monitoring" } }
+    prometheusNamespaceSelector: {}
+    # -- Custom ingress rules (advanced)
+    customRules: []
+  # -- Egress rules configuration
+  egress:
+    # -- Enable egress rules (restricts outbound traffic)
+    enabled: false
+    # -- DNS egress configuration
+    dns:
+      # -- Custom DNS egress selectors (overrides defaults)
+      # If unset, defaults to kube-system namespace with kube-dns labels
+      # For CoreDNS or different configurations, customize these selectors
+      # Example for custom CoreDNS:
+      # to:
+      #   - namespaceSelector:
+      #       matchLabels:
+      #         kubernetes.io/metadata.name: kube-system
+      #   - podSelector:
+      #       matchLabels:
+      #         k8s-app: coredns
+      to: []
+    # -- Custom egress rules (advanced)
+    customRules: []
 
 

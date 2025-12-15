@@ -1,3 +1,79 @@
+Thank you for installing {{ .Chart.Name }}!
+
+Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }} -n {{ .Release.Namespace }}
+  $ helm get all {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+{{- if .Values.autoscaling.enabled }}
+
+** Autoscaling Enabled **
+HPA configured with {{ .Values.autoscaling.minReplicas }}-{{ .Values.autoscaling.maxReplicas }} replicas
+Target CPU: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}%
+{{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
+Target Memory: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}%
+{{- end }}
+
+Monitor scaling:
+  kubectl get hpa {{ include "WebApp.fullname" . | lower }} -n {{ .Release.Namespace }} --watch
+{{- end }}
+
+{{- if .Values.migrationJob.enabled }}
+
+** Database Migration Job **
+{{- if .Values.migrationJob.waitForItInInitContainer }}
+Migration runs as init container (blocks pod startup)
+{{- else }}
+Migration runs as pre-install/pre-upgrade hook
+{{- end }}
+
+Check migration status:
+  kubectl get jobs -l app.kubernetes.io/name={{ include "WebApp.fullname" . | lower }}-migrations -n {{ .Release.Namespace }}
+  kubectl logs -l app.kubernetes.io/name={{ include "WebApp.fullname" . | lower }}-migrations -n {{ .Release.Namespace }} --tail=50
+{{- end }}
+
+{{- if and .Values.metrics.enabled .Values.metrics.serviceMonitor.enabled }}
+
+** Monitoring Enabled **
+ServiceMonitor created for Prometheus Operator
+Metrics endpoint: {{ .Values.metrics.path }} on port {{ .Values.metrics.port }}
+
+Verify ServiceMonitor:
+  kubectl get servicemonitor {{ include "WebApp.fullname" . | lower }} -n {{ .Release.Namespace }}
+{{- end }}
+
+{{- if .Values.networkPolicy.enabled }}
+
+** NetworkPolicy Enabled **
+Network access restricted to configured selectors
+{{- if .Values.networkPolicy.egress.enabled }}
+Egress rules are enforced - only allowed destinations are reachable
+{{- end }}
+
+View policy:
+  kubectl get networkpolicy {{ include "WebApp.fullname" . | lower }} -n {{ .Release.Namespace }} -o yaml
+{{- end }}
+
+{{- if not .Values.podDisruptionBudget.disabled }}
+
+** PodDisruptionBudget Active **
+Configured to maintain availability during voluntary disruptions
+{{- if .Values.podDisruptionBudget.minAvailable }}
+Minimum available: {{ .Values.podDisruptionBudget.minAvailable }}
+{{- else if .Values.podDisruptionBudget.maxUnavailable }}
+Maximum unavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
+{{- end }}
+
+View PDB:
+  kubectl get pdb {{ include "WebApp.fullname" . | lower }}-pdb -n {{ .Release.Namespace }}
+{{- end }}
+
+Verify deployment health:
+  kubectl get pods -l app.kubernetes.io/name={{ include "WebApp.name" . | lower }} -n {{ .Release.Namespace }}
+  kubectl logs -l app.kubernetes.io/name={{ include "WebApp.name" . | lower }} -n {{ .Release.Namespace }} --tail=50 -f
+
 1. Get the application URL by running these commands:
 {{- if .Values.ingress.enabled }}
 {{- range $host := .Values.ingress.hosts }}
@@ -6,16 +82,16 @@
   {{- end }}
 {{- end }}
 {{- else if contains "NodePort" .Values.service.type }}
-  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "WebApp.fullname" . }})
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "WebApp.fullname" . | lower }})
   export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
   echo http://$NODE_IP:$NODE_PORT
 {{- else if contains "LoadBalancer" .Values.service.type }}
      NOTE: It may take a few minutes for the LoadBalancer IP to be available.
-           You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "WebApp.fullname" . }}'
-  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "WebApp.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+           You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "WebApp.fullname" . | lower }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "WebApp.fullname" . | lower }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
   echo http://$SERVICE_IP:{{ .Values.service.port }}
 {{- else if contains "ClusterIP" .Values.service.type }}
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "WebApp.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "WebApp.name" . | lower }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
   export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
