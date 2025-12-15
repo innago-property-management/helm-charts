@@ -69,6 +69,19 @@ entries:
     urls:
     - https://github.com/innago-property-management/helm-charts/releases/download/registry-container-webhook-1.0.0/registry-container-webhook-1.0.0.tgz
     version: 1.0.0
+  valkey-cluster:
+  - apiVersion: v2
+    appVersion: 8.0.1
+    created: "2025-12-15T14:05:02.886826834Z"
+    description: A Helm chart for deploying Valkey in cluster or standalone mode with
+      persistence, monitoring, and automated cluster initialization
+    digest: 6c9d1db3c3ecf37cd83c5e35796215d86d94b1d0cbd19166a6f9c55f7673fd60
+    icon: https://cncf-branding.netlify.app/img/projects/helm/icon/color/helm-icon-color.png
+    name: valkey-cluster
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/valkey-cluster-1.0.0/valkey-cluster-1.0.0.tgz
+    version: 1.0.0
   webapp:
   - apiVersion: v2
     appVersion: 2.4.2
@@ -202,4 +215,4 @@ entries:
     urls:
     - https://github.com/innago-property-management/helm-charts/releases/download/webapp-1.0.0/webapp-1.0.0.tgz
     version: 1.0.0
-generated: "2025-09-18T20:56:54.386702283Z"
+generated: "2025-12-15T14:05:03.104822587Z"
