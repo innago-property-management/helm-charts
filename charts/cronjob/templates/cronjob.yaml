@@ -1,14 +1,46 @@
+{{- /* Fail-fast validation */ -}}
+{{- if not .Values.schedule }}
+{{- fail "schedule is required and must be set to a valid cron expression" }}
+{{- end }}
+
+{{- if not .Values.command }}
+{{- fail "command is required for CronJob" }}
+{{- end }}
+
+{{- if and (eq .Values.image.tag "latest") (ne .Release.Namespace "default") }}
+{{- fail "image.tag 'latest' is not allowed in production. Use explicit version tags." }}
+{{- end }}
+
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ include "CronJob.fullname" . | lower }}
 spec:
   schedule: {{ .Values.schedule | replace "'" "" | replace "\"" "" | quote}}
+  {{- if .Values.cronjob.concurrencyPolicy }}
+  concurrencyPolicy: {{ .Values.cronjob.concurrencyPolicy }}
+  {{- end }}
+  {{- if .Values.cronjob.successfulJobsHistoryLimit }}
+  successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
+  {{- end }}
+  {{- if .Values.cronjob.failedJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
+  {{- end }}
+  {{- if .Values.cronjob.startingDeadlineSeconds }}
+  startingDeadlineSeconds: {{ .Values.cronjob.startingDeadlineSeconds }}
+  {{- end }}
+  suspend: {{ .Values.cronjob.suspend | default false }}
   jobTemplate:
     metadata:
       labels:
         {{- include "CronJob.labels" . | nindent 8 }}
     spec:
+      {{- if .Values.job.backoffLimit }}
+      backoffLimit: {{ .Values.job.backoffLimit }}
+      {{- end }}
+      {{- if .Values.job.activeDeadlineSeconds }}
+      activeDeadlineSeconds: {{ .Values.job.activeDeadlineSeconds }}
+      {{- end }}
       ttlSecondsAfterFinished: {{ .Values.ttlSecondsAfterFinished | default 3600 }}
       template:
         metadata:
@@ -24,6 +56,14 @@ spec:
             {{- toYaml . | nindent 16 }}
           {{- end }}
           serviceAccountName: {{ include "CronJob.serviceAccountName" . | lower }}
+          {{- with .Values.podSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.initContainers }}
+          initContainers:
+            {{- toYaml .Values.initContainers | nindent 12 }}
+          {{- end }}
           containers:
             - name: {{ include "CronJob.fullname" . }}
               env:
@@ -54,14 +94,33 @@ spec:
               envFrom:
                 {{- toYaml . | nindent 14 }}
               {{- end }}
-              image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-              imagePullPolicy: {{ .Values.image.pullPolicy }}                  
+              {{- with .Values.containerSecurityContext }}
+              securityContext:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
               {{- with .Values.resources }}
-              resources:                
+              resources:
                 {{- toYaml . | nindent 16 }}
               {{- end }}
               {{- with .Values.command }}
               command:
                 {{- toYaml . | nindent 14 }}
               {{- end }}
+              {{- with .Values.args }}
+              args:
+                {{- toYaml . | nindent 14 }}
+              {{- end }}
+              {{- with .Values.volumeMounts }}
+              volumeMounts:
+                {{- toYaml . | nindent 14 }}
+              {{- end }}
+            {{- if .Values.additionalContainers }}
+            {{- toYaml .Values.additionalContainers | nindent 12 }}
+            {{- end }}
+          {{- with .Values.volumes }}
+          volumes:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           restartPolicy: OnFailure
