@@ -13,15 +13,24 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ max 2 .Values.replicaCount }}
   {{- end }}
+  strategy:
+    type: {{ .Values.strategy.type }}
+    {{- if eq .Values.strategy.type "RollingUpdate" }}
+    rollingUpdate:
+      maxSurge: {{ .Values.strategy.rollingUpdate.maxSurge }}
+      maxUnavailable: {{ .Values.strategy.rollingUpdate.maxUnavailable }}
+    {{- end }}
   selector:
     matchLabels:
       {{- include "WebApp.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+        checksum/configmaps: {{ toJson .Values.configMaps | sha256sum }}
+        checksum/config-version: {{ .Values.configVersion | sha256sum }}
+        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
       labels:
         {{- include "WebApp.selectorLabels" . | nindent 8 }}
         {{- if .Values.podLabels }}
@@ -33,6 +42,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "WebApp.serviceAccountName" . | lower }}
+      {{- if .Values.lifecycle.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.lifecycle.terminationGracePeriodSeconds }}
+      {{- end }}
       {{- if .Values.podSecurityContext }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -100,6 +112,18 @@ spec:
             {{- if .Values.additionalContainerPorts }}
               {{- toYaml .Values.additionalContainerPorts | nindent 12 }}
             {{- end }}
+          {{- if .Values.lifecycle.preStop.enabled }}
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - sleep {{ .Values.lifecycle.preStop.sleepSeconds }}
+          {{- end }}
+          {{- if .Values.health.startupProbe }}
+          startupProbe: {{- toYaml .Values.health.startupProbe | nindent 14 }}
+          {{- end }}
           livenessProbe: {{- toYaml .Values.health.livenessProbe | nindent 14 }}
           readinessProbe: {{- toYaml .Values.health.readinessProbe | nindent 14 }}
           resources:
@@ -111,14 +135,19 @@ spec:
         {{- if .Values.additionalContainers }}
           {{- toYaml .Values.additionalContainers | nindent 8 }}
         {{- end }}
-      {{- if  and .Values.migrationJob.enabled .Values.migrationJob.waitForItInInitContainer }}
+      {{- if or .Values.initContainers (and .Values.migrationJob.enabled .Values.migrationJob.waitForItInInitContainer) }}
       initContainers:
+        {{- if .Values.initContainers }}
+          {{- toYaml .Values.initContainers | nindent 8 }}
+        {{- end }}
+        {{- if and .Values.migrationJob.enabled .Values.migrationJob.waitForItInInitContainer }}
         - name: k8s-wait-for
-          image: "groundnuty/k8s-wait-for:v2.0"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.migrationJob.initContainerImage.repository }}:{{ .Values.migrationJob.initContainerImage.tag }}"
+          imagePullPolicy: {{ .Values.migrationJob.initContainerImage.pullPolicy }}
           args:
             - "job"
             - {{ include "WebApp.migrationJobName" . }}
+        {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
