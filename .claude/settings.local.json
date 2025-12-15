@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(~/repos)",
+      "Read(/Volumes/Repos)",
+      "Bash(cd:*)",
+      "Rad(~/.claude.json)",
+      "Read(~/.claude/)",
+      "Bash(git -C /Volumes/Repos/argocd-shared log --oneline --all --grep=\"valkey\\|Valkey\" -i)",
+      "Bash(git -C /Volumes/Repos/argocd-shared log --oneline --all --grep=\"valkey-cluster\" -i)",
+      "Bash(git -C /Volumes/Repos/argocd-shared log --oneline -20)",
+      "Bash(git -C /Volumes/Repos/argocd-shared show:*)",
+      "Bash(git -C /Volumes/Repos/argocd-shared log --oneline --all --grep=\"valkey\" --since=\"2025-12-01\" -i)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(tree:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(helm-docs:*)",
+      "Bash(helm lint:*)",
+      "Bash(helm template:*)",
+      "Bash(helm version:*)",
+      "Bash(kubectl version:*)",
+      "Bash(git -C /Volumes/Repos/helm-charts log --oneline --all --grep=\"valkey\\|Valkey\" -i)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd Valkey cluster Helm chart with production-ready features\n\nIntroduces a comprehensive Helm chart for deploying Valkey in cluster or \nstandalone mode with full production support.\n\nKey Features:\n- Cluster mode: 6-node setup (3 masters + 3 replicas) with automated initialization\n- Standalone mode: HA pair with configurable replication\n- PodDisruptionBudget enabled by default (minAvailable: 4)\n- Topology spread constraints for multi-AZ distribution\n- Graceful shutdown with preStop hook (BGSAVE before termination)\n- NetworkPolicy template for network security (opt-in)\n- ServiceMonitor for Prometheus metrics integration\n- Configurable cluster settings (requireFullCoverage, nodeTimeout, etc.)\n- Password auto-generation (opt-in) or external secret support\n- Comprehensive documentation (PRODUCTION.md, IMPROVEMENTS.md)\n\nArchitecture:\n- StatefulSet with headless service for stable pod identity\n- Persistent storage (RDB + AOF) with configurable storage class\n- Redis exporter sidecar for metrics (port 9121)\n- Security contexts (non-root, dropped capabilities)\n- ArgoCD and Helm hook support for cluster initialization\n\nConfiguration:\n- 35+ configurable options in values.yaml\n- Example overrides for cluster and standalone modes\n- All Valkey cluster parameters exposed (node timeout, replica validity, etc.)\n- Memory management with configurable maxmemory limits\n\nDocumentation:\n- Auto-generated README.md via helm-docs\n- PRODUCTION.md: Complete production deployment guide\n- IMPROVEMENTS.md: 16 improvements with detailed change log\n- REVIEW-RESPONSE.md: Code review resolution documentation\n\nChart based on Valkey 8.0.1 deployment patterns from argocd-shared repo.\nAll review feedback addressed including minor suggestions (password auto-gen,\ngraceful shutdown, TLS documentation, NetworkPolicy recommendations).\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git fetch:*)",
+      "Bash(git merge:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}
