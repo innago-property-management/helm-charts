@@ -1,4 +1,7 @@
 {{- if .Values.migrationJob.enabled -}}
+{{- if not .Values.migrationJob.image.repository }}
+{{- fail "migrationJob.enabled requires migrationJob.image.repository to be set" }}
+{{- end }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -49,6 +52,10 @@ spec:
           {{- end }}
           {{- with .Values.migrationJob.volumeMounts }}
           volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.migrationJob.resources }}
+          resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- if .Values.migrationJob.command }}

@@ -10,7 +10,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ include "WebApp.fullname" . | lower }}
-  minReplicas: {{ max 2 .Values.autoscaling.minReplicas }} 
+  minReplicas: {{ max 2 .Values.autoscaling.minReplicas }}
   maxReplicas: {{ max 2 .Values.autoscaling.minReplicas .Values.autoscaling.maxReplicas }}
   metrics:
     - type: Resource
@@ -19,4 +19,16 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+  {{- if .Values.autoscaling.behavior }}
+  behavior:
+    {{- toYaml .Values.autoscaling.behavior | nindent 4 }}
+  {{- end }}
 {{- end }}

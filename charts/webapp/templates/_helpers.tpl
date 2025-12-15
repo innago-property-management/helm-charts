@@ -31,14 +31,34 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
+Version label for main application
+*/}}
+{{- define "WebApp.versionLabel" -}}
+{{- if .Values.image.tag -}}
+app.kubernetes.io/version: {{ .Values.image.tag | quote }}
+{{- else if .Chart.AppVersion -}}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Version label for migrations
+*/}}
+{{- define "WebAppMigrations.versionLabel" -}}
+{{- if .Values.migrationJob.image.tag -}}
+app.kubernetes.io/version: {{ .Values.migrationJob.image.tag | quote }}
+{{- else if .Chart.AppVersion -}}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Common labels
 */}}
 {{- define "WebApp.labels" -}}
 helm.sh/chart: {{ include "WebApp.chart" . }}
 {{ include "WebApp.selectorLabels" . }}
-{{- if .Values.image.tag }}
-app.kubernetes.io/version: {{ .Values.image.tag | quote }}
-{{- end }}
+{{ include "WebApp.versionLabel" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
@@ -48,9 +68,7 @@ Common labels
 {{- define "WebAppMigrations.labels" -}}
 helm.sh/chart: {{ include "WebApp.chart" . }}
 {{ include "WebAppMigrations.selectorLabels" . }}
-{{- if .Values.migrationJob.image.tag }}
-app.kubernetes.io/version: {{ .Values.migrationJob.image.tag | quote }}
-{{- end }}
+{{ include "WebAppMigrations.versionLabel" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
