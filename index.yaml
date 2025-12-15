@@ -72,6 +72,18 @@ entries:
   valkey-cluster:
   - apiVersion: v2
     appVersion: 8.0.1
+    created: "2025-12-15T16:20:00.278956718Z"
+    description: A Helm chart for deploying Valkey in cluster or standalone mode with
+      persistence, monitoring, and automated cluster initialization
+    digest: 12b07def60281e8de7fb37a620602b5e7c36fc0d4cb15bef9f91936163d38502
+    icon: https://cncf-branding.netlify.app/img/projects/helm/icon/color/helm-icon-color.png
+    name: valkey-cluster
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/valkey-cluster-1.0.1/valkey-cluster-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 8.0.1
     created: "2025-12-15T14:05:02.886826834Z"
     description: A Helm chart for deploying Valkey in cluster or standalone mode with
       persistence, monitoring, and automated cluster initialization
@@ -215,4 +227,4 @@ entries:
     urls:
     - https://github.com/innago-property-management/helm-charts/releases/download/webapp-1.0.0/webapp-1.0.0.tgz
     version: 1.0.0
-generated: "2025-12-15T14:05:03.104822587Z"
+generated: "2025-12-15T16:20:00.47492543Z"
