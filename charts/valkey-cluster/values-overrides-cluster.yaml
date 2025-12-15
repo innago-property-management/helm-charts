@@ -1,0 +1,106 @@
+# Example values for deploying Valkey in cluster mode
+# This configuration creates a 6-node cluster with 3 masters and 3 replicas
+
+# Number of replicas (must be at least 6 for cluster mode)
+replicaCount: 6
+
+image:
+  repository: docker.io/valkey/valkey
+  pullPolicy: IfNotPresent
+  tag: "8.0.1"
+
+# Enable cluster mode
+cluster:
+  enabled: true
+  masterCount: 3
+  replicasPerMaster: 1
+  nodeTimeout: 5000
+  # Allow partial availability - cluster accepts writes even if some slots are uncovered
+  requireFullCoverage: "no"
+  allowReadsWhenDown: "no"
+  replicaValidityFactor: 10
+  init:
+    enabled: true
+    backoffLimit: 5
+    activeDeadlineSeconds: 300
+    hookType: "argocd"  # Use "helm" for native Helm hooks
+
+# Authentication (recommended for production)
+auth:
+  enabled: true
+  # Option 1: Auto-generate password (recommended)
+  password: ""
+  # Option 2: Use existing secret
+  # existingSecret: "valkey-auth"
+  # existingSecretPasswordKey: "password"
+
+# Valkey configuration
+config:
+  # Set maxmemory to ~90% of container memory limit (2Gi limit = 1800mb usable)
+  maxmemory: "1800mb"
+  maxmemory-policy: "noeviction"
+  appendonly: "yes"
+  appendfsync: "everysec"
+  save: "900 1 300 10 60 10000"
+
+# Persistence
+persistence:
+  enabled: true
+  storageClass: "ebs-sc"
+  accessModes:
+    - ReadWriteOnce
+  size: 8Gi
+
+# Resources (adjust based on workload)
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+
+# Node scheduling
+nodeSelector:
+  karpenter.sh/nodepool: stateful
+
+# Pod anti-affinity (use "preferred" for flexibility)
+affinity:
+  podAntiAffinity:
+    type: "preferred"
+    weight: 100
+
+# Topology spread constraints for AZ distribution
+topologySpreadConstraints:
+  enabled: true
+  maxSkew: 1
+  topologyKey: "topology.kubernetes.io/zone"
+  whenUnsatisfiable: "ScheduleAnyway"  # Use "DoNotSchedule" for strict enforcement
+
+# Enable metrics
+metrics:
+  enabled: true
+  image:
+    repository: oliver006/redis_exporter
+    tag: v1.66.0
+  port: 9121
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+# Enable ServiceMonitor for Prometheus
+serviceMonitor:
+  enabled: true
+  labels:
+    release: prometheus
+  interval: 30s
+  scrapeTimeout: 10s
+
+# PodDisruptionBudget (enabled by default for production safety)
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 4  # Ensure at least 4 of 6 nodes remain available during disruptions

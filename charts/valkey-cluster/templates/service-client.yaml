@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ValkeyCluster.fullname" . }}
+  labels:
+    {{- include "ValkeyCluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: client
+  {{- with .Values.service.client.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.client.type }}
+  ports:
+    - port: {{ .Values.service.client.port }}
+      targetPort: valkey
+      protocol: TCP
+      name: valkey
+    {{- if .Values.metrics.enabled }}
+    - port: {{ .Values.metrics.port }}
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+    {{- end }}
+  selector:
+    {{- include "ValkeyCluster.selectorLabels" . | nindent 4 }}
