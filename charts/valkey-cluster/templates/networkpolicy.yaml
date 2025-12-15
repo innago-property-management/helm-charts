@@ -47,12 +47,14 @@ spec:
     {{- end }}
     {{- if .Values.metrics.enabled }}
     # Allow Prometheus to scrape metrics
-    {{- if not .Values.networkPolicy.ingress.prometheusNamespaceSelector }}
-    {{- fail "networkPolicy.enabled with metrics.enabled requires networkPolicy.ingress.prometheusNamespaceSelector to be set (e.g., {matchLabels: {name: \"monitoring\"}})" }}
-    {{- end }}
     - from:
+        {{- if .Values.networkPolicy.ingress.prometheusNamespaceSelector }}
         - namespaceSelector:
             {{- toYaml .Values.networkPolicy.ingress.prometheusNamespaceSelector | nindent 12 }}
+        {{- else }}
+        {{- /* Default: allow same-namespace access for Prometheus */}}
+        - podSelector: {}
+        {{- end }}
       ports:
         - protocol: TCP
           port: {{ .Values.metrics.port }}

@@ -44,7 +44,7 @@ spec:
               # Wait for all pods to be ready
               EXPECTED_PODS={{ .Values.replicaCount }}
               READY_PODS=0
-              TIMEOUT=180
+              TIMEOUT={{ .Values.cluster.init.readinessTimeout | default 300 }}
               ELAPSED=0
 
               echo "Waiting for $EXPECTED_PODS pods to be ready..."

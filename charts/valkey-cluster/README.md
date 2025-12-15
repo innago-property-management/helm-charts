@@ -12,29 +12,30 @@ A Helm chart for deploying Valkey in cluster or standalone mode with persistence
 | affinity.podAntiAffinity | object | `{"type":"preferred","weight":100}` | Pod anti-affinity configuration |
 | affinity.podAntiAffinity.type | string | `"preferred"` | Use preferred (soft) or required (hard) anti-affinity "preferred" allows pods to be scheduled on same node if necessary "required" enforces strict node distribution |
 | affinity.podAntiAffinity.weight | int | `100` | Weight for preferred anti-affinity (1-100) |
-| auth | object | `{"autoGenerate":true,"enabled":true,"existingSecret":"","existingSecretPasswordKey":"password","password":""}` | Valkey authentication configuration |
-| auth.autoGenerate | bool | `true` | Auto-generate a random password if password is empty (and no existingSecret) WARNING: Auto-generated passwords change on each helm template render Set to true for development/testing ONLY. Use existingSecret for production. |
-| auth.enabled | bool | `true` | Enable password authentication |
+| auth | object | `{"autoGenerate":false,"enabled":false,"existingSecret":"","existingSecretPasswordKey":"password","password":""}` | Valkey authentication configuration |
+| auth.autoGenerate | bool | `false` | Auto-generate a random password if password is empty (and no existingSecret) When enabled, uses lookup function to preserve password across upgrades Set to true for development/testing. Use existingSecret for production. |
+| auth.enabled | bool | `false` | Enable password authentication Set to true and configure ONE of: password, autoGenerate, or existingSecret |
 | auth.existingSecret | string | `""` | Name of existing secret containing Valkey password (recommended for production) |
 | auth.existingSecretPasswordKey | string | `"password"` | Key in existing secret that contains the password |
 | auth.password | string | `""` | Valkey password (if not using existingSecret) IMPORTANT: You must configure ONE of: password, autoGenerate=true, or existingSecret Leave empty when using existingSecret or autoGenerate |
-| cluster | object | `{"allowReadsWhenDown":"no","enabled":true,"init":{"activeDeadlineSeconds":300,"backoffLimit":5,"enabled":true,"hookType":"argocd"},"masterCount":3,"nodeTimeout":5000,"replicaValidityFactor":10,"replicasPerMaster":1,"requireFullCoverage":"no"}` | Valkey cluster configuration |
+| cluster | object | `{"allowReadsWhenDown":"no","enabled":true,"init":{"activeDeadlineSeconds":300,"backoffLimit":5,"enabled":true,"hookType":"argocd","readinessTimeout":300},"masterCount":3,"nodeTimeout":5000,"replicaValidityFactor":10,"replicasPerMaster":1,"requireFullCoverage":"no"}` | Valkey cluster configuration |
 | cluster.allowReadsWhenDown | string | `"no"` | Allow reads when cluster is marked as failed |
 | cluster.enabled | bool | `true` | Enable cluster mode (requires minimum 6 replicas) |
-| cluster.init | object | `{"activeDeadlineSeconds":300,"backoffLimit":5,"enabled":true,"hookType":"argocd"}` | Enable cluster initialization job |
+| cluster.init | object | `{"activeDeadlineSeconds":300,"backoffLimit":5,"enabled":true,"hookType":"argocd","readinessTimeout":300}` | Enable cluster initialization job |
 | cluster.init.activeDeadlineSeconds | int | `300` | Init job active deadline in seconds |
 | cluster.init.backoffLimit | int | `5` | Init job backoff limit |
 | cluster.init.hookType | string | `"argocd"` | Hook type: "argocd" or "helm" |
+| cluster.init.readinessTimeout | int | `300` | Timeout waiting for pods to be ready before cluster creation (seconds) Increased from 180s to accommodate slow storage or large RDB restores |
 | cluster.masterCount | int | `3` | Number of master shards (for cluster mode) Total replicas should be masterCount * (1 + replicasPerMaster) |
 | cluster.nodeTimeout | int | `5000` | Cluster node timeout in milliseconds |
 | cluster.replicaValidityFactor | int | `10` | Replica validity factor (default 10) Controls how long a replica can be disconnected before being invalid for failover |
 | cluster.replicasPerMaster | int | `1` | Number of replicas per master shard |
 | cluster.requireFullCoverage | string | `"no"` | Require full hash slot coverage for cluster to accept writes Set to "no" for partial availability during failures |
-| config | object | `{"appendfsync":"everysec","appendonly":"yes","custom":"","maxmemory":"","maxmemory-policy":"noeviction","save":"900 1 300 10 60 10000"}` | Valkey configuration options These will be merged into valkey.conf |
+| config | object | `{"appendfsync":"everysec","appendonly":"yes","custom":"","maxmemory":"1800mb","maxmemory-policy":"noeviction","save":"900 1 300 10 60 10000"}` | Valkey configuration options These will be merged into valkey.conf |
 | config.appendfsync | string | `"everysec"` | AOF fsync policy |
 | config.appendonly | string | `"yes"` | Enable AOF persistence |
 | config.custom | string | `""` | Additional custom configuration Add any valkey.conf directives here |
-| config.maxmemory | string | `""` | Maximum memory limit (e.g., "1800mb") Should be ~90% of container memory limit. Empty means no limit. |
+| config.maxmemory | string | `"1800mb"` | Maximum memory limit (e.g., "1800mb") Should be ~90% of container memory limit (2Gi = 2048Mi → 1800mb recommended) Leave empty for no limit (not recommended for production) |
 | config.maxmemory-policy | string | `"noeviction"` | Maximum memory policy |
 | config.save | string | `"900 1 300 10 60 10000"` | Save snapshots to disk |
 | containerEnvFrom | list | `[]` | Container environment from (ConfigMap/Secret references) |
@@ -81,11 +82,11 @@ A Helm chart for deploying Valkey in cluster or standalone mode with persistence
 | podDisruptionBudget | object | `{"enabled":true,"maxUnavailable":null,"minAvailable":null}` | Pod disruption budget configuration |
 | podDisruptionBudget.enabled | bool | `true` | Enable PodDisruptionBudget |
 | podDisruptionBudget.maxUnavailable | string | `nil` | Maximum unavailable pods (alternative to minAvailable) If both minAvailable and maxUnavailable are null, minAvailable is auto-calculated |
-| podDisruptionBudget.minAvailable | string | `nil` | Minimum available pods If not set, defaults to: - Cluster mode: max(1, replicaCount - 2) [allows up to 2 nodes down] - Standalone mode: 1 [keeps at least 1 instance] Set explicitly to override auto-calculation |
+| podDisruptionBudget.minAvailable | string | `nil` | Minimum available pods If not set, defaults to: - Cluster mode: masterCount + 1 [ensures quorum is maintained] - Standalone mode: 1 [keeps at least 1 instance] Set explicitly to override auto-calculation |
 | podSecurityContext | object | `{"fsGroup":1000,"runAsGroup":1000,"runAsUser":1000}` | Pod security context |
 | readinessProbe | object | `{"enabled":true,"failureThreshold":3,"initialDelaySeconds":10,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":3}` | Readiness probe configuration |
 | replicaCount | int | `6` | Number of Valkey replicas to deploy For cluster mode: minimum 6 (3 masters + 3 replicas) For standalone mode: 1-2 |
-| resources | object | `{"limits":{"cpu":"1000m","memory":"2Gi"},"requests":{"cpu":"100m","memory":"128Mi"}}` | Resource limits and requests |
+| resources | object | `{"limits":{"cpu":"1000m","memory":"2Gi"},"requests":{"cpu":"250m","memory":"512Mi"}}` | Resource limits and requests |
 | service | object | `{"client":{"annotations":{},"port":6379,"type":"ClusterIP"},"headless":{"annotations":{},"clusterIP":"None","type":"ClusterIP"}}` | Service configuration |
 | service.client | object | `{"annotations":{},"port":6379,"type":"ClusterIP"}` | Client service for application access |
 | service.client.annotations | object | `{}` | Annotations for client service |

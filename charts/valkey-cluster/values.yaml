@@ -99,21 +99,25 @@ cluster:
     backoffLimit: 5
     # -- Init job active deadline in seconds
     activeDeadlineSeconds: 300
+    # -- Timeout waiting for pods to be ready before cluster creation (seconds)
+    # Increased from 180s to accommodate slow storage or large RDB restores
+    readinessTimeout: 300
     # -- Hook type: "argocd" or "helm"
     hookType: "argocd"
 
 # -- Valkey authentication configuration
 auth:
   # -- Enable password authentication
-  enabled: true
+  # Set to true and configure ONE of: password, autoGenerate, or existingSecret
+  enabled: false
   # -- Valkey password (if not using existingSecret)
   # IMPORTANT: You must configure ONE of: password, autoGenerate=true, or existingSecret
   # Leave empty when using existingSecret or autoGenerate
   password: ""
   # -- Auto-generate a random password if password is empty (and no existingSecret)
-  # WARNING: Auto-generated passwords change on each helm template render
-  # Set to true for development/testing ONLY. Use existingSecret for production.
-  autoGenerate: true
+  # When enabled, uses lookup function to preserve password across upgrades
+  # Set to true for development/testing. Use existingSecret for production.
+  autoGenerate: false
   # -- Name of existing secret containing Valkey password (recommended for production)
   existingSecret: ""
   # -- Key in existing secret that contains the password
@@ -123,8 +127,9 @@ auth:
 # These will be merged into valkey.conf
 config:
   # -- Maximum memory limit (e.g., "1800mb")
-  # Should be ~90% of container memory limit. Empty means no limit.
-  maxmemory: ""
+  # Should be ~90% of container memory limit (2Gi = 2048Mi → 1800mb recommended)
+  # Leave empty for no limit (not recommended for production)
+  maxmemory: "1800mb"
   # -- Maximum memory policy
   maxmemory-policy: "noeviction"
   # -- Enable AOF persistence
@@ -157,11 +162,11 @@ persistence:
 # -- Resource limits and requests
 resources:
   requests:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 250m
+    memory: 512Mi
   limits:
-    memory: 2Gi
     cpu: 1000m
+    memory: 2Gi
 
 # -- Node selector for pod assignment
 # Example for Karpenter: { karpenter.sh/nodepool: stateful }
@@ -283,7 +288,7 @@ podDisruptionBudget:
   enabled: true
   # -- Minimum available pods
   # If not set, defaults to:
-  # - Cluster mode: max(1, replicaCount - 2) [allows up to 2 nodes down]
+  # - Cluster mode: masterCount + 1 [ensures quorum is maintained]
   # - Standalone mode: 1 [keeps at least 1 instance]
   # Set explicitly to override auto-calculation
   minAvailable: null

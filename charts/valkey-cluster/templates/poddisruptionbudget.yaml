@@ -13,8 +13,9 @@ spec:
   {{- else }}
   {{- /* Calculate sensible default based on cluster mode */}}
   {{- if .Values.cluster.enabled }}
-  {{- /* For cluster mode: allow up to 2 nodes down, but ensure at least 1 remains */}}
-  minAvailable: {{ max 1 (sub (int .Values.replicaCount) 2) }}
+  {{- /* For cluster mode: ensure quorum is maintained (need masterCount/2 + 1 masters available) */}}
+  {{- /* minAvailable = masterCount + 1 ensures quorum + at least 1 replica */}}
+  minAvailable: {{ add1 (int .Values.cluster.masterCount) }}
   {{- else }}
   {{- /* For standalone mode: keep at least 1 instance available */}}
   minAvailable: 1

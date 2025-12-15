@@ -53,9 +53,12 @@ spec:
               echo "Initialized pod $POD_INDEX with IP $POD_IP"
               {{- end }}
               {{- if .Values.auth.enabled }}
+              # Read password (not visible in process args)
               VALKEY_PASSWORD=$(cat /mnt/secrets/{{ include "ValkeyCluster.secretPasswordKey" . }})
-              # Use awk instead of sed for safe password substitution (handles special characters)
-              awk -v pwd="$VALKEY_PASSWORD" '{gsub(/\$\{VALKEY_PASSWORD\}/, pwd); print}' /mnt/config/valkey.conf > /mnt/config/valkey.conf.tmp
+              # Use shell parameter expansion to substitute password (handles special characters, no external process)
+              while IFS= read -r line; do
+                echo "${line//\$\{VALKEY_PASSWORD\}/$VALKEY_PASSWORD}"
+              done < /mnt/config/valkey.conf > /mnt/config/valkey.conf.tmp
               mv /mnt/config/valkey.conf.tmp /mnt/config/valkey.conf
               {{- end }}
           volumeMounts:
