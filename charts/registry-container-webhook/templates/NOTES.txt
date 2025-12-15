@@ -1,0 +1,94 @@
+{{- $invalidConfig := false }}
+{{- range index .Values "harbor-container-webhook" "rules" }}
+{{- if contains "REPO" .replace }}
+{{- $invalidConfig = true }}
+{{- end }}
+{{- end }}
+
+{{- if $invalidConfig }}
+
+⚠️  CRITICAL: Configuration contains placeholder values!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Your rewrite rules contain 'REPO' placeholders.
+Pods will FAIL to create until you configure actual registry URLs.
+
+This is a MUTATING ADMISSION WEBHOOK operating in the critical path
+of pod creation. Invalid configuration will block pod creation cluster-wide.
+
+Update your values and run:
+  helm upgrade {{ .Release.Name }} registry-container-webhook -f values-production.yaml
+
+Example fix:
+  harbor-container-webhook:
+    rules:
+      - name: 'docker.io rewrite rule'
+        matches:
+          - '^docker.io'
+        replace: 'registry.example.com/dockerhub'  # Replace with your registry
+        checkUpstream: false
+
+{{- else }}
+
+✓ registry-container-webhook installed successfully!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Webhook Name: {{ include "registry-container-webhook.fullname" . }}
+Namespace:    {{ .Release.Namespace }}
+Replicas:     {{ index .Values "harbor-container-webhook" "replicaCount" | default 1 }}
+
+Active Rewrite Rules:
+{{- range index .Values "harbor-container-webhook" "rules" }}
+  • {{ .name }}
+    {{ index .matches 0 }} → {{ .replace }}
+{{- end }}
+
+{{- if lt (int (index .Values "harbor-container-webhook" "replicaCount" | default 1)) 2 }}
+
+⚠️  WARNING: Single replica configuration detected!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Running with only 1 replica creates a single point of failure.
+If the webhook pod restarts, pod creation may fail cluster-wide.
+
+Recommended: Set replicaCount to 2+ for production.
+
+{{- end }}
+
+{{- if not .Values.podDisruptionBudget.enabled }}
+
+⚠️  WARNING: PodDisruptionBudget is disabled!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+During maintenance (node drains, upgrades), Kubernetes may terminate
+all webhook pods simultaneously, causing pod creation failures.
+
+Recommended: Enable PodDisruptionBudget in production.
+
+{{- end }}
+
+Next Steps:
+
+1. Verify webhook is running:
+   kubectl get pods -l app.kubernetes.io/name=harbor-container-webhook -n {{ .Release.Namespace }}
+
+2. Check webhook configuration:
+   kubectl get mutatingwebhookconfiguration harbor-container-webhook
+
+3. Test with a sample pod:
+   kubectl run test-nginx --image=nginx --dry-run=server -o yaml
+
+4. Monitor webhook logs:
+   kubectl logs -l app.kubernetes.io/name=harbor-container-webhook -n {{ .Release.Namespace }} -f
+
+Important Notes:
+
+  • This webhook operates in the CRITICAL PATH of pod creation
+  • Webhook unavailability = pods cannot be created cluster-wide
+  • Ensure high availability (2+ replicas, PDB enabled)
+  • Monitor webhook health and certificate expiration
+
+For more information, visit:
+  https://github.com/innago-property-management/helm-charts/tree/main/charts/registry-container-webhook
+
+{{- end }}

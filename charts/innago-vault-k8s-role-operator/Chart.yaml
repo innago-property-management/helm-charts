@@ -3,13 +3,13 @@ name: innago-vault-k8s-role-operator
 description: A Helm chart for Kubernetes
 type: application
 
-version: 0.1.1
+version: 1.0.0
 
-appVersion: "0.1.1"
+appVersion: "1.0.0"
 
 dependencies:
   - name: webapp
-    version: 2.4.0
+    version: 2.5.0
     repository: oci://ghcr.io/innago-property-management/helm-charts
     alias: innago-webapp
     tags:

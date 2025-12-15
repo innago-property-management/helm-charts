@@ -5,31 +5,23 @@ metadata:
   labels:
     app.kubernetes.io/part-of: {{ .Release.Name }}
 rules:
+  # Read access to ServiceAccounts (operator watches these for Vault role configuration)
   - verbs: ["list", "get", "watch"]
-    resources: ["*"]
-    apiGroups: ["*"]
-  - verbs:
-      - "*"
-    resources:
-      - configmaps
-    apiGroups:
-      - ""
-  - verbs:
-      - "*"
-    apiGroups:
-      - ""
-    resources:
-      - namespaces
-  - verbs:
-      - "*"
-    resources:
-      - cronjobs
-      - jobs
-    apiGroups:
-      - batch
-  - verbs:
-      - "*"
-    apiGroups:
-      - coordination.k8s.io
-    resources:
-      - leases
+    resources: ["serviceaccounts"]
+    apiGroups: [""]
+  # Read access to Namespaces (operator watches namespace labels/annotations)
+  - verbs: ["list", "get", "watch"]
+    resources: ["namespaces"]
+    apiGroups: [""]
+  # Full access to ConfigMaps (operator's primary resource for storing Vault role config)
+  - verbs: ["*"]
+    resources: ["configmaps"]
+    apiGroups: [""]
+  # Full access to CronJobs and Jobs (operator may manage these for Vault token rotation)
+  - verbs: ["*"]
+    resources: ["cronjobs", "jobs"]
+    apiGroups: ["batch"]
+  # Coordination for leader election (required for operator HA)
+  - verbs: ["*"]
+    apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]

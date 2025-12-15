@@ -1,1 +1,61 @@
-version 0.2.1 fixes an issue with a leading `*` in a schedule
+Thank you for installing {{ .Chart.Name }}!
+
+Your CronJob "{{ include "CronJob.fullname" . | lower }}" has been deployed.
+
+Configuration:
+  Schedule: {{ .Values.schedule }}
+  Namespace: {{ .Release.Namespace }}
+  Image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+  Concurrency Policy: {{ .Values.cronjob.concurrencyPolicy }}
+
+To view your CronJob:
+  kubectl get cronjob {{ include "CronJob.fullname" . | lower }} -n {{ .Release.Namespace }}
+
+To view job executions:
+  kubectl get jobs -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+To view logs from the latest job:
+  kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }} --tail=50
+
+To manually trigger a job:
+  kubectl create job --from=cronjob/{{ include "CronJob.fullname" . | lower }} manual-{{ now | date "20060102-150405" }} -n {{ .Release.Namespace }}
+
+{{- if not .Values.resources.limits }}
+
+WARNING: No resource limits configured!
+  This can lead to resource exhaustion. Set resources.limits in production.
+{{- end }}
+
+{{- if eq .Values.image.tag "latest" }}
+
+WARNING: Using 'latest' image tag!
+  This is not recommended for production. Use explicit version tags.
+{{- end }}
+
+{{- if .Values.metrics.serviceMonitor.enabled }}
+
+** Monitoring Enabled **
+ServiceMonitor created for Prometheus Operator
+  Port: {{ .Values.metrics.port }}
+  Path: {{ .Values.metrics.path }}
+  Interval: {{ .Values.metrics.serviceMonitor.interval }}
+
+View metrics:
+  kubectl port-forward -n {{ .Release.Namespace }} svc/{{ include "CronJob.fullname" . | lower }} {{ .Values.metrics.port }}:{{ .Values.metrics.port }}
+  curl http://localhost:{{ .Values.metrics.port }}{{ .Values.metrics.path }}
+{{- end }}
+
+{{- if .Values.networkPolicy.enabled }}
+
+** Network Policy Enabled **
+Network traffic is restricted according to configured policies.
+{{- if .Values.networkPolicy.egress.enabled }}
+  Egress: Enabled (DNS allowed: {{ .Values.networkPolicy.egress.dns.enabled }})
+{{- end }}
+
+Check network policy:
+  kubectl get networkpolicy {{ include "CronJob.fullname" . | lower }} -n {{ .Release.Namespace }} -o yaml
+{{- end }}
+
+For more information, visit:
+  https://github.com/innago-property-management/helm-charts/tree/main/charts/cronjob
