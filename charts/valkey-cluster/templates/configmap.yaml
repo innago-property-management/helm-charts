@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ValkeyCluster.fullname" . }}-config
+  labels:
+    {{- include "ValkeyCluster.labels" . | nindent 4 }}
+data:
+  valkey.conf: |
+    # Valkey Configuration
+    # Network
+    bind 0.0.0.0
+    port 6379
+    tcp-backlog 511
+    timeout 0
+    tcp-keepalive 300
+
+    {{- if .Values.cluster.enabled }}
+    # Cluster Configuration
+    cluster-enabled yes
+    cluster-config-file nodes.conf
+    cluster-node-timeout {{ .Values.cluster.nodeTimeout }}
+    cluster-require-full-coverage {{ .Values.cluster.requireFullCoverage }}
+    cluster-allow-reads-when-down {{ .Values.cluster.allowReadsWhenDown }}
+    cluster-replica-validity-factor {{ .Values.cluster.replicaValidityFactor }}
+    {{- end }}
+
+    # General
+    daemonize no
+    supervised no
+    pidfile /var/run/valkey.pid
+    loglevel notice
+    logfile ""
+    databases 16
+
+    {{- if .Values.auth.enabled }}
+    # Security
+    requirepass ${VALKEY_PASSWORD}
+    {{- if .Values.cluster.enabled }}
+    masterauth ${VALKEY_PASSWORD}
+    {{- end }}
+    {{- end }}
+
+    # Persistence - Snapshots
+    {{- if .Values.config.save }}
+    save {{ .Values.config.save }}
+    {{- else }}
+    save ""
+    {{- end }}
+    stop-writes-on-bgsave-error yes
+    rdbcompression yes
+    rdbchecksum yes
+    dbfilename dump.rdb
+    dir /data
+
+    # Persistence - AOF
+    {{- if eq .Values.config.appendonly "yes" }}
+    appendonly yes
+    appendfilename "appendonly.aof"
+    appendfsync {{ .Values.config.appendfsync | default "everysec" }}
+    no-appendfsync-on-rewrite no
+    auto-aof-rewrite-percentage 100
+    auto-aof-rewrite-min-size 64mb
+    aof-load-truncated yes
+    aof-use-rdb-preamble yes
+    {{- else }}
+    appendonly no
+    {{- end }}
+
+    # Memory Management
+    {{- if .Values.config.maxmemory }}
+    maxmemory {{ .Values.config.maxmemory }}
+    {{- end }}
+    {{- if index .Values.config "maxmemory-policy" }}
+    maxmemory-policy {{ index .Values.config "maxmemory-policy" }}
+    {{- end }}
+    maxmemory-samples 5
+
+    # Lazy Freeing
+    lazyfree-lazy-eviction no
+    lazyfree-lazy-expire no
+    lazyfree-lazy-server-del no
+    replica-lazy-flush no
+
+    # Slow Log
+    slowlog-log-slower-than 10000
+    slowlog-max-len 128
+
+    # Latency Monitor
+    latency-monitor-threshold 0
+
+    # Event Notification
+    notify-keyspace-events ""
+
+    {{- if .Values.config.custom }}
+    # Custom Configuration
+    {{ .Values.config.custom | nindent 4 }}
+    {{- end }}

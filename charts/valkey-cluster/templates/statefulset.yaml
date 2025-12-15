@@ -1,0 +1,303 @@
+{{- if .Values.cluster.enabled }}
+{{- $expectedReplicas := mul .Values.cluster.masterCount (add1 .Values.cluster.replicasPerMaster) }}
+{{- if ne (int .Values.replicaCount) $expectedReplicas }}
+{{- fail (printf "Cluster mode requires replicaCount (%d) to equal masterCount * (1 + replicasPerMaster) = %d * (1 + %d) = %d" (int .Values.replicaCount) (int .Values.cluster.masterCount) (int .Values.cluster.replicasPerMaster) $expectedReplicas) }}
+{{- end }}
+{{- end }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "ValkeyCluster.fullname" . }}
+  labels:
+    {{- include "ValkeyCluster.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "ValkeyCluster.fullname" . }}-headless
+  replicas: {{ .Values.replicaCount }}
+  {{- if .Values.cluster.enabled }}
+  podManagementPolicy: Parallel
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "ValkeyCluster.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "ValkeyCluster.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "ValkeyCluster.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: init-config
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              cp /mnt/config-map/valkey.conf /mnt/config/valkey.conf
+              {{- if .Values.cluster.enabled }}
+              POD_INDEX=${HOSTNAME##*-}
+              POD_IP=$(hostname -i)
+              echo "cluster-announce-ip $POD_IP" >> /mnt/config/valkey.conf
+              echo "Initialized pod $POD_INDEX with IP $POD_IP"
+              {{- end }}
+              {{- if .Values.auth.enabled }}
+              # Read password (not visible in process args)
+              VALKEY_PASSWORD=$(cat /mnt/secrets/{{ include "ValkeyCluster.secretPasswordKey" . }})
+              # Use shell parameter expansion to substitute password (handles special characters, no external process)
+              while IFS= read -r line; do
+                echo "${line//\$\{VALKEY_PASSWORD\}/$VALKEY_PASSWORD}"
+              done < /mnt/config/valkey.conf > /mnt/config/valkey.conf.tmp
+              mv /mnt/config/valkey.conf.tmp /mnt/config/valkey.conf
+              {{- end }}
+          volumeMounts:
+            - name: config-map
+              mountPath: /mnt/config-map
+            - name: config
+              mountPath: /mnt/config
+            {{- if .Values.auth.enabled }}
+            - name: valkey-password
+              mountPath: /mnt/secrets
+              readOnly: true
+            {{- end }}
+      containers:
+        - name: valkey
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - valkey-server
+            - /etc/valkey/valkey.conf
+          ports:
+            - name: valkey
+              containerPort: 6379
+              protocol: TCP
+            {{- if .Values.cluster.enabled }}
+            - name: cluster-bus
+              containerPort: 16379
+              protocol: TCP
+            {{- end }}
+          env:
+            - name: MY_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MY_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: MY_POD_SERVICE_ACCOUNT
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.serviceAccountName
+            {{- if .Values.auth.enabled }}
+            - name: VALKEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ValkeyCluster.secretName" . }}
+                  key: {{ include "ValkeyCluster.secretPasswordKey" . }}
+            {{- end }}
+            {{- with .Values.containerEnvironmentVariables }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.containerEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.lifecycle.preStop.enabled }}
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - sh
+                  - -c
+                  - |
+                    {{- if .Values.auth.enabled }}
+                    valkey-cli -a $VALKEY_PASSWORD BGSAVE
+                    {{- else }}
+                    valkey-cli BGSAVE
+                    {{- end }}
+                    sleep {{ .Values.lifecycle.preStop.delay }}
+          {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - |
+                  {{- if .Values.auth.enabled }}
+                  valkey-cli -a $VALKEY_PASSWORD ping
+                  {{- else }}
+                  valkey-cli ping
+                  {{- end }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - |
+                  {{- if .Values.auth.enabled }}
+                  valkey-cli -a $VALKEY_PASSWORD ping
+                  {{- else }}
+                  valkey-cli ping
+                  {{- end }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.startupProbe.enabled }}
+          startupProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - |
+                  {{- if .Values.auth.enabled }}
+                  valkey-cli -a $VALKEY_PASSWORD ping
+                  {{- else }}
+                  valkey-cli ping
+                  {{- end }}
+            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.startupProbe.successThreshold }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: config
+              mountPath: /etc/valkey
+        {{- if .Values.metrics.enabled }}
+        - name: metrics
+          securityContext:
+            {{- toYaml .Values.metrics.securityContext | nindent 12 }}
+          image: "{{ .Values.metrics.image.repository }}:{{ .Values.metrics.image.tag }}"
+          imagePullPolicy: {{ .Values.metrics.image.pullPolicy }}
+          ports:
+            - name: metrics
+              containerPort: {{ .Values.metrics.port }}
+              protocol: TCP
+          env:
+            - name: REDIS_ADDR
+              value: "redis://localhost:6379"
+            {{- if .Values.auth.enabled }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ValkeyCluster.secretName" . }}
+                  key: {{ include "ValkeyCluster.secretPasswordKey" . }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.metrics.resources | nindent 12 }}
+        {{- end }}
+      volumes:
+        - name: config-map
+          configMap:
+            name: {{ include "ValkeyCluster.fullname" . }}-config
+        - name: config
+          emptyDir: {}
+        {{- if .Values.auth.enabled }}
+        - name: valkey-password
+          secret:
+            secretName: {{ include "ValkeyCluster.secretName" . }}
+            items:
+              - key: {{ include "ValkeyCluster.secretPasswordKey" . }}
+                path: {{ include "ValkeyCluster.secretPasswordKey" . }}
+        {{- end }}
+        {{- if not .Values.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.affinity.podAntiAffinity }}
+      affinity:
+        podAntiAffinity:
+          {{- if eq .Values.affinity.podAntiAffinity.type "required" }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  {{- include "ValkeyCluster.selectorLabels" . | nindent 18 }}
+              topologyKey: kubernetes.io/hostname
+          {{- else }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: {{ .Values.affinity.podAntiAffinity.weight }}
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    {{- include "ValkeyCluster.selectorLabels" . | nindent 20 }}
+                topologyKey: kubernetes.io/hostname
+          {{- end }}
+      {{- end }}
+      {{- if .Values.topologySpreadConstraints.enabled }}
+      topologySpreadConstraints:
+        - maxSkew: {{ .Values.topologySpreadConstraints.maxSkew }}
+          topologyKey: {{ .Values.topologySpreadConstraints.topologyKey }}
+          whenUnsatisfiable: {{ .Values.topologySpreadConstraints.whenUnsatisfiable }}
+          labelSelector:
+            matchLabels:
+              {{- include "ValkeyCluster.selectorLabels" . | nindent 14 }}
+      {{- end }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        {{- with .Values.persistence.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes:
+          {{- range .Values.persistence.accessModes }}
+          - {{ . | quote }}
+          {{- end }}
+        {{- if .Values.persistence.storageClass }}
+        {{- if (eq "-" .Values.persistence.storageClass) }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: {{ .Values.persistence.storageClass | quote }}
+        {{- end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size | quote }}
+  {{- end }}

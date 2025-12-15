@@ -1,0 +1,27 @@
+{{- if .Values.podDisruptionBudget.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "ValkeyCluster.fullname" . }}
+  labels:
+    {{- include "ValkeyCluster.labels" . | nindent 4 }}
+spec:
+  {{- if .Values.podDisruptionBudget.minAvailable }}
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  {{- else if .Values.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
+  {{- else }}
+  {{- /* Calculate sensible default based on cluster mode */}}
+  {{- if .Values.cluster.enabled }}
+  {{- /* For cluster mode: ensure quorum is maintained (need masterCount/2 + 1 masters available) */}}
+  {{- /* minAvailable = masterCount + 1 ensures quorum + at least 1 replica */}}
+  minAvailable: {{ add1 (int .Values.cluster.masterCount) }}
+  {{- else }}
+  {{- /* For standalone mode: keep at least 1 instance available */}}
+  minAvailable: 1
+  {{- end }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "ValkeyCluster.selectorLabels" . | nindent 6 }}
+{{- end }}

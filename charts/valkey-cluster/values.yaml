@@ -1,0 +1,368 @@
+# Default values for valkey-cluster.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Number of Valkey replicas to deploy
+# For cluster mode: minimum 6 (3 masters + 3 replicas)
+# For standalone mode: 1-2
+replicaCount: 6
+
+image:
+  # -- Valkey Docker image repository
+  repository: docker.io/valkey/valkey
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Overrides the image tag whose default is the chart appVersion
+  tag: ""
+
+# -- Docker registry secret names as an array
+imagePullSecrets: []
+
+# -- String to partially override valkey-cluster.fullname
+nameOverride: ""
+
+# -- String to fully override valkey-cluster.fullname
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Annotations to add to the pod
+podAnnotations: {}
+
+# -- Pod security context
+podSecurityContext:
+  fsGroup: 1000
+  runAsUser: 1000
+  runAsGroup: 1000
+
+# -- Container security context
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false
+
+# -- Service configuration
+service:
+  # -- Headless service for StatefulSet pod DNS
+  headless:
+    # -- Service type for headless service
+    type: ClusterIP
+    # -- Cluster IP (use "None" for headless)
+    clusterIP: None
+    # -- Annotations for headless service
+    annotations: {}
+
+  # -- Client service for application access
+  client:
+    # -- Service type for client service
+    type: ClusterIP
+    # -- Service port
+    port: 6379
+    # -- Annotations for client service
+    annotations: {}
+
+# -- Valkey cluster configuration
+cluster:
+  # -- Enable cluster mode (requires minimum 6 replicas)
+  enabled: true
+  # -- Number of master shards (for cluster mode)
+  # Total replicas should be masterCount * (1 + replicasPerMaster)
+  masterCount: 3
+  # -- Number of replicas per master shard
+  replicasPerMaster: 1
+  # -- Cluster node timeout in milliseconds
+  nodeTimeout: 5000
+  # -- Require full hash slot coverage for cluster to accept writes
+  # Set to "no" for partial availability during failures
+  requireFullCoverage: "no"
+  # -- Allow reads when cluster is marked as failed
+  allowReadsWhenDown: "no"
+  # -- Replica validity factor (default 10)
+  # Controls how long a replica can be disconnected before being invalid for failover
+  replicaValidityFactor: 10
+  # -- Enable cluster initialization job
+  init:
+    enabled: true
+    # -- Init job backoff limit
+    backoffLimit: 5
+    # -- Init job active deadline in seconds
+    activeDeadlineSeconds: 300
+    # -- Timeout waiting for pods to be ready before cluster creation (seconds)
+    # Increased from 180s to accommodate slow storage or large RDB restores
+    readinessTimeout: 300
+    # -- Hook type: "argocd" or "helm"
+    hookType: "argocd"
+
+# -- Valkey authentication configuration
+auth:
+  # -- Enable password authentication
+  # Set to true and configure ONE of: password, autoGenerate, or existingSecret
+  enabled: false
+  # -- Valkey password (if not using existingSecret)
+  # IMPORTANT: You must configure ONE of: password, autoGenerate=true, or existingSecret
+  # Leave empty when using existingSecret or autoGenerate
+  password: ""
+  # -- Auto-generate a random password if password is empty (and no existingSecret)
+  # When enabled, uses lookup function to preserve password across upgrades
+  # Set to true for development/testing. Use existingSecret for production.
+  autoGenerate: false
+  # -- Name of existing secret containing Valkey password (recommended for production)
+  existingSecret: ""
+  # -- Key in existing secret that contains the password
+  existingSecretPasswordKey: "password"
+
+# -- Valkey configuration options
+# These will be merged into valkey.conf
+config:
+  # -- Maximum memory limit (e.g., "1800mb")
+  # Should be ~90% of container memory limit (2Gi = 2048Mi → 1800mb recommended)
+  # Leave empty for no limit (not recommended for production)
+  maxmemory: "1800mb"
+  # -- Maximum memory policy
+  maxmemory-policy: "noeviction"
+  # -- Enable AOF persistence
+  appendonly: "yes"
+  # -- AOF fsync policy
+  appendfsync: "everysec"
+  # -- Save snapshots to disk
+  save: "900 1 300 10 60 10000"
+  # -- Additional custom configuration
+  # Add any valkey.conf directives here
+  custom: ""
+
+# -- Persistence configuration
+persistence:
+  # -- Enable persistence using PVC
+  enabled: true
+  # -- PVC Storage Class
+  # Leave empty ("") to use cluster default storage class
+  # If set to "-", storageClassName: "", which disables dynamic provisioning
+  # Set to specific class name for cloud providers (e.g., "ebs-sc" for AWS, "standard-rwo" for GKE)
+  storageClass: ""
+  # -- PVC Access Mode
+  accessModes:
+    - ReadWriteOnce
+  # -- PVC Storage Request
+  size: 8Gi
+  # -- Annotations for PVCs
+  annotations: {}
+
+# -- Resource limits and requests
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+
+# -- Node selector for pod assignment
+# Example for Karpenter: { karpenter.sh/nodepool: stateful }
+# Example for node type: { node.kubernetes.io/instance-type: m5.large }
+nodeSelector: {}
+
+# -- Tolerations for pod assignment
+tolerations: []
+
+# -- Affinity for pod assignment
+affinity:
+  # -- Pod anti-affinity configuration
+  podAntiAffinity:
+    # -- Use preferred (soft) or required (hard) anti-affinity
+    # "preferred" allows pods to be scheduled on same node if necessary
+    # "required" enforces strict node distribution
+    type: "preferred"
+    # -- Weight for preferred anti-affinity (1-100)
+    weight: 100
+
+# -- Container environment variables
+containerEnvironmentVariables: []
+  # - name: EXAMPLE_VAR
+  #   value: "example-value"
+
+# -- Container environment from (ConfigMap/Secret references)
+containerEnvFrom: []
+  # - configMapRef:
+  #     name: example-configmap
+  # - secretRef:
+  #     name: example-secret
+
+# -- Liveness probe configuration
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
+
+# -- Readiness probe configuration
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  successThreshold: 1
+  failureThreshold: 3
+
+# -- Startup probe configuration (prevents liveness failures during slow starts)
+startupProbe:
+  enabled: false
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 30
+
+# -- Lifecycle hooks configuration
+lifecycle:
+  # -- preStop hook for graceful shutdown
+  preStop:
+    # -- Enable preStop hook
+    enabled: true
+    # -- Delay in seconds after triggering BGSAVE before shutdown
+    delay: 5
+
+# -- Prometheus metrics exporter configuration
+metrics:
+  # -- Enable redis_exporter sidecar for Prometheus metrics
+  enabled: true
+  # -- redis_exporter image
+  image:
+    repository: oliver006/redis_exporter
+    tag: v1.66.0
+    pullPolicy: IfNotPresent
+  # -- redis_exporter port
+  port: 9121
+  # -- redis_exporter resources
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 128Mi
+      cpu: 100m
+  # -- redis_exporter security context
+  securityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+
+# -- ServiceMonitor configuration for Prometheus Operator
+serviceMonitor:
+  # -- Enable ServiceMonitor creation
+  enabled: true
+  # -- ServiceMonitor namespace (defaults to release namespace)
+  namespace: ""
+  # -- ServiceMonitor labels
+  labels:
+    release: prometheus
+  # -- ServiceMonitor scrape interval
+  interval: 30s
+  # -- ServiceMonitor scrape timeout
+  scrapeTimeout: 10s
+  # -- Namespace selector for ServiceMonitor (if monitoring across namespaces)
+  # Example: namespaceSelector: { matchNames: ["valkey-cluster"] }
+  namespaceSelector: {}
+
+# -- Pod disruption budget configuration
+podDisruptionBudget:
+  # -- Enable PodDisruptionBudget
+  enabled: true
+  # -- Minimum available pods
+  # If not set, defaults to:
+  # - Cluster mode: masterCount + 1 [ensures quorum is maintained]
+  # - Standalone mode: 1 [keeps at least 1 instance]
+  # Set explicitly to override auto-calculation
+  minAvailable: null
+  # -- Maximum unavailable pods (alternative to minAvailable)
+  # If both minAvailable and maxUnavailable are null, minAvailable is auto-calculated
+  maxUnavailable: null
+
+# -- Topology spread constraints for availability zone distribution
+topologySpreadConstraints:
+  # -- Enable topology spread constraints
+  enabled: true
+  # -- Maximum skew allowed between zones
+  maxSkew: 1
+  # -- Topology key to spread across (typically topology.kubernetes.io/zone)
+  topologyKey: "topology.kubernetes.io/zone"
+  # -- What to do if constraint cannot be satisfied: DoNotSchedule or ScheduleAnyway
+  whenUnsatisfiable: "ScheduleAnyway"
+
+# -- Network policy configuration
+networkPolicy:
+  # -- Enable NetworkPolicy creation
+  enabled: false
+  # -- Ingress rules configuration
+  ingress:
+    # -- Allow external client connections (beyond pod-to-pod)
+    # Requires at least one of namespaceSelector or podSelector to be set
+    allowExternal: false
+    # -- Namespace selector for allowed clients
+    # Example: namespaceSelector: { matchLabels: { name: "app-namespace" } }
+    namespaceSelector: {}
+    # -- Pod selector for allowed clients
+    # Example: podSelector: { matchLabels: { app: "my-app" } }
+    podSelector: {}
+    # -- Namespace selector for Prometheus
+    # Example: prometheusNamespaceSelector: { matchLabels: { name: "monitoring" } }
+    prometheusNamespaceSelector: {}
+    # -- Custom ingress rules (advanced)
+    customRules: []
+  # -- Egress rules configuration
+  egress:
+    # -- Enable egress rules (restricts outbound traffic)
+    enabled: false
+    # -- DNS egress configuration
+    dns:
+      # -- Custom DNS egress selectors (overrides defaults)
+      # If unset, defaults to kube-system namespace with kube-dns labels
+      # For CoreDNS or different configurations, customize these selectors
+      # Example for custom CoreDNS:
+      # to:
+      #   - namespaceSelector:
+      #       matchLabels:
+      #         kubernetes.io/metadata.name: kube-system
+      #   - podSelector:
+      #       matchLabels:
+      #         k8s-app: coredns
+      to: []
+    # -- Custom egress rules (advanced)
+    customRules: []
+
+# -- TLS configuration (future enhancement - not yet implemented)
+# When implemented, will support:
+# - tls-port for encrypted client connections
+# - tls-cluster yes for encrypted cluster bus
+# - Certificate mounting via secrets
+# - tls-auth-clients for mutual TLS
+tls:
+  # -- Enable TLS encryption
+  enabled: false
+  # -- TLS port for client connections
+  port: 6380
+  # -- Enable TLS for cluster bus communication
+  clusterEnabled: false
+  # -- Existing secret containing TLS certificates
+  # Expected keys: tls.crt, tls.key, ca.crt
+  existingSecret: ""
+  # -- Require client authentication (mTLS)
+  authClients: "no"

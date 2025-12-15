@@ -1,0 +1,84 @@
+# Example values for deploying Valkey in standalone mode
+# This configuration creates a single Valkey instance or HA pair
+
+# Number of replicas (1 for single instance, 2 for HA)
+replicaCount: 2
+
+image:
+  repository: docker.io/valkey/valkey
+  pullPolicy: IfNotPresent
+  tag: "8.0.1"
+
+# Disable cluster mode for standalone deployment
+cluster:
+  enabled: false
+
+# Authentication (recommended for production)
+auth:
+  enabled: true
+  # Option 1: Auto-generate password (recommended)
+  password: ""
+  # Option 2: Use existing secret
+  # existingSecret: "valkey-auth"
+  # existingSecretPasswordKey: "password"
+
+# Valkey configuration
+config:
+  maxmemory-policy: "allkeys-lru"  # LRU eviction policy for cache use case
+  appendonly: "yes"
+  appendfsync: "everysec"
+  save: "900 1 300 10 60 10000"
+
+# Persistence
+persistence:
+  enabled: true
+  storageClass: "ebs-sc"
+  accessModes:
+    - ReadWriteOnce
+  size: 8Gi
+
+# Resources (adjust based on workload)
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
+# Node scheduling (Karpenter-specific)
+nodeSelector:
+  karpenter.sh/nodepool: stateful
+
+# Pod anti-affinity (use "required" for strict HA)
+affinity:
+  podAntiAffinity:
+    type: "required"  # Ensure pods run on different nodes
+
+# Enable metrics
+metrics:
+  enabled: true
+  image:
+    repository: oliver006/redis_exporter
+    tag: v1.66.0
+  port: 9121
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+# Enable ServiceMonitor for Prometheus
+serviceMonitor:
+  enabled: true
+  labels:
+    release: prometheus
+  interval: 30s
+  scrapeTimeout: 10s
+
+# Optional: Enable PodDisruptionBudget for HA
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1  # Ensure at least 1 instance is always available

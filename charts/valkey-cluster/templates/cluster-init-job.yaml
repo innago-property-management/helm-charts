@@ -1,0 +1,133 @@
+{{- if and .Values.cluster.enabled .Values.cluster.init.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "ValkeyCluster.fullname" . }}-cluster-init
+  labels:
+    {{- include "ValkeyCluster.labels" . | nindent 4 }}
+    app.kubernetes.io/component: cluster-init
+  annotations:
+    {{- if eq .Values.cluster.init.hookType "argocd" }}
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    {{- else if eq .Values.cluster.init.hookType "helm" }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "0"
+    helm.sh/hook-delete-policy: before-hook-creation
+    {{- end }}
+spec:
+  backoffLimit: {{ .Values.cluster.init.backoffLimit }}
+  activeDeadlineSeconds: {{ .Values.cluster.init.activeDeadlineSeconds }}
+  template:
+    metadata:
+      labels:
+        {{- include "ValkeyCluster.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: cluster-init
+    spec:
+      restartPolicy: OnFailure
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "ValkeyCluster.serviceAccountName" . }}
+      containers:
+        - name: cluster-init
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              echo "Starting Valkey cluster initialization..."
+
+              # Wait for all pods to be ready
+              EXPECTED_PODS={{ .Values.replicaCount }}
+              READY_PODS=0
+              TIMEOUT={{ .Values.cluster.init.readinessTimeout | default 300 }}
+              ELAPSED=0
+
+              echo "Waiting for $EXPECTED_PODS pods to be ready..."
+              while [ $READY_PODS -lt $EXPECTED_PODS ] && [ $ELAPSED -lt $TIMEOUT ]; do
+                READY_PODS=0
+                for i in $(seq 0 $((EXPECTED_PODS - 1))); do
+                  POD_NAME="{{ include "ValkeyCluster.fullname" . }}-$i.{{ include "ValkeyCluster.fullname" . }}-headless.{{ .Release.Namespace }}.svc.cluster.local"
+                  {{- if .Values.auth.enabled }}
+                  if valkey-cli -h $POD_NAME -a $VALKEY_PASSWORD ping > /dev/null 2>&1; then
+                  {{- else }}
+                  if valkey-cli -h $POD_NAME ping > /dev/null 2>&1; then
+                  {{- end }}
+                    READY_PODS=$((READY_PODS + 1))
+                  fi
+                done
+                echo "Ready pods: $READY_PODS/$EXPECTED_PODS"
+                if [ $READY_PODS -lt $EXPECTED_PODS ]; then
+                  sleep 5
+                  ELAPSED=$((ELAPSED + 5))
+                fi
+              done
+
+              if [ $READY_PODS -lt $EXPECTED_PODS ]; then
+                echo "ERROR: Timeout waiting for pods to be ready"
+                exit 1
+              fi
+
+              echo "All pods are ready. Checking if cluster already exists..."
+
+              # Check if cluster is already initialized
+              FIRST_POD="{{ include "ValkeyCluster.fullname" . }}-0.{{ include "ValkeyCluster.fullname" . }}-headless.{{ .Release.Namespace }}.svc.cluster.local"
+              {{- if .Values.auth.enabled }}
+              CLUSTER_INFO=$(valkey-cli -h $FIRST_POD -a $VALKEY_PASSWORD cluster info 2>/dev/null || echo "cluster_state:fail")
+              {{- else }}
+              CLUSTER_INFO=$(valkey-cli -h $FIRST_POD cluster info 2>/dev/null || echo "cluster_state:fail")
+              {{- end }}
+
+              if echo "$CLUSTER_INFO" | grep -q "cluster_state:ok"; then
+                echo "Cluster already initialized and healthy. Skipping initialization."
+                exit 0
+              fi
+
+              echo "Creating new cluster with {{ .Values.cluster.masterCount }} masters and {{ .Values.cluster.replicasPerMaster }} replica(s) per master..."
+
+              # Build the list of node addresses
+              NODE_ADDRESSES=""
+              for i in $(seq 0 $((EXPECTED_PODS - 1))); do
+                NODE_ADDRESSES="$NODE_ADDRESSES {{ include "ValkeyCluster.fullname" . }}-$i.{{ include "ValkeyCluster.fullname" . }}-headless.{{ .Release.Namespace }}.svc.cluster.local:6379"
+              done
+
+              # Create the cluster
+              {{- if .Values.auth.enabled }}
+              echo "yes" | valkey-cli --cluster create $NODE_ADDRESSES \
+                --cluster-replicas {{ .Values.cluster.replicasPerMaster }} \
+                -a $VALKEY_PASSWORD
+              {{- else }}
+              echo "yes" | valkey-cli --cluster create $NODE_ADDRESSES \
+                --cluster-replicas {{ .Values.cluster.replicasPerMaster }}
+              {{- end }}
+
+              echo "Cluster initialization completed successfully!"
+
+              # Verify cluster health
+              {{- if .Values.auth.enabled }}
+              valkey-cli -h $FIRST_POD -a $VALKEY_PASSWORD cluster info
+              valkey-cli -h $FIRST_POD -a $VALKEY_PASSWORD cluster nodes
+              {{- else }}
+              valkey-cli -h $FIRST_POD cluster info
+              valkey-cli -h $FIRST_POD cluster nodes
+              {{- end }}
+          env:
+            {{- if .Values.auth.enabled }}
+            - name: VALKEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ValkeyCluster.secretName" . }}
+                  key: {{ include "ValkeyCluster.secretPasswordKey" . }}
+            {{- end }}
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+{{- end }}

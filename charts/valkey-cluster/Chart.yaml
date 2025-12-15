@@ -1,0 +1,7 @@
+apiVersion: v2
+name: valkey-cluster
+description: A Helm chart for deploying Valkey in cluster or standalone mode with persistence, monitoring, and automated cluster initialization
+type: application
+version: 1.0.0
+appVersion: "8.0.1"
+icon: https://cncf-branding.netlify.app/img/projects/helm/icon/color/helm-icon-color.png

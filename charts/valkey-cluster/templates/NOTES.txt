@@ -1,0 +1,90 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+
+{{- if .Values.cluster.enabled }}
+** Valkey Cluster Mode **
+
+A Valkey cluster with {{ .Values.replicaCount }} nodes has been deployed.
+- Masters: {{ .Values.cluster.masterCount }}
+- Replicas per master: {{ .Values.cluster.replicasPerMaster }}
+
+{{- if .Values.cluster.init.enabled }}
+The cluster will be automatically initialized via a PostSync Job.
+{{- else }}
+Note: Cluster initialization is disabled. You will need to manually create the cluster.
+{{- end }}
+
+{{- else }}
+** Valkey Standalone Mode **
+
+A standalone Valkey instance with {{ .Values.replicaCount }} replica(s) has been deployed.
+{{- end }}
+
+To connect to your Valkey service:
+
+1. Get the Valkey password:
+
+{{- if .Values.auth.enabled }}
+   export VALKEY_PASSWORD=$(kubectl get secret --namespace {{ .Release.Namespace }} {{ include "ValkeyCluster.secretName" . }} -o jsonpath="{.data.{{ include "ValkeyCluster.secretPasswordKey" . }}}" | base64 -d)
+{{- else }}
+   Authentication is disabled.
+{{- end }}
+
+2. Connect to Valkey from within the cluster:
+
+   Client service: {{ include "ValkeyCluster.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.client.port }}
+{{- if .Values.cluster.enabled }}
+   Headless service (for direct pod access): {{ include "ValkeyCluster.fullname" . }}-headless.{{ .Release.Namespace }}.svc.cluster.local:6379
+{{- end }}
+
+3. Run a Valkey client pod:
+
+   kubectl run --namespace {{ .Release.Namespace }} valkey-client --rm --tty -i --restart='Never' \
+     --image {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }} \
+     {{- if .Values.auth.enabled }}
+     --env VALKEY_PASSWORD=$VALKEY_PASSWORD \
+     {{- end }}
+     -- bash
+
+   Then connect using:
+   {{- if .Values.auth.enabled }}
+   valkey-cli -h {{ include "ValkeyCluster.fullname" . }} -a $VALKEY_PASSWORD
+   {{- else }}
+   valkey-cli -h {{ include "ValkeyCluster.fullname" . }}
+   {{- end }}
+
+{{- if .Values.cluster.enabled }}
+
+4. Check cluster status:
+
+   {{- if .Values.auth.enabled }}
+   valkey-cli -h {{ include "ValkeyCluster.fullname" . }} -a $VALKEY_PASSWORD cluster info
+   valkey-cli -h {{ include "ValkeyCluster.fullname" . }} -a $VALKEY_PASSWORD cluster nodes
+   {{- else }}
+   valkey-cli -h {{ include "ValkeyCluster.fullname" . }} cluster info
+   valkey-cli -h {{ include "ValkeyCluster.fullname" . }} cluster nodes
+   {{- end }}
+{{- end }}
+
+{{- if .Values.metrics.enabled }}
+
+5. Metrics are available at:
+
+   Each pod exposes metrics on port {{ .Values.metrics.port }}
+   {{- if .Values.serviceMonitor.enabled }}
+   ServiceMonitor has been created for Prometheus Operator
+   {{- end }}
+{{- end }}
+
+{{- if .Values.persistence.enabled }}
+
+6. Persistence:
+
+   Data is persisted to {{ .Values.persistence.size }} volumes using {{ .Values.persistence.storageClass }} StorageClass
+{{- else }}
+
+WARNING: Persistence is disabled! Data will be lost if pods are restarted.
+{{- end }}
+
+For more information, visit: https://valkey.io/
