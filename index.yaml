@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   cronjob:
   - apiVersion: v2
+    appVersion: 1.36.1
+    created: "2025-12-15T18:49:59.263349207Z"
+    description: Innago Helm Chart for deploying a CronJob
+    digest: 86c2f492f77c6cd0363d0fb6083f725297ad69d4d887f58c55ced767fe7d8137
+    name: cronjob
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/cronjob-2.0.0/cronjob-2.0.0.tgz
+    version: 2.0.0
+  - apiVersion: v2
     appVersion: 1.16.0
     created: "2025-05-07T22:25:30.591498459Z"
     description: Innago Helm Chart for deploying a CronJob
@@ -12,6 +22,27 @@ entries:
     - https://github.com/innago-property-management/helm-charts/releases/download/cronjob-1.0.0/cronjob-1.0.0.tgz
     version: 1.0.0
   innago-vault-k8s-role-operator:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-12-15T18:49:59.467856157Z"
+    dependencies:
+    - alias: innago-webapp
+      import-values:
+      - child: serviceAccount
+        parent: serviceAccount
+      name: webapp
+      repository: oci://ghcr.io/innago-property-management/helm-charts
+      tags:
+      - webapp
+      - innago
+      version: 2.5.0
+    description: A Helm chart for Kubernetes
+    digest: f956244c2d1ef3c95b9e8477d3c27b2e8a1d301d686b5a4eef6fbc2eed605ce2
+    name: innago-vault-k8s-role-operator
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/innago-vault-k8s-role-operator-1.0.0/innago-vault-k8s-role-operator-1.0.0.tgz
+    version: 1.0.0
   - apiVersion: v2
     appVersion: 0.1.1
     created: "2025-08-25T09:20:16.09029588Z"
@@ -55,6 +86,20 @@ entries:
     - https://github.com/innago-property-management/helm-charts/releases/download/innago-vault-k8s-role-operator-0.1.0/innago-vault-k8s-role-operator-0.1.0.tgz
     version: 0.1.0
   registry-container-webhook:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-12-15T18:49:59.716051917Z"
+    dependencies:
+    - name: harbor-container-webhook
+      repository: https://indeedeng.github.io/harbor-container-webhook
+      version: 0.8.1
+    description: App to rewrite image repos to use specified caching registry
+    digest: 7ffb45ade881bd3f10b692ae66780143eba9f5d789f666a2e6c2f95184d0e461
+    name: registry-container-webhook
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/registry-container-webhook-2.0.0/registry-container-webhook-2.0.0.tgz
+    version: 2.0.0
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2025-05-07T22:25:30.802156897Z"
@@ -238,4 +283,4 @@ entries:
     urls:
     - https://github.com/innago-property-management/helm-charts/releases/download/webapp-1.0.0/webapp-1.0.0.tgz
     version: 1.0.0
-generated: "2025-12-15T18:08:34.380058925Z"
+generated: "2025-12-15T18:50:00.129491461Z"
