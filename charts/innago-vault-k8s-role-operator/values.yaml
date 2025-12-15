@@ -6,13 +6,24 @@ innago-webapp:
   # -- Liveness and readiness probe settings.
   # See https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   health:
-    # -- Liveness probe settings.
-    livenessProbe:
+    # -- Startup probe settings (operators need time for leader election).
+    startupProbe:
       httpGet: &health
         # -- The path for the health probe.
         path: /healthz
         # -- The port for the health probe.
         port: http
+      # -- Initial delay before first check (seconds).
+      initialDelaySeconds: 10
+      # -- How often to perform the probe (seconds).
+      periodSeconds: 5
+      # -- Timeout for the probe (seconds).
+      timeoutSeconds: 3
+      # -- Number of failures before pod is considered unhealthy.
+      failureThreshold: 30
+    # -- Liveness probe settings.
+    livenessProbe:
+      httpGet: *health
     # -- Readiness probe settings.
     readinessProbe:
       httpGet: *health
@@ -23,7 +34,8 @@ innago-webapp:
     # -- If true, a PodDisruptionBudget will not be created.
     disabled: false
     # -- The minimum number of pods that must be available after an eviction.
-    minAvailable: 0
+    # IMPORTANT: Set to 1 for production to ensure high availability during maintenance.
+    minAvailable: 1
     # -- The maximum number of pods that can be unavailable after an eviction.
     maxUnavailable: 1
     # -- The policy for evicting unhealthy pods.
@@ -48,14 +60,31 @@ innago-webapp:
     # -- The tag for the application image.
     tag: &tag 1.0.0
 
+  # -- Resource requests and limits for the operator.
+  # CRITICAL: Prevents OOM kills and ensures stable operation.
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+  # -- Vault configuration
+  vault:
+    # -- Vault server address (protocol://host:port)
+    # IMPORTANT: Configure this for your environment. Default assumes Vault in 'security' namespace.
+    address: https://vault.security.svc:8200
+    # -- Name of the secret containing the Vault TLS certificate
+    # Recommendation: Use https://github.com/emberstack/kubernetes-reflector
+    # to replicate the secret into all namespaces
+    tlsSecret: vault-tls
+
   # -- Annotations to add to the primary pod
   podAnnotations:
-    # -- vault address
-    vault.security.banzaicloud.io/vault-addr: https://vault.default.svc:8200
-    # -- name of the secret containing the vault TLS certificate
-    # recommendation: use something like
-    # https://github.com/emberstack/kubernetes-reflector
-    # to replicate the secret into all namespaces
+    # vault.security.banzaicloud.io/vault-addr is set via vault.address above
+    vault.security.banzaicloud.io/vault-addr: https://vault.security.svc:8200
+    # vault.security.banzaicloud.io/vault-tls-secret is set via vault.tlsSecret above
     vault.security.banzaicloud.io/vault-tls-secret: vault-tls
     keptn.sh/workload: *name
     keptn.sh/version: *tag
