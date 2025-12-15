@@ -3,7 +3,53 @@
 # Declare variables to be passed into your templates.
 
 harbor-container-webhook:
+  # -- Replica count for high availability
+  # IMPORTANT: Set to 2+ for production to prevent webhook unavailability
+  replicaCount: 2
+
+  # -- Resource requests and limits
+  # CRITICAL: Prevents OOM kills which would block pod creation cluster-wide
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+  # -- Pod anti-affinity to spread across nodes
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: harbor-container-webhook
+            topologyKey: kubernetes.io/hostname
+
+  # -- Pod security context
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
+    fsGroup: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- Container security context
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+
   # -- rules is an array -- to change one or add one, you MUST copy all the others that you want
+  # IMPORTANT: Replace 'REPO' with your actual registry URL before deploying
   rules:
     - name: 'docker.io rewrite rule'
       # -- image refs must match at least one of the rules, and not match any excludes
@@ -30,3 +76,11 @@ harbor-container-webhook:
         - '^gcr.io'
       replace: 'REPO/gcr'
       checkUpstream: false
+
+# -- Pod Disruption Budget configuration
+# CRITICAL: Prevents all webhook pods from being terminated simultaneously
+podDisruptionBudget:
+  # -- Enable PodDisruptionBudget
+  enabled: true
+  # -- Minimum number of pods that must be available during voluntary disruptions
+  minAvailable: 1
