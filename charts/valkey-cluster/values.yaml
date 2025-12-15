@@ -142,10 +142,10 @@ persistence:
   # -- Enable persistence using PVC
   enabled: true
   # -- PVC Storage Class
-  # If defined, storageClassName: <storageClass>
+  # Leave empty ("") to use cluster default storage class
   # If set to "-", storageClassName: "", which disables dynamic provisioning
-  # If undefined (the default) or set to null, no storageClassName spec is set
-  storageClass: "ebs-sc"
+  # Set to specific class name for cloud providers (e.g., "ebs-sc" for AWS, "standard-rwo" for GKE)
+  storageClass: ""
   # -- PVC Access Mode
   accessModes:
     - ReadWriteOnce
@@ -281,10 +281,15 @@ serviceMonitor:
 podDisruptionBudget:
   # -- Enable PodDisruptionBudget
   enabled: true
-  # -- Minimum available pods (for 6-node cluster, keep at least 4 available)
-  minAvailable: 4
+  # -- Minimum available pods
+  # If not set, defaults to:
+  # - Cluster mode: max(1, replicaCount - 2) [allows up to 2 nodes down]
+  # - Standalone mode: 1 [keeps at least 1 instance]
+  # Set explicitly to override auto-calculation
+  minAvailable: null
   # -- Maximum unavailable pods (alternative to minAvailable)
-  # maxUnavailable: 1
+  # If both minAvailable and maxUnavailable are null, minAvailable is auto-calculated
+  maxUnavailable: null
 
 # -- Topology spread constraints for availability zone distribution
 topologySpreadConstraints:
@@ -304,7 +309,8 @@ networkPolicy:
   # -- Ingress rules configuration
   ingress:
     # -- Allow external client connections (beyond pod-to-pod)
-    allowExternal: true
+    # Requires at least one of namespaceSelector or podSelector to be set
+    allowExternal: false
     # -- Namespace selector for allowed clients
     # Example: namespaceSelector: { matchLabels: { name: "app-namespace" } }
     namespaceSelector: {}

@@ -1,3 +1,9 @@
+{{- if .Values.cluster.enabled }}
+{{- $expectedReplicas := mul .Values.cluster.masterCount (add1 .Values.cluster.replicasPerMaster) }}
+{{- if ne (int .Values.replicaCount) $expectedReplicas }}
+{{- fail (printf "Cluster mode requires replicaCount (%d) to equal masterCount * (1 + replicasPerMaster) = %d * (1 + %d) = %d" (int .Values.replicaCount) (int .Values.cluster.masterCount) (int .Values.cluster.replicasPerMaster) $expectedReplicas) }}
+{{- end }}
+{{- end }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:

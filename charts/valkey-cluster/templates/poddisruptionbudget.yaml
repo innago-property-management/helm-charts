@@ -8,9 +8,17 @@ metadata:
 spec:
   {{- if .Values.podDisruptionBudget.minAvailable }}
   minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
-  {{- end }}
-  {{- if .Values.podDisruptionBudget.maxUnavailable }}
+  {{- else if .Values.podDisruptionBudget.maxUnavailable }}
   maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
+  {{- else }}
+  {{- /* Calculate sensible default based on cluster mode */}}
+  {{- if .Values.cluster.enabled }}
+  {{- /* For cluster mode: allow up to 2 nodes down, but ensure at least 1 remains */}}
+  minAvailable: {{ max 1 (sub (int .Values.replicaCount) 2) }}
+  {{- else }}
+  {{- /* For standalone mode: keep at least 1 instance available */}}
+  minAvailable: 1
+  {{- end }}
   {{- end }}
   selector:
     matchLabels:

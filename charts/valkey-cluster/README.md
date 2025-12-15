@@ -57,30 +57,31 @@ A Helm chart for deploying Valkey in cluster or standalone mode with persistence
 | metrics.resources | object | `{"limits":{"cpu":"100m","memory":"128Mi"},"requests":{"cpu":"50m","memory":"64Mi"}}` | redis_exporter resources |
 | metrics.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | redis_exporter security context |
 | nameOverride | string | `""` | String to partially override valkey-cluster.fullname |
-| networkPolicy | object | `{"egress":{"customRules":[],"dns":{"to":[]},"enabled":false},"enabled":false,"ingress":{"allowExternal":true,"customRules":[],"namespaceSelector":{},"podSelector":{},"prometheusNamespaceSelector":{}}}` | Network policy configuration |
+| networkPolicy | object | `{"egress":{"customRules":[],"dns":{"to":[]},"enabled":false},"enabled":false,"ingress":{"allowExternal":false,"customRules":[],"namespaceSelector":{},"podSelector":{},"prometheusNamespaceSelector":{}}}` | Network policy configuration |
 | networkPolicy.egress | object | `{"customRules":[],"dns":{"to":[]},"enabled":false}` | Egress rules configuration |
 | networkPolicy.egress.customRules | list | `[]` | Custom egress rules (advanced) |
 | networkPolicy.egress.dns | object | `{"to":[]}` | DNS egress configuration |
 | networkPolicy.egress.dns.to | list | `[]` | Custom DNS egress selectors (overrides defaults) If unset, defaults to kube-system namespace with kube-dns labels For CoreDNS or different configurations, customize these selectors Example for custom CoreDNS: to:   - namespaceSelector:       matchLabels:         kubernetes.io/metadata.name: kube-system   - podSelector:       matchLabels:         k8s-app: coredns |
 | networkPolicy.egress.enabled | bool | `false` | Enable egress rules (restricts outbound traffic) |
 | networkPolicy.enabled | bool | `false` | Enable NetworkPolicy creation |
-| networkPolicy.ingress | object | `{"allowExternal":true,"customRules":[],"namespaceSelector":{},"podSelector":{},"prometheusNamespaceSelector":{}}` | Ingress rules configuration |
-| networkPolicy.ingress.allowExternal | bool | `true` | Allow external client connections (beyond pod-to-pod) |
+| networkPolicy.ingress | object | `{"allowExternal":false,"customRules":[],"namespaceSelector":{},"podSelector":{},"prometheusNamespaceSelector":{}}` | Ingress rules configuration |
+| networkPolicy.ingress.allowExternal | bool | `false` | Allow external client connections (beyond pod-to-pod) Requires at least one of namespaceSelector or podSelector to be set |
 | networkPolicy.ingress.customRules | list | `[]` | Custom ingress rules (advanced) |
 | networkPolicy.ingress.namespaceSelector | object | `{}` | Namespace selector for allowed clients Example: namespaceSelector: { matchLabels: { name: "app-namespace" } } |
 | networkPolicy.ingress.podSelector | object | `{}` | Pod selector for allowed clients Example: podSelector: { matchLabels: { app: "my-app" } } |
 | networkPolicy.ingress.prometheusNamespaceSelector | object | `{}` | Namespace selector for Prometheus Example: prometheusNamespaceSelector: { matchLabels: { name: "monitoring" } } |
 | nodeSelector | object | `{}` | Node selector for pod assignment Example for Karpenter: { karpenter.sh/nodepool: stateful } Example for node type: { node.kubernetes.io/instance-type: m5.large } |
-| persistence | object | `{"accessModes":["ReadWriteOnce"],"annotations":{},"enabled":true,"size":"8Gi","storageClass":"ebs-sc"}` | Persistence configuration |
+| persistence | object | `{"accessModes":["ReadWriteOnce"],"annotations":{},"enabled":true,"size":"8Gi","storageClass":""}` | Persistence configuration |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | PVC Access Mode |
 | persistence.annotations | object | `{}` | Annotations for PVCs |
 | persistence.enabled | bool | `true` | Enable persistence using PVC |
 | persistence.size | string | `"8Gi"` | PVC Storage Request |
-| persistence.storageClass | string | `"ebs-sc"` | PVC Storage Class If defined, storageClassName: <storageClass> If set to "-", storageClassName: "", which disables dynamic provisioning If undefined (the default) or set to null, no storageClassName spec is set |
+| persistence.storageClass | string | `""` | PVC Storage Class Leave empty ("") to use cluster default storage class If set to "-", storageClassName: "", which disables dynamic provisioning Set to specific class name for cloud providers (e.g., "ebs-sc" for AWS, "standard-rwo" for GKE) |
 | podAnnotations | object | `{}` | Annotations to add to the pod |
-| podDisruptionBudget | object | `{"enabled":true,"minAvailable":4}` | Pod disruption budget configuration |
+| podDisruptionBudget | object | `{"enabled":true,"maxUnavailable":null,"minAvailable":null}` | Pod disruption budget configuration |
 | podDisruptionBudget.enabled | bool | `true` | Enable PodDisruptionBudget |
-| podDisruptionBudget.minAvailable | int | `4` | Minimum available pods (for 6-node cluster, keep at least 4 available) |
+| podDisruptionBudget.maxUnavailable | string | `nil` | Maximum unavailable pods (alternative to minAvailable) If both minAvailable and maxUnavailable are null, minAvailable is auto-calculated |
+| podDisruptionBudget.minAvailable | string | `nil` | Minimum available pods If not set, defaults to: - Cluster mode: max(1, replicaCount - 2) [allows up to 2 nodes down] - Standalone mode: 1 [keeps at least 1 instance] Set explicitly to override auto-calculation |
 | podSecurityContext | object | `{"fsGroup":1000,"runAsGroup":1000,"runAsUser":1000}` | Pod security context |
 | readinessProbe | object | `{"enabled":true,"failureThreshold":3,"initialDelaySeconds":10,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":3}` | Readiness probe configuration |
 | replicaCount | int | `6` | Number of Valkey replicas to deploy For cluster mode: minimum 6 (3 masters + 3 replicas) For standalone mode: 1-2 |

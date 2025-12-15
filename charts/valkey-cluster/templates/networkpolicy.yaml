@@ -29,6 +29,9 @@ spec:
         {{- end }}
     {{- if .Values.networkPolicy.ingress.allowExternal }}
     # Allow external client connections
+    {{- if not (or .Values.networkPolicy.ingress.namespaceSelector .Values.networkPolicy.ingress.podSelector) }}
+    {{- fail "networkPolicy.ingress.allowExternal requires at least one of namespaceSelector or podSelector to be set (empty selectors would allow all namespaces/pods)" }}
+    {{- end }}
     - from:
         {{- if .Values.networkPolicy.ingress.namespaceSelector }}
         - namespaceSelector:
@@ -44,13 +47,12 @@ spec:
     {{- end }}
     {{- if .Values.metrics.enabled }}
     # Allow Prometheus to scrape metrics
+    {{- if not .Values.networkPolicy.ingress.prometheusNamespaceSelector }}
+    {{- fail "networkPolicy.enabled with metrics.enabled requires networkPolicy.ingress.prometheusNamespaceSelector to be set (e.g., {matchLabels: {name: \"monitoring\"}})" }}
+    {{- end }}
     - from:
-        {{- if .Values.networkPolicy.ingress.prometheusNamespaceSelector }}
         - namespaceSelector:
             {{- toYaml .Values.networkPolicy.ingress.prometheusNamespaceSelector | nindent 12 }}
-        {{- else }}
-        - namespaceSelector: {}
-        {{- end }}
       ports:
         - protocol: TCP
           port: {{ .Values.metrics.port }}
