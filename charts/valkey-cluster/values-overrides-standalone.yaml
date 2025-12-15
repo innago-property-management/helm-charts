@@ -46,7 +46,7 @@ resources:
     cpu: 500m
     memory: 1Gi
 
-# Node scheduling
+# Node scheduling (Karpenter-specific)
 nodeSelector:
   karpenter.sh/nodepool: stateful
 

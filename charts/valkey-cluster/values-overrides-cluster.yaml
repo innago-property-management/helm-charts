@@ -25,14 +25,16 @@ cluster:
     activeDeadlineSeconds: 300
     hookType: "argocd"  # Use "helm" for native Helm hooks
 
-# Authentication (recommended for production)
+# Authentication (required for production)
 auth:
   enabled: true
-  # Option 1: Auto-generate password (recommended)
-  password: ""
-  # Option 2: Use existing secret
-  # existingSecret: "valkey-auth"
-  # existingSecretPasswordKey: "password"
+  # Use existing secret (recommended for production)
+  password: ""  # Leave empty when using existingSecret
+  autoGenerate: false  # Never auto-generate in production
+  existingSecret: "valkey-password"  # Create this secret externally
+  existingSecretPasswordKey: "password"
+  # For development/testing only:
+  # autoGenerate: true
 
 # Valkey configuration
 config:
@@ -60,7 +62,7 @@ resources:
     cpu: 1000m
     memory: 2Gi
 
-# Node scheduling
+# Node scheduling (Karpenter-specific)
 nodeSelector:
   karpenter.sh/nodepool: stateful
 

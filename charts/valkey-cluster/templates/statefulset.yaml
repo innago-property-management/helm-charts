@@ -48,7 +48,9 @@ spec:
               {{- end }}
               {{- if .Values.auth.enabled }}
               VALKEY_PASSWORD=$(cat /mnt/secrets/{{ include "ValkeyCluster.secretPasswordKey" . }})
-              sed -i "s/\${VALKEY_PASSWORD}/$VALKEY_PASSWORD/g" /mnt/config/valkey.conf
+              # Use awk instead of sed for safe password substitution (handles special characters)
+              awk -v pwd="$VALKEY_PASSWORD" '{gsub(/\$\{VALKEY_PASSWORD\}/, pwd); print}' /mnt/config/valkey.conf > /mnt/config/valkey.conf.tmp
+              mv /mnt/config/valkey.conf.tmp /mnt/config/valkey.conf
               {{- end }}
           volumeMounts:
             - name: config-map

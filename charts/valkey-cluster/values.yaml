@@ -107,12 +107,14 @@ auth:
   # -- Enable password authentication
   enabled: true
   # -- Valkey password (if not using existingSecret)
-  # Leave empty with autoGenerate=true to auto-generate a random password
+  # IMPORTANT: You must configure ONE of: password, autoGenerate=true, or existingSecret
+  # Leave empty when using existingSecret or autoGenerate
   password: ""
   # -- Auto-generate a random password if password is empty (and no existingSecret)
-  # WARNING: Auto-generated passwords are not persisted - set to false for production
-  autoGenerate: false
-  # -- Name of existing secret containing Valkey password
+  # WARNING: Auto-generated passwords change on each helm template render
+  # Set to true for development/testing ONLY. Use existingSecret for production.
+  autoGenerate: true
+  # -- Name of existing secret containing Valkey password (recommended for production)
   existingSecret: ""
   # -- Key in existing secret that contains the password
   existingSecretPasswordKey: "password"
@@ -162,8 +164,9 @@ resources:
     cpu: 1000m
 
 # -- Node selector for pod assignment
-nodeSelector:
-  karpenter.sh/nodepool: stateful
+# Example for Karpenter: { karpenter.sh/nodepool: stateful }
+# Example for node type: { node.kubernetes.io/instance-type: m5.large }
+nodeSelector: {}
 
 # -- Tolerations for pod assignment
 tolerations: []
@@ -317,6 +320,20 @@ networkPolicy:
   egress:
     # -- Enable egress rules (restricts outbound traffic)
     enabled: false
+    # -- DNS egress configuration
+    dns:
+      # -- Custom DNS egress selectors (overrides defaults)
+      # If unset, defaults to kube-system namespace with kube-dns labels
+      # For CoreDNS or different configurations, customize these selectors
+      # Example for custom CoreDNS:
+      # to:
+      #   - namespaceSelector:
+      #       matchLabels:
+      #         kubernetes.io/metadata.name: kube-system
+      #   - podSelector:
+      #       matchLabels:
+      #         k8s-app: coredns
+      to: []
     # -- Custom egress rules (advanced)
     customRules: []
 

@@ -12,12 +12,12 @@ A Helm chart for deploying Valkey in cluster or standalone mode with persistence
 | affinity.podAntiAffinity | object | `{"type":"preferred","weight":100}` | Pod anti-affinity configuration |
 | affinity.podAntiAffinity.type | string | `"preferred"` | Use preferred (soft) or required (hard) anti-affinity "preferred" allows pods to be scheduled on same node if necessary "required" enforces strict node distribution |
 | affinity.podAntiAffinity.weight | int | `100` | Weight for preferred anti-affinity (1-100) |
-| auth | object | `{"autoGenerate":false,"enabled":true,"existingSecret":"","existingSecretPasswordKey":"password","password":""}` | Valkey authentication configuration |
-| auth.autoGenerate | bool | `false` | Auto-generate a random password if password is empty (and no existingSecret) WARNING: Auto-generated passwords are not persisted - set to false for production |
+| auth | object | `{"autoGenerate":true,"enabled":true,"existingSecret":"","existingSecretPasswordKey":"password","password":""}` | Valkey authentication configuration |
+| auth.autoGenerate | bool | `true` | Auto-generate a random password if password is empty (and no existingSecret) WARNING: Auto-generated passwords change on each helm template render Set to true for development/testing ONLY. Use existingSecret for production. |
 | auth.enabled | bool | `true` | Enable password authentication |
-| auth.existingSecret | string | `""` | Name of existing secret containing Valkey password |
+| auth.existingSecret | string | `""` | Name of existing secret containing Valkey password (recommended for production) |
 | auth.existingSecretPasswordKey | string | `"password"` | Key in existing secret that contains the password |
-| auth.password | string | `""` | Valkey password (if not using existingSecret) Leave empty with autoGenerate=true to auto-generate a random password |
+| auth.password | string | `""` | Valkey password (if not using existingSecret) IMPORTANT: You must configure ONE of: password, autoGenerate=true, or existingSecret Leave empty when using existingSecret or autoGenerate |
 | cluster | object | `{"allowReadsWhenDown":"no","enabled":true,"init":{"activeDeadlineSeconds":300,"backoffLimit":5,"enabled":true,"hookType":"argocd"},"masterCount":3,"nodeTimeout":5000,"replicaValidityFactor":10,"replicasPerMaster":1,"requireFullCoverage":"no"}` | Valkey cluster configuration |
 | cluster.allowReadsWhenDown | string | `"no"` | Allow reads when cluster is marked as failed |
 | cluster.enabled | bool | `true` | Enable cluster mode (requires minimum 6 replicas) |
@@ -57,9 +57,11 @@ A Helm chart for deploying Valkey in cluster or standalone mode with persistence
 | metrics.resources | object | `{"limits":{"cpu":"100m","memory":"128Mi"},"requests":{"cpu":"50m","memory":"64Mi"}}` | redis_exporter resources |
 | metrics.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | redis_exporter security context |
 | nameOverride | string | `""` | String to partially override valkey-cluster.fullname |
-| networkPolicy | object | `{"egress":{"customRules":[],"enabled":false},"enabled":false,"ingress":{"allowExternal":true,"customRules":[],"namespaceSelector":{},"podSelector":{},"prometheusNamespaceSelector":{}}}` | Network policy configuration |
-| networkPolicy.egress | object | `{"customRules":[],"enabled":false}` | Egress rules configuration |
+| networkPolicy | object | `{"egress":{"customRules":[],"dns":{"to":[]},"enabled":false},"enabled":false,"ingress":{"allowExternal":true,"customRules":[],"namespaceSelector":{},"podSelector":{},"prometheusNamespaceSelector":{}}}` | Network policy configuration |
+| networkPolicy.egress | object | `{"customRules":[],"dns":{"to":[]},"enabled":false}` | Egress rules configuration |
 | networkPolicy.egress.customRules | list | `[]` | Custom egress rules (advanced) |
+| networkPolicy.egress.dns | object | `{"to":[]}` | DNS egress configuration |
+| networkPolicy.egress.dns.to | list | `[]` | Custom DNS egress selectors (overrides defaults) If unset, defaults to kube-system namespace with kube-dns labels For CoreDNS or different configurations, customize these selectors Example for custom CoreDNS: to:   - namespaceSelector:       matchLabels:         kubernetes.io/metadata.name: kube-system   - podSelector:       matchLabels:         k8s-app: coredns |
 | networkPolicy.egress.enabled | bool | `false` | Enable egress rules (restricts outbound traffic) |
 | networkPolicy.enabled | bool | `false` | Enable NetworkPolicy creation |
 | networkPolicy.ingress | object | `{"allowExternal":true,"customRules":[],"namespaceSelector":{},"podSelector":{},"prometheusNamespaceSelector":{}}` | Ingress rules configuration |
@@ -68,7 +70,7 @@ A Helm chart for deploying Valkey in cluster or standalone mode with persistence
 | networkPolicy.ingress.namespaceSelector | object | `{}` | Namespace selector for allowed clients Example: namespaceSelector: { matchLabels: { name: "app-namespace" } } |
 | networkPolicy.ingress.podSelector | object | `{}` | Pod selector for allowed clients Example: podSelector: { matchLabels: { app: "my-app" } } |
 | networkPolicy.ingress.prometheusNamespaceSelector | object | `{}` | Namespace selector for Prometheus Example: prometheusNamespaceSelector: { matchLabels: { name: "monitoring" } } |
-| nodeSelector | object | `{"karpenter.sh/nodepool":"stateful"}` | Node selector for pod assignment |
+| nodeSelector | object | `{}` | Node selector for pod assignment Example for Karpenter: { karpenter.sh/nodepool: stateful } Example for node type: { node.kubernetes.io/instance-type: m5.large } |
 | persistence | object | `{"accessModes":["ReadWriteOnce"],"annotations":{},"enabled":true,"size":"8Gi","storageClass":"ebs-sc"}` | Persistence configuration |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | PVC Access Mode |
 | persistence.annotations | object | `{}` | Annotations for PVCs |

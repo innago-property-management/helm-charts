@@ -104,10 +104,23 @@ lifecycle:
 ```bash
 ✅ helm template: PreStop hook renders with BGSAVE + sleep 5
 ✅ helm template with lifecycle.preStop.enabled=false: No lifecycle block
-✅ helm template with auth.enabled=false: BGSAVE without password
+✅ helm template conditionally uses password based on auth.enabled
 ```
 
-**Implementation Details:**
+**Implementation Details (with auth enabled):**
+```yaml
+lifecycle:
+  preStop:
+    exec:
+      command:
+        - sh
+        - -c
+        - |
+          valkey-cli -a $VALKEY_PASSWORD BGSAVE
+          sleep 5
+```
+
+**Implementation Details (with auth disabled):**
 ```yaml
 lifecycle:
   preStop:
