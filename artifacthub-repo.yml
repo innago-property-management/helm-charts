@@ -1,0 +1,11 @@
+# Artifact Hub repository metadata file
+# https://artifacthub.io/docs/topics/repositories/
+
+# Repository ID for verified publisher status
+repositoryID: 73ceb950-0e86-4593-98a1-059e9c77be09
+
+# Repository owners
+owners:
+  - name: Innago
+    email: support@innago.com
+    url: https://github.com/innago-property-management
