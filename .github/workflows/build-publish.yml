@@ -75,7 +75,7 @@ jobs:
       with:
         charts_dir: 'charts'
         skip_existing: 'true'
-    - name: Deploy artifacthub-repo.yml to gh-pages
+    - name: Deploy artifacthub-repo.yml and assets to gh-pages
       if: github.ref == 'refs/heads/main'
       run: |
         git config user.name "$GITHUB_ACTOR"
@@ -83,11 +83,12 @@ jobs:
         git fetch origin gh-pages
         git checkout gh-pages
         git checkout main -- artifacthub-repo.yml
-        git add artifacthub-repo.yml
+        git checkout main -- assets/ || true
+        git add artifacthub-repo.yml assets/
         if git diff --staged --quiet; then
-          echo "No changes to artifacthub-repo.yml"
+          echo "No changes to deploy"
         else
-          git commit -m "Update artifacthub-repo.yml from main [skip ci]"
+          git commit -m "Update artifacthub-repo.yml and assets from main [skip ci]"
           git push origin gh-pages
         fi
         git checkout main
