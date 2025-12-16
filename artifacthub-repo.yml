@@ -1,0 +1,8 @@
+# Artifact Hub repository metadata file
+# https://artifacthub.io/docs/topics/repositories/
+
+# Repository owners
+owners:
+  - name: Innago
+    email: support@innago.com
+    url: https://github.com/innago-property-management
