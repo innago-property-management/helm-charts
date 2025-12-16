@@ -9,7 +9,7 @@ home: https://innago-property-management.github.io/helm-charts/valkey-cluster
 sources:
   - https://github.com/innago/helm-charts/tree/main/charts/valkey-cluster
 maintainers:
-  - name: "Chris Anderson"
+  - name: "Innago"
     email: "support@innago.com"
 keywords:
   - valkey
