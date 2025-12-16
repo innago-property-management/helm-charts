@@ -2,7 +2,7 @@ apiVersion: v2
 name: valkey-cluster
 description: A Helm chart for deploying Valkey in cluster or standalone mode with persistence, monitoring, and automated cluster initialization
 type: application
-version: 1.0.1
+version: 1.0.2
 appVersion: "8.0.1"
 icon: https://cncf-branding.netlify.app/img/projects/helm/icon/color/helm-icon-color.png
 home: https://innago-property-management.github.io/helm-charts/valkey-cluster
@@ -20,6 +20,7 @@ keywords:
 annotations:
   artifacthub.io/category: "database"
   artifacthub.io/license: "Apache-2.0"
+  artifacthub.io/prerelease: "false"
   artifacthub.io/links: |
     - name: Documentation
       url: https://github.com/innago-property-management/helm-charts/tree/main/charts/valkey-cluster
@@ -28,8 +29,10 @@ annotations:
   artifacthub.io/images: |
     - name: valkey
       image: docker.io/valkey/valkey:8.0.1
+      whitelisted: true
     - name: redis-exporter
       image: docker.io/oliver006/redis_exporter:v1.66.0
+      whitelisted: true
   artifacthub.io/changes: |
-    - kind: added
-      description: "Add all required fields for Artifact Hub"
+    - kind: changed
+      description: "Bump chart version for Artifact Hub metadata enhancements"
