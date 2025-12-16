@@ -57,7 +57,7 @@ innago-webapp:
     # -- The repository for the application image.
     repository: ghcr.io/innago-property-management/innago-vault-k8s-role-operator
     # -- The tag for the application image.
-    tag: &tag 1.0.0
+    tag: &tag 2.0.0
 
   # -- Resource requests and limits for the operator.
   # CRITICAL: Prevents OOM kills and ensures stable operation.
