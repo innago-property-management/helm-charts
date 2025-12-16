@@ -1,0 +1,59 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+{{ template "chart.description" . }}
+
+## Prerequisites
+
+### Vault Policy and Role
+
+The operator requires a Vault policy and Kubernetes auth role to manage application secrets.
+
+**1. Create the Vault policy:**
+
+```hcl
+# Policy name: innago-vault-k8s-role-operator
+
+path "auth/kubernetes/login" {
+  capabilities = ["create", "update"]
+}
+
+path "auth/kubernetes/role/*" {
+  capabilities = ["create", "update"]
+}
+
+path "sys/policies/acl/*" {
+  capabilities = ["create", "update"]
+}
+```
+
+```bash
+vault policy write innago-vault-k8s-role-operator - <<EOF
+path "auth/kubernetes/login" {
+  capabilities = ["create", "update"]
+}
+path "auth/kubernetes/role/*" {
+  capabilities = ["create", "update"]
+}
+path "sys/policies/acl/*" {
+  capabilities = ["create", "update"]
+}
+EOF
+```
+
+**2. Create the Kubernetes auth role:**
+
+```bash
+vault write auth/kubernetes/role/innago-vault-k8s-role-operator \
+  bound_service_account_names=innago-vault-k8s-role-operator \
+  bound_service_account_namespaces=innago-vault-k8s-role-operator \
+  policies=innago-vault-k8s-role-operator \
+  ttl=1h
+```
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}
