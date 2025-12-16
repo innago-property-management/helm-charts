@@ -72,9 +72,25 @@ jobs:
         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         CR_KEY: "${{ secrets.CR_KEY }}"
         CR_SIGN: true
-      with: 
+      with:
         charts_dir: 'charts'
         skip_existing: 'true'
+    - name: Deploy artifacthub-repo.yml to gh-pages
+      if: github.ref == 'refs/heads/main'
+      run: |
+        git config user.name "$GITHUB_ACTOR"
+        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+        git fetch origin gh-pages
+        git checkout gh-pages
+        git checkout main -- artifacthub-repo.yml
+        git add artifacthub-repo.yml
+        if git diff --staged --quiet; then
+          echo "No changes to artifacthub-repo.yml"
+        else
+          git commit -m "Update artifacthub-repo.yml from main [skip ci]"
+          git push origin gh-pages
+        fi
+        git checkout main
     - name: Push chart to GHCR
       run: |
         shopt -s nullglob
