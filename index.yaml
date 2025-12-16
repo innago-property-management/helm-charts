@@ -23,6 +23,27 @@ entries:
     version: 1.0.0
   innago-vault-k8s-role-operator:
   - apiVersion: v2
+    appVersion: 2.0.3
+    created: "2025-12-16T14:09:13.209688717Z"
+    dependencies:
+    - alias: innago-webapp
+      import-values:
+      - child: serviceAccount
+        parent: serviceAccount
+      name: webapp
+      repository: oci://ghcr.io/innago-property-management/helm-charts
+      tags:
+      - webapp
+      - innago
+      version: 2.5.0
+    description: A Helm chart for Kubernetes
+    digest: d7c0256ababa1cd07a54d2106e799ad83ce8d1498418a6e9c3df820d9bd7c270
+    name: innago-vault-k8s-role-operator
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/innago-vault-k8s-role-operator-2.0.3/innago-vault-k8s-role-operator-2.0.3.tgz
+    version: 2.0.3
+  - apiVersion: v2
     appVersion: 1.0.0
     created: "2025-12-16T12:59:35.04154267Z"
     dependencies:
@@ -325,4 +346,4 @@ entries:
     urls:
     - https://github.com/innago-property-management/helm-charts/releases/download/webapp-1.0.0/webapp-1.0.0.tgz
     version: 1.0.0
-generated: "2025-12-16T12:59:35.575556439Z"
+generated: "2025-12-16T14:09:14.11825013Z"
