@@ -5,3 +5,18 @@ type: application
 version: 1.0.1
 appVersion: "8.0.1"
 icon: https://cncf-branding.netlify.app/img/projects/helm/icon/color/helm-icon-color.png
+home: https://innago-property-management.github.io/helm-charts/valkey-cluster
+sources:
+  - https://github.com/innago/helm-charts/tree/main/charts/valkey-cluster
+maintainers:
+  - name: "Chris Anderson"
+    email: "support@innago.com"
+keywords:
+  - valkey
+  - cluster
+  - database
+  - key-value
+annotations:
+  artifacthub.io/changes: |
+    - kind: added
+      description: "Add all required fields for Artifact Hub"
