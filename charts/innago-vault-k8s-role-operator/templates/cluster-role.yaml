@@ -5,23 +5,31 @@ metadata:
   labels:
     app.kubernetes.io/part-of: {{ .Release.Name }}
 rules:
-  # Read access to ServiceAccounts (operator watches these for Vault role configuration)
-  - verbs: ["list", "get", "watch"]
-    resources: ["serviceaccounts"]
-    apiGroups: [""]
-  # Read access to Namespaces (operator watches namespace labels/annotations)
-  - verbs: ["list", "get", "watch"]
-    resources: ["namespaces"]
-    apiGroups: [""]
-  # Full access to ConfigMaps (operator's primary resource for storing Vault role config)
-  - verbs: ["*"]
+  # ============================================================================
+  # RBAC validated via EKS audit logging on 2025-12-16
+  # See: kubectl rbac-tool auditgen
+  # ============================================================================
+
+  # Read access to ConfigMaps (cluster-scoped for Vault role config discovery)
+  - apiGroups: [""]
     resources: ["configmaps"]
-    apiGroups: [""]
-  # Full access to CronJobs and Jobs (operator may manage these for Vault token rotation)
-  - verbs: ["*"]
-    resources: ["cronjobs", "jobs"]
-    apiGroups: ["batch"]
-  # Coordination for leader election (required for operator HA)
-  - verbs: ["*"]
-    apiGroups: ["coordination.k8s.io"]
+    verbs: ["get", "list", "watch"]
+
+  # Read access to Deployments (operator queries deployment info at startup)
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch"]
+
+  # Create Jobs (operator creates jobs for Vault token rotation)
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["create"]
+
+  # Leader election coordination (required for operator HA)
+  - apiGroups: ["coordination.k8s.io"]
     resources: ["leases"]
+    verbs: ["create", "delete", "get", "patch", "update"]
+
+  # Non-resource URLs (health/version checks)
+  - nonResourceURLs: ["/version/"]
+    verbs: ["get"]
