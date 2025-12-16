@@ -3,16 +3,17 @@ on:
   push:
     branches-ignore:
       - main
+      - gh-pages
     tags-ignore:
       - "*"
-      
+
 permissions:
   contents: read
   pull-requests: write
 
 jobs:
   pull_request:
-    if: github.ref != 'refs/heads/main'
+    if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/gh-pages'
     uses: innago-property-management/Oui-DELIVER/.github/workflows/auto-pr.yml@main
     secrets:
       token: ${{ secrets.SEMVER_TOKEN }}
