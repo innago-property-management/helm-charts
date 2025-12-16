@@ -2,9 +2,9 @@ apiVersion: v2
 name: webapp
 description: Innago Helm chart for deploying web applications to Kubernetes with production-ready patterns
 type: application
-version: 2.5.1
+version: 2.5.2
 appVersion: "2.5.0"
-icon: https://cncf-branding.netlify.app/img/projects/helm/icon/color/helm-icon-color.png
+icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
 home: https://innago-property-management.github.io/helm-charts/webapp
 sources:
   - https://github.com/innago-property-management/helm-charts/tree/main/charts/webapp
@@ -29,5 +29,5 @@ annotations:
     - name: Production Guide
       url: https://github.com/innago-property-management/helm-charts/blob/main/charts/webapp/PRODUCTION.md
   artifacthub.io/changes: |
-    - kind: added
-      description: "Add Artifact Hub metadata for chart discoverability"
+    - kind: fixed
+      description: "Fix broken Helm icon URL"

@@ -2,9 +2,9 @@ apiVersion: v2
 name: cronjob
 description: Innago Helm Chart for deploying a CronJob
 type: application
-version: 2.0.1
+version: 2.0.2
 appVersion: "1.36.1"
-icon: https://cncf-branding.netlify.app/img/projects/helm/icon/color/helm-icon-color.png
+icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
 home: https://innago-property-management.github.io/helm-charts/cronjob
 sources:
   - https://github.com/innago-property-management/helm-charts/tree/main/charts/cronjob
@@ -27,5 +27,5 @@ annotations:
     - name: Support
       url: https://github.com/innago-property-management/helm-charts/issues
   artifacthub.io/changes: |
-    - kind: added
-      description: "Add Artifact Hub metadata for chart discoverability"
+    - kind: fixed
+      description: "Fix broken Helm icon URL"

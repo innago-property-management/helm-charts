@@ -2,9 +2,9 @@ apiVersion: v2
 name: registry-container-webhook
 description: Kubernetes admission webhook to rewrite container image references for registry caching
 type: application
-version: 2.0.1
+version: 2.0.2
 appVersion: "1.16.0"
-icon: https://cncf-branding.netlify.app/img/projects/helm/icon/color/helm-icon-color.png
+icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
 home: https://innago-property-management.github.io/helm-charts/registry-container-webhook
 sources:
   - https://github.com/innago-property-management/helm-charts/tree/main/charts/registry-container-webhook
@@ -32,8 +32,8 @@ annotations:
     - name: Upstream Project
       url: https://github.com/indeedeng/harbor-container-webhook
   artifacthub.io/changes: |
-    - kind: added
-      description: "Add Artifact Hub metadata for chart discoverability"
+    - kind: fixed
+      description: "Fix broken Helm icon URL"
 
 dependencies:
   - name: harbor-container-webhook
