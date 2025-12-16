@@ -3,9 +3,9 @@ apiVersion: v2
 name: innago-vault-k8s-role-operator
 description: Kubernetes operator for managing HashiCorp Vault roles and policies
 type: application
-version: 2.0.4
+version: 2.0.5
 appVersion: "2.0.3"
-icon: https://cncf-branding.netlify.app/img/projects/helm/icon/color/helm-icon-color.png
+icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
 home: https://innago-property-management.github.io/helm-charts/innago-vault-k8s-role-operator
 sources:
   - https://github.com/innago-property-management/helm-charts/tree/main/charts/innago-vault-k8s-role-operator
@@ -34,8 +34,8 @@ annotations:
       image: ghcr.io/innago-property-management/innago-vault-k8s-role-operator:2.0.0
       whitelisted: true
   artifacthub.io/changes: |
-    - kind: added
-      description: "Add Artifact Hub metadata for chart discoverability"
+    - kind: fixed
+      description: "Fix broken Helm icon URL"
 
 dependencies:
   - name: webapp
