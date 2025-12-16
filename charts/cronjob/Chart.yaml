@@ -1,24 +1,31 @@
 apiVersion: v2
 name: cronjob
 description: Innago Helm Chart for deploying a CronJob
-
-# A chart can be either an 'application' or a 'library' chart.
-#
-# Application charts are a collection of templates that can be packaged into versioned archives
-# to be deployed.
-#
-# Library charts provide useful utilities or functions for the chart developer. They're included as
-# a dependency of application charts to inject those utilities and functions into the rendering
-# pipeline. Library charts do not define any templates and therefore cannot be deployed.
 type: application
-
-# This is the chart version. This version number should be incremented each time you make changes
-# to the chart and its templates, including the app version.
-# Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 2.0.0
-
-# This is the version number of the application being deployed. This version number should be
-# incremented each time you make changes to the application. Versions are not expected to
-# follow Semantic Versioning. They should reflect the version the application is using.
-# It is recommended to use it with quotes.
+version: 2.0.1
 appVersion: "1.36.1"
+icon: https://cncf-branding.netlify.app/img/projects/helm/icon/color/helm-icon-color.png
+home: https://innago-property-management.github.io/helm-charts/cronjob
+sources:
+  - https://github.com/innago-property-management/helm-charts/tree/main/charts/cronjob
+maintainers:
+  - name: "Innago"
+    email: "support@innago.com"
+keywords:
+  - cronjob
+  - kubernetes
+  - scheduling
+  - batch
+  - job
+annotations:
+  artifacthub.io/category: "integration-delivery"
+  artifacthub.io/license: "Apache-2.0"
+  artifacthub.io/prerelease: "false"
+  artifacthub.io/links: |
+    - name: Documentation
+      url: https://github.com/innago-property-management/helm-charts/tree/main/charts/cronjob
+    - name: Support
+      url: https://github.com/innago-property-management/helm-charts/issues
+  artifacthub.io/changes: |
+    - kind: added
+      description: "Add Artifact Hub metadata for chart discoverability"
