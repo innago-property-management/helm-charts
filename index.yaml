@@ -4,6 +4,41 @@ entries:
   - annotations:
       artifacthub.io/category: integration-delivery
       artifacthub.io/changes: |
+        - kind: fixed
+          description: "Fix broken Helm icon URL"
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://github.com/innago-property-management/helm-charts/tree/main/charts/cronjob
+        - name: Support
+          url: https://github.com/innago-property-management/helm-charts/issues
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: 1.36.1
+    created: "2025-12-16T15:51:54.973028624Z"
+    description: Innago Helm Chart for deploying a CronJob
+    digest: 0df81629c6a7335ae4f481a728e079d79af760f28807d7ec7c061c2d48227fc5
+    home: https://innago-property-management.github.io/helm-charts/cronjob
+    icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
+    keywords:
+    - cronjob
+    - kubernetes
+    - scheduling
+    - batch
+    - job
+    maintainers:
+    - email: support@innago.com
+      name: Innago
+    name: cronjob
+    sources:
+    - https://github.com/innago-property-management/helm-charts/tree/main/charts/cronjob
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/cronjob-2.0.2/cronjob-2.0.2.tgz
+    version: 2.0.2
+  - annotations:
+      artifacthub.io/category: integration-delivery
+      artifacthub.io/changes: |
         - kind: added
           description: "Add Artifact Hub metadata for chart discoverability"
       artifacthub.io/license: Apache-2.0
@@ -57,6 +92,58 @@ entries:
     - https://github.com/innago-property-management/helm-charts/releases/download/cronjob-1.0.0/cronjob-1.0.0.tgz
     version: 1.0.0
   innago-vault-k8s-role-operator:
+  - annotations:
+      artifacthub.io/category: security
+      artifacthub.io/changes: |
+        - kind: fixed
+          description: "Fix broken Helm icon URL"
+      artifacthub.io/images: |
+        - name: innago-vault-k8s-role-operator
+          image: ghcr.io/innago-property-management/innago-vault-k8s-role-operator:2.0.0
+          whitelisted: true
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://github.com/innago-property-management/helm-charts/tree/main/charts/innago-vault-k8s-role-operator
+        - name: Support
+          url: https://github.com/innago-property-management/helm-charts/issues
+      artifacthub.io/operator: "true"
+      artifacthub.io/operatorCapabilities: Basic Install
+    apiVersion: v2
+    appVersion: 2.0.3
+    created: "2025-12-16T15:51:55.158603193Z"
+    dependencies:
+    - alias: innago-webapp
+      import-values:
+      - child: serviceAccount
+        parent: serviceAccount
+      name: webapp
+      repository: oci://ghcr.io/innago-property-management/helm-charts
+      tags:
+      - webapp
+      - innago
+      version: 2.5.0
+    description: Kubernetes operator for managing HashiCorp Vault roles and policies
+    digest: 2b55ee41efbb8dcdbbece9386cd5743cdcad1d38e5d0f67603e8d74c87491b9e
+    home: https://innago-property-management.github.io/helm-charts/innago-vault-k8s-role-operator
+    icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
+    keywords:
+    - vault
+    - hashicorp
+    - kubernetes
+    - operator
+    - secrets
+    - security
+    maintainers:
+    - email: support@innago.com
+      name: Innago
+    name: innago-vault-k8s-role-operator
+    sources:
+    - https://github.com/innago-property-management/helm-charts/tree/main/charts/innago-vault-k8s-role-operator
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/innago-vault-k8s-role-operator-2.0.5/innago-vault-k8s-role-operator-2.0.5.tgz
+    version: 2.0.5
   - annotations:
       artifacthub.io/category: security
       artifacthub.io/changes: |
@@ -239,6 +326,51 @@ entries:
   - annotations:
       artifacthub.io/category: integration-delivery
       artifacthub.io/changes: |
+        - kind: fixed
+          description: "Fix broken Helm icon URL"
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://github.com/innago-property-management/helm-charts/tree/main/charts/registry-container-webhook
+        - name: Support
+          url: https://github.com/innago-property-management/helm-charts/issues
+        - name: Upstream Project
+          url: https://github.com/indeedeng/harbor-container-webhook
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-12-16T15:51:55.356405799Z"
+    dependencies:
+    - name: harbor-container-webhook
+      repository: https://indeedeng.github.io/harbor-container-webhook
+      version: 0.8.1
+    description: Kubernetes admission webhook to rewrite container image references
+      for registry caching
+    digest: b41790345233eddfce1f65d882bf91144c58cb7296f87a88d63b6f159508b346
+    home: https://innago-property-management.github.io/helm-charts/registry-container-webhook
+    icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
+    keywords:
+    - webhook
+    - registry
+    - docker
+    - harbor
+    - caching
+    - container
+    - admission-controller
+    maintainers:
+    - email: support@innago.com
+      name: Innago
+    name: registry-container-webhook
+    sources:
+    - https://github.com/innago-property-management/helm-charts/tree/main/charts/registry-container-webhook
+    - https://github.com/indeedeng/harbor-container-webhook
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/registry-container-webhook-2.0.2/registry-container-webhook-2.0.2.tgz
+    version: 2.0.2
+  - annotations:
+      artifacthub.io/category: integration-delivery
+      artifacthub.io/changes: |
         - kind: added
           description: "Add Artifact Hub metadata for chart discoverability"
       artifacthub.io/license: Apache-2.0
@@ -313,6 +445,49 @@ entries:
   - annotations:
       artifacthub.io/category: database
       artifacthub.io/changes: |
+        - kind: fixed
+          description: "Fix broken Helm icon URL"
+      artifacthub.io/images: |
+        - name: valkey
+          image: docker.io/valkey/valkey:8.0.1
+          whitelisted: true
+        - name: redis-exporter
+          image: docker.io/oliver006/redis_exporter:v1.66.0
+          whitelisted: true
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://github.com/innago-property-management/helm-charts/tree/main/charts/valkey-cluster
+        - name: Support
+          url: https://github.com/innago-property-management/helm-charts/issues
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: 8.0.1
+    created: "2025-12-16T15:51:55.688509054Z"
+    description: A Helm chart for deploying Valkey in cluster or standalone mode with
+      persistence, monitoring, and automated cluster initialization
+    digest: f8c58539f2d58bb0cb52ab3ec772ed0b13fa12f4b282bee7e7395b1973317796
+    home: https://innago-property-management.github.io/helm-charts/valkey-cluster
+    icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
+    keywords:
+    - valkey
+    - cluster
+    - database
+    - key-value
+    maintainers:
+    - email: support@innago.com
+      name: Innago
+    name: valkey-cluster
+    sources:
+    - https://github.com/innago-property-management/helm-charts/tree/main/charts/valkey-cluster
+    - https://github.com/valkey-io/valkey
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/valkey-cluster-1.0.3/valkey-cluster-1.0.3.tgz
+    version: 1.0.3
+  - annotations:
+      artifacthub.io/category: database
+      artifacthub.io/changes: |
         - kind: changed
           description: "Bump chart version for Artifact Hub metadata enhancements"
       artifacthub.io/images: |
@@ -378,6 +553,44 @@ entries:
     - https://github.com/innago-property-management/helm-charts/releases/download/valkey-cluster-1.0.0/valkey-cluster-1.0.0.tgz
     version: 1.0.0
   webapp:
+  - annotations:
+      artifacthub.io/category: integration-delivery
+      artifacthub.io/changes: |
+        - kind: fixed
+          description: "Fix broken Helm icon URL"
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://github.com/innago-property-management/helm-charts/tree/main/charts/webapp
+        - name: Support
+          url: https://github.com/innago-property-management/helm-charts/issues
+        - name: Production Guide
+          url: https://github.com/innago-property-management/helm-charts/blob/main/charts/webapp/PRODUCTION.md
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: 2.5.0
+    created: "2025-12-16T15:51:55.943248808Z"
+    description: Innago Helm chart for deploying web applications to Kubernetes with
+      production-ready patterns
+    digest: a06be0d7798bd86eb076945b9f6823af161fece8d79e11d7a596c3ef36fc387e
+    home: https://innago-property-management.github.io/helm-charts/webapp
+    icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
+    keywords:
+    - webapp
+    - kubernetes
+    - deployment
+    - application
+    - container
+    maintainers:
+    - email: support@innago.com
+      name: Innago
+    name: webapp
+    sources:
+    - https://github.com/innago-property-management/helm-charts/tree/main/charts/webapp
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/webapp-2.5.2/webapp-2.5.2.tgz
+    version: 2.5.2
   - annotations:
       artifacthub.io/category: integration-delivery
       artifacthub.io/changes: |
@@ -559,4 +772,4 @@ entries:
     urls:
     - https://github.com/innago-property-management/helm-charts/releases/download/webapp-1.0.0/webapp-1.0.0.tgz
     version: 1.0.0
-generated: "2025-12-16T15:19:16.810930759Z"
+generated: "2025-12-16T15:51:55.94344468Z"
