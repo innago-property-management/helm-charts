@@ -294,6 +294,13 @@ vpa:
   # -- "InPlaceOrRecreate": Updates resources in-place when possible, recreates otherwise (recommended)
   # -- Note: "Auto" is deprecated, use "InPlaceOrRecreate" instead
   updateMode: "Off"
+  # -- Minimum number of replicas that must be running for VPA to apply updates
+  # -- Only relevant for updateMode "InPlaceOrRecreate" or "Recreate"
+  # -- Ensures availability during VPA-triggered restarts
+  minReplicas: null
+  # -- Annotations to add to the VPA resource
+  # -- Example: description annotations, external tool integrations
+  annotations: {}
   # -- Which resource values VPA controls
   # -- RequestsAndLimits: VPA manages both requests and limits
   # -- RequestsOnly: VPA only manages requests
