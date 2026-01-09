@@ -1,4 +1,9 @@
 {{- if .Values.vpa.enabled }}
+{{- /* Validate updateMode */ -}}
+{{- $validModes := list "Off" "Initial" "InPlaceOrRecreate" "Auto" -}}
+{{- if not (has .Values.vpa.updateMode $validModes) }}
+{{- fail (printf "vpa.updateMode must be one of: %s. Got: %s" (join ", " $validModes) .Values.vpa.updateMode) }}
+{{- end }}
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
 metadata:
@@ -24,6 +29,9 @@ spec:
       controlledResources: ["memory"]
       {{- else if .Values.vpa.controlledResources }}
       controlledResources: {{ toJson .Values.vpa.controlledResources }}
+      {{- else }}
+      # Full resource control (HPA disabled)
+      controlledResources: ["cpu", "memory"]
       {{- end }}
       controlledValues: {{ .Values.vpa.controlledValues | default "RequestsAndLimits" | quote }}
       minAllowed:
