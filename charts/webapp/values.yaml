@@ -281,6 +281,39 @@ autoscaling:
   #        periodSeconds: 60
   #    selectPolicy: Min  # Use the policy that scales down the least
 
+# -- Vertical Pod Autoscaler configuration
+# -- Automatically adjusts resource requests based on actual usage
+# -- See https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler
+# -- Requires VPA to be installed in the cluster
+vpa:
+  # -- Enable VPA (creates VerticalPodAutoscaler resource)
+  enabled: false
+  # -- VPA update mode
+  # -- "Off": Only provides recommendations, no automatic updates
+  # -- "Initial": Sets resources only at pod creation
+  # -- "InPlaceOrRecreate": Updates resources in-place when possible, recreates otherwise (recommended)
+  # -- Note: "Auto" is deprecated, use "InPlaceOrRecreate" instead
+  updateMode: "Off"
+  # -- Annotations to add to the VPA resource
+  # -- Example: description annotations, external tool integrations
+  annotations: {}
+  # -- Which resource values VPA controls
+  # -- RequestsAndLimits: VPA manages both requests and limits
+  # -- RequestsOnly: VPA only manages requests
+  controlledValues: RequestsAndLimits
+  # -- Which resources VPA controls (only used when HPA is not enabled)
+  # -- When HPA is enabled, VPA automatically manages only memory to avoid conflicts
+  # -- Options: ["cpu", "memory"] or ["memory"]
+  controlledResources: null
+  # -- Minimum resource values VPA can recommend
+  minAllowed:
+    cpu: 10m
+    memory: 32Mi
+  # -- Maximum resource values VPA can recommend
+  maxAllowed:
+    cpu: 4
+    memory: 8Gi
+
 # -- Node selector for pod assignment
 # -- Constrains pods to run only on nodes with specific labels
 # -- See https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/

@@ -1,0 +1,51 @@
+{{- if .Values.vpa.enabled }}
+{{- /* Validate updateMode - "Auto" is deprecated */ -}}
+{{- $validModes := list "Off" "Initial" "InPlaceOrRecreate" -}}
+{{- if eq .Values.vpa.updateMode "Auto" }}
+{{- fail "vpa.updateMode 'Auto' is deprecated. Use 'InPlaceOrRecreate' instead." }}
+{{- else if not (has .Values.vpa.updateMode $validModes) }}
+{{- fail (printf "vpa.updateMode must be one of: %s. Got: %s" (join ", " $validModes) .Values.vpa.updateMode) }}
+{{- end }}
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: {{ include "WebApp.fullname" . | lower }}
+  labels:
+    {{- include "WebApp.labels" . | nindent 4 }}
+  {{- with .Values.vpa.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "WebApp.fullname" . | lower }}
+  updatePolicy:
+    updateMode: {{ .Values.vpa.updateMode | quote }}
+  resourcePolicy:
+    containerPolicies:
+    - containerName: "*"
+      {{- if .Values.autoscaling.enabled }}
+      # HPA is enabled - VPA only manages memory to avoid conflicts
+      controlledResources: ["memory"]
+      {{- else }}
+      # HPA disabled - use explicit setting or default to both
+      {{- with .Values.vpa.controlledResources }}
+      controlledResources: {{ toJson . }}
+      {{- else }}
+      controlledResources: ["cpu", "memory"]
+      {{- end }}
+      {{- end }}
+      controlledValues: {{ .Values.vpa.controlledValues | default "RequestsAndLimits" | quote }}
+      minAllowed:
+        {{- if not .Values.autoscaling.enabled }}
+        cpu: {{ .Values.vpa.minAllowed.cpu | default "10m" }}
+        {{- end }}
+        memory: {{ .Values.vpa.minAllowed.memory | default "32Mi" }}
+      maxAllowed:
+        {{- if not .Values.autoscaling.enabled }}
+        cpu: {{ .Values.vpa.maxAllowed.cpu | default "4" }}
+        {{- end }}
+        memory: {{ .Values.vpa.maxAllowed.memory | default "8Gi" }}
+{{- end }}
