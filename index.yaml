@@ -556,6 +556,44 @@ entries:
   - annotations:
       artifacthub.io/category: integration-delivery
       artifacthub.io/changes: |
+        - kind: added
+          description: "Add VPA (Vertical Pod Autoscaler) template with HPA-aware memory-only mode"
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://github.com/innago-property-management/helm-charts/tree/main/charts/webapp
+        - name: Support
+          url: https://github.com/innago-property-management/helm-charts/issues
+        - name: Production Guide
+          url: https://github.com/innago-property-management/helm-charts/blob/main/charts/webapp/PRODUCTION.md
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: 2.6.0
+    created: "2026-01-09T16:50:57.301153498Z"
+    description: Innago Helm chart for deploying web applications to Kubernetes with
+      production-ready patterns
+    digest: 38e1535e041654f4a7ddfe111df5ea7d83fc5eda55b569f2973f7b82e6bc4daa
+    home: https://innago-property-management.github.io/helm-charts/webapp
+    icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
+    keywords:
+    - webapp
+    - kubernetes
+    - deployment
+    - application
+    - container
+    maintainers:
+    - email: support@innago.com
+      name: Innago
+    name: webapp
+    sources:
+    - https://github.com/innago-property-management/helm-charts/tree/main/charts/webapp
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/webapp-2.6.0/webapp-2.6.0.tgz
+    version: 2.6.0
+  - annotations:
+      artifacthub.io/category: integration-delivery
+      artifacthub.io/changes: |
         - kind: fixed
           description: "Fix broken Helm icon URL"
       artifacthub.io/license: Apache-2.0
@@ -772,4 +810,4 @@ entries:
     urls:
     - https://github.com/innago-property-management/helm-charts/releases/download/webapp-1.0.0/webapp-1.0.0.tgz
     version: 1.0.0
-generated: "2025-12-16T15:51:55.94344468Z"
+generated: "2026-01-09T16:50:57.301323604Z"
