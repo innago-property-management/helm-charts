@@ -1,0 +1,42 @@
+{{- if .Values.vpa.enabled }}
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: {{ include "WebApp.fullname" . | lower }}
+  labels:
+    {{- include "WebApp.labels" . | nindent 4 }}
+  {{- with .Values.vpa.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "WebApp.fullname" . | lower }}
+  updatePolicy:
+    updateMode: {{ .Values.vpa.updateMode | quote }}
+    {{- if .Values.vpa.minReplicas }}
+    minReplicas: {{ .Values.vpa.minReplicas }}
+    {{- end }}
+  resourcePolicy:
+    containerPolicies:
+    - containerName: "*"
+      {{- if .Values.autoscaling.enabled }}
+      # HPA is enabled - VPA only manages memory to avoid conflicts
+      controlledResources: ["memory"]
+      {{- else if .Values.vpa.controlledResources }}
+      controlledResources: {{ toJson .Values.vpa.controlledResources }}
+      {{- end }}
+      controlledValues: {{ .Values.vpa.controlledValues | default "RequestsAndLimits" | quote }}
+      minAllowed:
+        {{- if not .Values.autoscaling.enabled }}
+        cpu: {{ .Values.vpa.minAllowed.cpu | default "10m" }}
+        {{- end }}
+        memory: {{ .Values.vpa.minAllowed.memory | default "32Mi" }}
+      maxAllowed:
+        {{- if not .Values.autoscaling.enabled }}
+        cpu: {{ .Values.vpa.maxAllowed.cpu | default "4" }}
+        {{- end }}
+        memory: {{ .Values.vpa.maxAllowed.memory | default "8Gi" }}
+{{- end }}
