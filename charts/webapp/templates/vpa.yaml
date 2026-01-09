@@ -16,9 +16,6 @@ spec:
     name: {{ include "WebApp.fullname" . | lower }}
   updatePolicy:
     updateMode: {{ .Values.vpa.updateMode | quote }}
-    {{- if .Values.vpa.minReplicas }}
-    minReplicas: {{ .Values.vpa.minReplicas }}
-    {{- end }}
   resourcePolicy:
     containerPolicies:
     - containerName: "*"
