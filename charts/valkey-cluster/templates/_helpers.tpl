@@ -65,11 +65,7 @@ Create the name of the service account to use
 Return the appropriate apiVersion for ServiceMonitor
 */}}
 {{- define "ValkeyCluster.serviceMonitor.apiVersion" -}}
-{{- if .Capabilities.APIVersions.Has "monitoring.coreos.com/v1" -}}
 monitoring.coreos.com/v1
-{{- else -}}
-monitoring.coreos.com/v1
-{{- end -}}
 {{- end -}}
 
 {{/*
