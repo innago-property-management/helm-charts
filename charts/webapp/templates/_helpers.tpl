@@ -63,7 +63,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Common labels
+Migration labels
 */}}
 {{- define "WebAppMigrations.labels" -}}
 helm.sh/chart: {{ include "WebApp.chart" . }}
@@ -81,7 +81,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Selector labels
+Migration selector labels
 */}}
 {{- define "WebAppMigrations.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "WebApp.fullname" . | lower }}-migrations
