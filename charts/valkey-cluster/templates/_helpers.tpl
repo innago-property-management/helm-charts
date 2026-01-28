@@ -89,3 +89,15 @@ Generate Valkey password secret key
 password
 {{- end }}
 {{- end }}
+
+{{/*
+Generate valkey-cli command with auth handling
+Usage: {{ include "ValkeyCluster.cliCommand" (dict "context" . "command" "ping") }}
+*/}}
+{{- define "ValkeyCluster.cliCommand" -}}
+{{- if .context.Values.auth.enabled }}
+valkey-cli -a $VALKEY_PASSWORD {{ .command }}
+{{- else }}
+valkey-cli {{ .command }}
+{{- end }}
+{{- end }}
