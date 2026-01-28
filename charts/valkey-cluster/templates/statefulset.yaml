@@ -132,11 +132,7 @@ spec:
                   - sh
                   - -c
                   - |
-                    {{- if .Values.auth.enabled }}
-                    valkey-cli -a $VALKEY_PASSWORD BGSAVE
-                    {{- else }}
-                    valkey-cli BGSAVE
-                    {{- end }}
+                    {{ include "ValkeyCluster.cliCommand" (dict "context" . "command" "BGSAVE") }}
                     sleep {{ .Values.lifecycle.preStop.delay }}
           {{- end }}
           {{- if .Values.livenessProbe.enabled }}
@@ -146,11 +142,7 @@ spec:
                 - sh
                 - -c
                 - |
-                  {{- if .Values.auth.enabled }}
-                  valkey-cli -a $VALKEY_PASSWORD ping
-                  {{- else }}
-                  valkey-cli ping
-                  {{- end }}
+                  {{ include "ValkeyCluster.cliCommand" (dict "context" . "command" "ping") }}
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
@@ -164,11 +156,7 @@ spec:
                 - sh
                 - -c
                 - |
-                  {{- if .Values.auth.enabled }}
-                  valkey-cli -a $VALKEY_PASSWORD ping
-                  {{- else }}
-                  valkey-cli ping
-                  {{- end }}
+                  {{ include "ValkeyCluster.cliCommand" (dict "context" . "command" "ping") }}
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
@@ -182,11 +170,7 @@ spec:
                 - sh
                 - -c
                 - |
-                  {{- if .Values.auth.enabled }}
-                  valkey-cli -a $VALKEY_PASSWORD ping
-                  {{- else }}
-                  valkey-cli ping
-                  {{- end }}
+                  {{ include "ValkeyCluster.cliCommand" (dict "context" . "command" "ping") }}
             initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.startupProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
