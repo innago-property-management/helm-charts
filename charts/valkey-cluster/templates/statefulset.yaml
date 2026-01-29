@@ -132,11 +132,7 @@ spec:
                   - sh
                   - -c
                   - |
-                    {{- if .Values.auth.enabled }}
-                    valkey-cli -a $VALKEY_PASSWORD BGSAVE
-                    {{- else }}
-                    valkey-cli BGSAVE
-                    {{- end }}
+                    valkey-cli ${VALKEY_PASSWORD:+-a $VALKEY_PASSWORD} BGSAVE
                     sleep {{ .Values.lifecycle.preStop.delay }}
           {{- end }}
           {{- if .Values.livenessProbe.enabled }}
