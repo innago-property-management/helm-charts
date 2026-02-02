@@ -91,11 +91,11 @@ password
 {{- end }}
 
 {{/*
-Generate valkey-cli command with auth handling
-Usage: {{ include "ValkeyCluster.cliCommand" (dict "context" . "command" "ping") }}
+Generate valkey-cli command with optional auth
+Usage: {{ include "ValkeyCluster.cliCommand" (dict "root" . "command" "ping") }}
 */}}
 {{- define "ValkeyCluster.cliCommand" -}}
-{{- if .context.Values.auth.enabled }}
+{{- if .root.Values.auth.enabled }}
 valkey-cli -a $VALKEY_PASSWORD {{ .command }}
 {{- else }}
 valkey-cli {{ .command }}
