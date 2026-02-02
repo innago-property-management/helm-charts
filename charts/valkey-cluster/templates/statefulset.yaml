@@ -132,7 +132,7 @@ spec:
                   - sh
                   - -c
                   - |
-                    valkey-cli ${VALKEY_PASSWORD:+-a $VALKEY_PASSWORD} BGSAVE
+                    {{- include "ValkeyCluster.cliCommand" (dict "root" . "command" "BGSAVE") | trim | nindent 20 }}
                     sleep {{ .Values.lifecycle.preStop.delay }}
           {{- end }}
           {{- if .Values.livenessProbe.enabled }}
@@ -142,11 +142,7 @@ spec:
                 - sh
                 - -c
                 - |
-                  {{- if .Values.auth.enabled }}
-                  valkey-cli -a $VALKEY_PASSWORD ping
-                  {{- else }}
-                  valkey-cli ping
-                  {{- end }}
+                  {{- include "ValkeyCluster.cliCommand" (dict "root" . "command" "ping") | trim | nindent 18 }}
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
@@ -160,11 +156,7 @@ spec:
                 - sh
                 - -c
                 - |
-                  {{- if .Values.auth.enabled }}
-                  valkey-cli -a $VALKEY_PASSWORD ping
-                  {{- else }}
-                  valkey-cli ping
-                  {{- end }}
+                  {{- include "ValkeyCluster.cliCommand" (dict "root" . "command" "ping") | trim | nindent 18 }}
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
@@ -178,11 +170,7 @@ spec:
                 - sh
                 - -c
                 - |
-                  {{- if .Values.auth.enabled }}
-                  valkey-cli -a $VALKEY_PASSWORD ping
-                  {{- else }}
-                  valkey-cli ping
-                  {{- end }}
+                  {{- include "ValkeyCluster.cliCommand" (dict "root" . "command" "ping") | nindent 18 }}
             initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.startupProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
