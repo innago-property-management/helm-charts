@@ -163,6 +163,12 @@ service:
   #   service.beta.kubernetes.io/azure-load-balancer-internal: "true"
   annotations: {}
   # -- Labels to add to the Service resource
+  # Example: Service mesh integration
+  #  service.istio.io/canonical-name: myapp
+  # Example: Monitoring/metrics
+  #  prometheus.io/scrape: "true"
+  # Example: Cost allocation
+  #  cost-center: engineering
   labels: {}
 
 # -- Additional service ports beyond http/https

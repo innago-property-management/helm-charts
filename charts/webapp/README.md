@@ -125,7 +125,7 @@ Innago Helm chart for deploying web applications to Kubernetes with production-r
 | service.annotations | object | `{}` | Service annotations for cloud provider integrations Example for AWS NLB:   service.beta.kubernetes.io/aws-load-balancer-type: "nlb"   service.beta.kubernetes.io/aws-load-balancer-internal: "true" Example for GCP Internal Load Balancer:   cloud.google.com/load-balancer-type: "Internal" Example for Azure Internal LB:   service.beta.kubernetes.io/azure-load-balancer-internal: "true" |
 | service.enableHttps | bool | `false` | Adds a port named "https" targeting the container's https port |
 | service.httpsPort | int | `443` | HTTPS service port (when enableHttps=true) |
-| service.labels | object | `{}` | Labels to add to the Service resource |
+| service.labels | object | `{}` | Labels to add to the Service resource Example: Service mesh integration  service.istio.io/canonical-name: myapp Example: Monitoring/metrics  prometheus.io/scrape: "true" Example: Cost allocation  cost-center: engineering |
 | service.port | int | `80` | HTTP service port (external port that clients connect to) |
 | service.type | string | `"ClusterIP"` | NodePort: Expose on each node's IP at a static port |
 | serviceAccount.annotations | object | `{}` | Example for GCP Workload Identity: iam.gke.io/gcp-service-account: SA_NAME@PROJECT.iam.gserviceaccount.com |
