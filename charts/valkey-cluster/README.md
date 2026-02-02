@@ -1,8 +1,21 @@
 # valkey-cluster
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.0.1](https://img.shields.io/badge/AppVersion-8.0.1-informational?style=flat-square)
+![Version: 1.0.3](https://img.shields.io/badge/Version-1.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.0.1](https://img.shields.io/badge/AppVersion-8.0.1-informational?style=flat-square)
 
 A Helm chart for deploying Valkey in cluster or standalone mode with persistence, monitoring, and automated cluster initialization
+
+**Homepage:** <https://innago-property-management.github.io/helm-charts/valkey-cluster>
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| Innago | <support@innago.com> |  |
+
+## Source Code
+
+* <https://github.com/innago-property-management/helm-charts/tree/main/charts/valkey-cluster>
+* <https://github.com/valkey-io/valkey>
 
 ## Values
 
