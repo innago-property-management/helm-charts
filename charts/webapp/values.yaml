@@ -162,6 +162,14 @@ service:
   # Example for Azure Internal LB:
   #   service.beta.kubernetes.io/azure-load-balancer-internal: "true"
   annotations: {}
+  # -- Labels to add to the Service resource
+  # Example: Service mesh integration
+  #  service.istio.io/canonical-name: myapp
+  # Example: Monitoring/metrics
+  #  prometheus.io/scrape: "true"
+  # Example: Cost allocation
+  #  cost-center: engineering
+  labels: {}
 
 # -- Additional service ports beyond http/https
 # -- Useful for exposing metrics, gRPC, or custom protocols
@@ -726,5 +734,3 @@ networkPolicy:
       to: []
     # -- Custom egress rules (advanced)
     customRules: []
-
-
