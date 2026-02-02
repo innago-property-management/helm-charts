@@ -91,7 +91,7 @@ password
 {{- end }}
 
 {{/*
-Generate valkey-cli command with conditional auth
+Generate valkey-cli command with optional auth
 Usage: {{ include "ValkeyCluster.cliCommand" (dict "root" . "command" "ping") }}
 */}}
 {{- define "ValkeyCluster.cliCommand" -}}
