@@ -170,7 +170,7 @@ spec:
                 - sh
                 - -c
                 - |
-                  {{- include "ValkeyCluster.cliCommand" (dict "root" . "command" "ping") | nindent 18 }}
+                  {{- include "ValkeyCluster.cliCommand" (dict "root" . "command" "ping") | trim | nindent 18 }}
             initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.startupProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
