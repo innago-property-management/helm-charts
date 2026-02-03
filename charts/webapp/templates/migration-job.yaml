@@ -58,11 +58,9 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if .Values.migrationJob.command }}
+          {{- with .Values.migrationJob.command }}
           command:
-            {{- with .Values.migrationJob.command -}}
-              {{- toYaml . | nindent 12 }}
-            {{- end }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
       restartPolicy: Never
       {{- with .Values.nodeSelector }}
