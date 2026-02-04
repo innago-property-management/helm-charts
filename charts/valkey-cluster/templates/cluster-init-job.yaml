@@ -52,11 +52,7 @@ spec:
                 READY_PODS=0
                 for i in $(seq 0 $((EXPECTED_PODS - 1))); do
                   POD_NAME="{{ include "ValkeyCluster.fullname" . }}-$i.{{ include "ValkeyCluster.fullname" . }}-headless.{{ .Release.Namespace }}.svc.cluster.local"
-                  {{- if .Values.auth.enabled }}
-                  if valkey-cli -h $POD_NAME -a $VALKEY_PASSWORD ping > /dev/null 2>&1; then
-                  {{- else }}
-                  if valkey-cli -h $POD_NAME ping > /dev/null 2>&1; then
-                  {{- end }}
+                  if {{ include "ValkeyCluster.cliCommand" (dict "root" . "command" "-h $POD_NAME ping") }} > /dev/null 2>&1; then
                     READY_PODS=$((READY_PODS + 1))
                   fi
                 done
@@ -76,11 +72,7 @@ spec:
 
               # Check if cluster is already initialized
               FIRST_POD="{{ include "ValkeyCluster.fullname" . }}-0.{{ include "ValkeyCluster.fullname" . }}-headless.{{ .Release.Namespace }}.svc.cluster.local"
-              {{- if .Values.auth.enabled }}
-              CLUSTER_INFO=$(valkey-cli -h $FIRST_POD -a $VALKEY_PASSWORD cluster info 2>/dev/null || echo "cluster_state:fail")
-              {{- else }}
-              CLUSTER_INFO=$(valkey-cli -h $FIRST_POD cluster info 2>/dev/null || echo "cluster_state:fail")
-              {{- end }}
+              CLUSTER_INFO=$({{ include "ValkeyCluster.cliCommand" (dict "root" . "command" "-h $FIRST_POD cluster info") }} 2>/dev/null || echo "cluster_state:fail")
 
               if echo "$CLUSTER_INFO" | grep -q "cluster_state:ok"; then
                 echo "Cluster already initialized and healthy. Skipping initialization."
@@ -108,13 +100,8 @@ spec:
               echo "Cluster initialization completed successfully!"
 
               # Verify cluster health
-              {{- if .Values.auth.enabled }}
-              valkey-cli -h $FIRST_POD -a $VALKEY_PASSWORD cluster info
-              valkey-cli -h $FIRST_POD -a $VALKEY_PASSWORD cluster nodes
-              {{- else }}
-              valkey-cli -h $FIRST_POD cluster info
-              valkey-cli -h $FIRST_POD cluster nodes
-              {{- end }}
+              {{ include "ValkeyCluster.cliCommand" (dict "root" . "command" "-h $FIRST_POD cluster info") }}
+              {{ include "ValkeyCluster.cliCommand" (dict "root" . "command" "-h $FIRST_POD cluster nodes") }}
           env:
             {{- if .Values.auth.enabled }}
             - name: VALKEY_PASSWORD
