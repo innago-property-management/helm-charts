@@ -62,13 +62,6 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Return the appropriate apiVersion for ServiceMonitor
-*/}}
-{{- define "ValkeyCluster.serviceMonitor.apiVersion" -}}
-monitoring.coreos.com/v1
-{{- end -}}
-
-{{/*
 Generate Valkey password secret name
 */}}
 {{- define "ValkeyCluster.secretName" -}}
