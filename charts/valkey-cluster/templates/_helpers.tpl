@@ -101,3 +101,23 @@ valkey-cli -a $VALKEY_PASSWORD {{ .command }}
 valkey-cli {{ .command }}
 {{- end }}
 {{- end }}
+
+{{/*
+Generate probe configuration
+Usage: {{ include "ValkeyCluster.probe" (dict "root" . "probe" .Values.livenessProbe) }}
+*/}}
+{{- define "ValkeyCluster.probe" -}}
+{{- if .probe.enabled }}
+exec:
+  command:
+    - sh
+    - -c
+    - |
+      {{- include "ValkeyCluster.cliCommand" (dict "root" .root "command" "ping") | trim | nindent 6 }}
+initialDelaySeconds: {{ .probe.initialDelaySeconds }}
+periodSeconds: {{ .probe.periodSeconds }}
+timeoutSeconds: {{ .probe.timeoutSeconds }}
+successThreshold: {{ .probe.successThreshold }}
+failureThreshold: {{ .probe.failureThreshold }}
+{{- end }}
+{{- end }}

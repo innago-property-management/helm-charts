@@ -135,47 +135,23 @@ spec:
                     {{- include "ValkeyCluster.cliCommand" (dict "root" . "command" "BGSAVE") | trim | nindent 20 }}
                     sleep {{ .Values.lifecycle.preStop.delay }}
           {{- end }}
-          {{- if .Values.livenessProbe.enabled }}
+          {{- with .Values.livenessProbe }}
+          {{- if .enabled }}
           livenessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - |
-                  {{- include "ValkeyCluster.cliCommand" (dict "root" . "command" "ping") | trim | nindent 18 }}
-            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
-            successThreshold: {{ .Values.livenessProbe.successThreshold }}
-            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+            {{- include "ValkeyCluster.probe" (dict "root" $ "probe" .) | nindent 12 }}
           {{- end }}
-          {{- if .Values.readinessProbe.enabled }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          {{- if .enabled }}
           readinessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - |
-                  {{- include "ValkeyCluster.cliCommand" (dict "root" . "command" "ping") | trim | nindent 18 }}
-            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
-            successThreshold: {{ .Values.readinessProbe.successThreshold }}
-            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            {{- include "ValkeyCluster.probe" (dict "root" $ "probe" .) | nindent 12 }}
           {{- end }}
-          {{- if .Values.startupProbe.enabled }}
+          {{- end }}
+          {{- with .Values.startupProbe }}
+          {{- if .enabled }}
           startupProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - |
-                  {{- include "ValkeyCluster.cliCommand" (dict "root" . "command" "ping") | trim | nindent 18 }}
-            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
-            successThreshold: {{ .Values.startupProbe.successThreshold }}
-            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+            {{- include "ValkeyCluster.probe" (dict "root" $ "probe" .) | nindent 12 }}
+          {{- end }}
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
