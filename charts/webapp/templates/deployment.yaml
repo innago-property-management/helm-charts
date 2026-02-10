@@ -34,7 +34,7 @@ spec:
       labels:
         {{- include "WebApp.selectorLabels" . | nindent 8 }}
         {{- if .Values.podLabels }}
-          {{- toYaml .Values.podLabels | nindent 8 }}
+        {{- toYaml .Values.podLabels | nindent 8 }}
         {{- end }}
     spec:
       {{- with .Values.imagePullSecrets | default }}
