@@ -34,22 +34,22 @@ Create chart name and version as used by the chart label.
 Version label for main application
 */}}
 {{- define "WebApp.versionLabel" -}}
-{{- if .Values.image.tag -}}
+{{- if .Values.image.tag }}
 app.kubernetes.io/version: {{ .Values.image.tag | quote }}
-{{- else if .Chart.AppVersion -}}
+{{- else if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end -}}
+{{- end }}
 {{- end -}}
 
 {{/*
 Version label for migrations
 */}}
 {{- define "WebAppMigrations.versionLabel" -}}
-{{- if .Values.migrationJob.image.tag -}}
+{{- if .Values.migrationJob.image.tag }}
 app.kubernetes.io/version: {{ .Values.migrationJob.image.tag | quote }}
-{{- else if .Chart.AppVersion -}}
+{{- else if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end -}}
+{{- end }}
 {{- end -}}
 
 {{/*
