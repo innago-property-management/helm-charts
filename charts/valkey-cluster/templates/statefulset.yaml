@@ -82,7 +82,7 @@ spec:
             - /etc/valkey/valkey.conf
           ports:
             - name: valkey
-              containerPort: 6379
+              containerPort: {{ .Values.service.client.port }}
               protocol: TCP
             {{- if .Values.cluster.enabled }}
             - name: cluster-bus
