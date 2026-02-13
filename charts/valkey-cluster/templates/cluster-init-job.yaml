@@ -45,6 +45,7 @@ spec:
               EXPECTED_PODS={{ .Values.replicaCount }}
               READY_PODS=0
               TIMEOUT={{ .Values.cluster.init.readinessTimeout | default 300 }}
+              POLL_INTERVAL=5
               ELAPSED=0
 
               echo "Waiting for $EXPECTED_PODS pods to be ready..."
@@ -62,8 +63,8 @@ spec:
                 done
                 echo "Ready pods: $READY_PODS/$EXPECTED_PODS"
                 if [ $READY_PODS -lt $EXPECTED_PODS ]; then
-                  sleep 5
-                  ELAPSED=$((ELAPSED + 5))
+                  sleep $POLL_INTERVAL
+                  ELAPSED=$((ELAPSED + POLL_INTERVAL))
                 fi
               done
 
