@@ -82,7 +82,7 @@ spec:
                 fieldRef:
                   fieldPath: spec.serviceAccountName
             - name: MY_APP_VERSION
-              value: {{ .Values.image.tag }}                  
+              value: {{ .Values.image.tag }}
             - name: MY_POD_IP
               valueFrom:
                 fieldRef:
