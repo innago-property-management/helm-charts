@@ -275,11 +275,7 @@ spec:
           - {{ . | quote }}
           {{- end }}
         {{- if .Values.persistence.storageClass }}
-        {{- if (eq "-" .Values.persistence.storageClass) }}
-        storageClassName: ""
-        {{- else }}
-        storageClassName: {{ .Values.persistence.storageClass | quote }}
-        {{- end }}
+        storageClassName: {{ eq "-" .Values.persistence.storageClass | ternary "" (.Values.persistence.storageClass | quote) }}
         {{- end }}
         resources:
           requests:
