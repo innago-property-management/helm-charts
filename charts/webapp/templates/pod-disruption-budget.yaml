@@ -12,15 +12,8 @@ spec:
   {{- else if .Values.podDisruptionBudget.maxUnavailable }}
   maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
   {{- else }}
-  {{- /* Calculate sensible default based on replica count */}}
-  {{- $replicas := max 2 .Values.replicaCount }}
-  {{- if eq $replicas 2 }}
-  {{- /* For 2 replicas, allow 1 down (keep 1 available) */}}
+  {{- /* Default: allow up to 1 pod down regardless of replica count */}}
   maxUnavailable: 1
-  {{- else }}
-  {{- /* For 3+ replicas, allow up to 1 down to preserve majority */}}
-  maxUnavailable: 1
-  {{- end }}
   {{- end }}
   {{- if ge (int .Capabilities.KubeVersion.Minor) 27 }}
   unhealthyPodEvictionPolicy: {{ .Values.podDisruptionBudget.unhealthyPodEvictionPolicy | default "IfHealthyBudget" }}
