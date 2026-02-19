@@ -81,7 +81,7 @@ jobs:
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
         git fetch origin gh-pages
-        git checkout gh-pages
+        git checkout gh-pages -f
         git checkout main -- artifacthub-repo.yml
         git checkout main -- assets/ || true
         git add artifacthub-repo.yml assets/
