@@ -20,7 +20,7 @@ spec:
         - podSelector: {}
       ports:
         - protocol: TCP
-          port: {{ .Values.httpContainerPort | default 8080 }}
+          port: {{ .Values.httpContainerPort | default 80 }}
         {{- if .Values.service.enableHttps }}
         - protocol: TCP
           port: {{ .Values.httpsContainerPort | default 443 }}
@@ -41,7 +41,7 @@ spec:
         {{- end }}
       ports:
         - protocol: TCP
-          port: {{ .Values.httpContainerPort | default 8080 }}
+          port: {{ .Values.httpContainerPort | default 80 }}
         {{- if .Values.service.enableHttps }}
         - protocol: TCP
           port: {{ .Values.httpsContainerPort | default 443 }}
@@ -59,7 +59,7 @@ spec:
         {{- end }}
       ports:
         - protocol: TCP
-          port: {{ .Values.httpContainerPort | default 8080 }}
+          port: {{ .Values.httpContainerPort | default 80 }}
     {{- end }}
     {{- with .Values.networkPolicy.ingress.customRules }}
     {{- toYaml . | nindent 4 }}
