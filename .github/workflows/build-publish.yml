@@ -29,7 +29,7 @@ jobs:
       with: 
         fetch-depth: '0'
         submodules: 'true'
-        token: '${{ secrets.SEMVER_TOKEN }}'
+        token: '${{ secrets.SEMVER_TOKEN_NO_EXPIRATION }}'
     - name: Configure Git
       run: |
         git config user.name "$GITHUB_ACTOR"
