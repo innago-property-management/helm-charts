@@ -16,4 +16,4 @@ jobs:
     if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/gh-pages'
     uses: innago-property-management/Oui-DELIVER/.github/workflows/auto-pr.yml@main
     secrets:
-      token: ${{ secrets.SEMVER_TOKEN }}
+      token: ${{ secrets.SEMVER_TOKEN_NO_EXPIRATION }}
