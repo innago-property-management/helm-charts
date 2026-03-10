@@ -29,7 +29,7 @@ jobs:
       - name: GitLeaks
         shell: bash
         env:
-          GITHUB_TOKEN: "${{ secrets.SEMVER_TOKEN }}"
+          GITHUB_TOKEN: "${{ secrets.SEMVER_TOKEN_NO_EXPIRATION }}"
         run: |
           REPO_NAME=$(echo "${{ github.repository }}" | cut -d '/' -f 2)
           WORK_DIR="/__w/${{ github.repository_owner }}/${REPO_NAME}"
