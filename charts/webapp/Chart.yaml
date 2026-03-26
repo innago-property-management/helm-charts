@@ -2,8 +2,8 @@ apiVersion: v2
 name: webapp
 description: Innago Helm chart for deploying web applications to Kubernetes with production-ready patterns
 type: application
-version: 2.6.2
-appVersion: "2.6.2"
+version: 2.6.3
+appVersion: "2.6.3"
 icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
 home: https://innago-property-management.github.io/helm-charts/webapp
 sources:
