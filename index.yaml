@@ -611,6 +611,44 @@ entries:
           url: https://github.com/innago-property-management/helm-charts/blob/main/charts/webapp/PRODUCTION.md
       artifacthub.io/prerelease: "false"
     apiVersion: v2
+    appVersion: 2.6.3
+    created: "2026-03-26T20:01:27.036991409Z"
+    description: Innago Helm chart for deploying web applications to Kubernetes with
+      production-ready patterns
+    digest: edccc6e99d197529f1cd78e8597755eb6ee920696c70848a1a34850019499cdf
+    home: https://innago-property-management.github.io/helm-charts/webapp
+    icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
+    keywords:
+    - webapp
+    - kubernetes
+    - deployment
+    - application
+    - container
+    maintainers:
+    - email: support@innago.com
+      name: Innago
+    name: webapp
+    sources:
+    - https://github.com/innago-property-management/helm-charts/tree/main/charts/webapp
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/webapp-2.6.3/webapp-2.6.3.tgz
+    version: 2.6.3
+  - annotations:
+      artifacthub.io/category: integration-delivery
+      artifacthub.io/changes: |
+        - kind: added
+          description: "Add VPA (Vertical Pod Autoscaler) template with HPA-aware memory-only mode"
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://github.com/innago-property-management/helm-charts/tree/main/charts/webapp
+        - name: Support
+          url: https://github.com/innago-property-management/helm-charts/issues
+        - name: Production Guide
+          url: https://github.com/innago-property-management/helm-charts/blob/main/charts/webapp/PRODUCTION.md
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
     appVersion: 2.6.2
     created: "2026-02-19T15:13:28.644972268Z"
     description: Innago Helm chart for deploying web applications to Kubernetes with
@@ -929,4 +967,4 @@ entries:
     urls:
     - https://github.com/innago-property-management/helm-charts/releases/download/webapp-1.0.0/webapp-1.0.0.tgz
     version: 1.0.0
-generated: "2026-02-19T15:13:28.645142425Z"
+generated: "2026-03-26T20:01:27.037169051Z"
