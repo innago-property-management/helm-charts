@@ -1,8 +1,10 @@
 {{- if and .Values.cluster.enabled .Values.cluster.init.enabled }}
+{{- $fullname := include "ValkeyCluster.fullname" . }}
+{{- $headlessDomain := printf "%s-headless.%s.svc.cluster.local" $fullname .Release.Namespace }}
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "ValkeyCluster.fullname" . }}-cluster-init
+  name: {{ $fullname }}-cluster-init
   labels:
     {{- include "ValkeyCluster.labels" . | nindent 4 }}
     app.kubernetes.io/component: cluster-init
@@ -51,7 +53,7 @@ spec:
               while [ $READY_PODS -lt $EXPECTED_PODS ] && [ $ELAPSED -lt $TIMEOUT ]; do
                 READY_PODS=0
                 for i in $(seq 0 $((EXPECTED_PODS - 1))); do
-                  POD_NAME="{{ include "ValkeyCluster.fullname" . }}-$i.{{ include "ValkeyCluster.fullname" . }}-headless.{{ .Release.Namespace }}.svc.cluster.local"
+                  POD_NAME="{{ $fullname }}-$i.{{ $headlessDomain }}"
                   {{- if .Values.auth.enabled }}
                   if valkey-cli -h $POD_NAME -a $VALKEY_PASSWORD ping > /dev/null 2>&1; then
                   {{- else }}
@@ -75,7 +77,7 @@ spec:
               echo "All pods are ready. Checking if cluster already exists..."
 
               # Check if cluster is already initialized
-              FIRST_POD="{{ include "ValkeyCluster.fullname" . }}-0.{{ include "ValkeyCluster.fullname" . }}-headless.{{ .Release.Namespace }}.svc.cluster.local"
+              FIRST_POD="{{ $fullname }}-0.{{ $headlessDomain }}"
               {{- if .Values.auth.enabled }}
               CLUSTER_INFO=$(valkey-cli -h $FIRST_POD -a $VALKEY_PASSWORD cluster info 2>/dev/null || echo "cluster_state:fail")
               {{- else }}
@@ -92,7 +94,7 @@ spec:
               # Build the list of node addresses
               NODE_ADDRESSES=""
               for i in $(seq 0 $((EXPECTED_PODS - 1))); do
-                NODE_ADDRESSES="$NODE_ADDRESSES {{ include "ValkeyCluster.fullname" . }}-$i.{{ include "ValkeyCluster.fullname" . }}-headless.{{ .Release.Namespace }}.svc.cluster.local:6379"
+                NODE_ADDRESSES="$NODE_ADDRESSES {{ $fullname }}-$i.{{ $headlessDomain }}:6379"
               done
 
               # Create the cluster
