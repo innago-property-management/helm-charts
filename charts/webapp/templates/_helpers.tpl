@@ -105,5 +105,5 @@ Migrations Job Name with image hash
 {{- define "WebApp.migrationJobName"}}
 {{- $hash := printf "%s:%s" .Values.migrationJob.image.repository (.Values.migrationJob.image.tag | default .Chart.AppVersion) | sha256sum | trunc 10 }}
 {{- $name := printf "%s-migrations-%s" (include "WebApp.fullname" .) $hash | trunc 63 | trimSuffix "-" | lower }}
-{{- printf "%s" $name }}
+{{- $name -}}
 {{- end }}
