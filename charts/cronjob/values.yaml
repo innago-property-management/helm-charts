@@ -61,6 +61,15 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+# -- Value for the `project` common label, applied to every resource this chart renders
+# -- Identifies the owning organization; you should rarely need to override this
+project: innago-property-management
+
+# -- Value for the `environment` common label (dev/qa/pre/prod)
+# -- Applied to every resource this chart renders. Omitted entirely when empty.
+# -- Supply this per cluster rather than per service
+environment: ""
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true

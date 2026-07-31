@@ -53,11 +53,24 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end -}}
 
 {{/*
+Innago common labels - applied to every resource this chart renders.
+Deliberately kept out of the selector label helpers, since selectors are immutable.
+*/}}
+{{- define "WebApp.commonLabels" -}}
+project: {{ .Values.project | default "innago-property-management" | quote }}
+chart-name: {{ .Chart.Name }}
+{{- with .Values.environment }}
+environment: {{ . | quote }}
+{{- end }}
+{{- end }}
+
+{{/*
 Common labels
 */}}
 {{- define "WebApp.labels" -}}
 helm.sh/chart: {{ include "WebApp.chart" . }}
 {{ include "WebApp.selectorLabels" . }}
+{{ include "WebApp.commonLabels" . }}
 {{ include "WebApp.versionLabel" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
@@ -68,6 +81,7 @@ Migration labels
 {{- define "WebAppMigrations.labels" -}}
 helm.sh/chart: {{ include "WebApp.chart" . }}
 {{ include "WebAppMigrations.selectorLabels" . }}
+{{ include "WebApp.commonLabels" . }}
 {{ include "WebAppMigrations.versionLabel" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}

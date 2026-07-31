@@ -31,11 +31,24 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
+Innago common labels - applied to every resource this chart renders.
+Deliberately kept out of the selector label helper, since selectors are immutable.
+*/}}
+{{- define "CronJob.commonLabels" -}}
+project: {{ .Values.project | default "innago-property-management" | quote }}
+chart-name: {{ .Chart.Name }}
+{{- with .Values.environment }}
+environment: {{ . | quote }}
+{{- end }}
+{{- end }}
+
+{{/*
 Common labels
 */}}
 {{- define "CronJob.labels" -}}
 helm.sh/chart: {{ include "CronJob.chart" . }}
 {{ include "CronJob.selectorLabels" . }}
+{{ include "CronJob.commonLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}

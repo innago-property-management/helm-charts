@@ -33,6 +33,7 @@ Innago Helm Chart for deploying a CronJob
 | cronjob.startingDeadlineSeconds | int | `300` | Deadline in seconds for starting the job if it misses scheduled time If not set, jobs have no deadline |
 | cronjob.successfulJobsHistoryLimit | int | `3` | Number of successful job history to retain |
 | cronjob.suspend | bool | `false` | Suspend cron job execution (useful for maintenance) |
+| environment | string | `""` | Value for the `environment` common label (dev/qa/pre/prod) Applied to every resource this chart renders. Omitted entirely when empty. Supply this per cluster rather than per service |
 | fullnameOverride | string | `""` |  |
 | image | object | `{"pullPolicy":"IfNotPresent","repository":"busybox","tag":""}` | Container image configuration |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy (Always, IfNotPresent, Never) |
@@ -64,6 +65,7 @@ Innago Helm Chart for deploying a CronJob
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
 | podSecurityContext | object | `{"fsGroup":65534,"runAsGroup":65534,"runAsNonRoot":true,"runAsUser":65534,"seccompProfile":{"type":"RuntimeDefault"}}` | Pod-level security context See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| project | string | `"innago-property-management"` | Value for the `project` common label, applied to every resource this chart renders Identifies the owning organization; you should rarely need to override this |
 | resources | object | `{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"128Mi"}}` | Resource requests and limits See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
 | schedule | string | `"0 */2 * * *"` | Cron schedule in standard cron format Format: "minute hour day month weekday" Examples:   "*/5 * * * *"     - Every 5 minutes   "0 */2 * * *"     - Every 2 hours   "0 0 * * *"       - Daily at midnight   "0 0 * * 0"       - Weekly on Sunday Tip: Use https://crontab.guru for help |
 | serviceAccount.annotations | object | `{}` |  |

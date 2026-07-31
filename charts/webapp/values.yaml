@@ -70,6 +70,15 @@ deploymentLabels: {}
 #  team: platform
 #  criticality: high
 
+# -- Value for the `project` common label, applied to every resource this chart renders
+# -- Identifies the owning organization; you should rarely need to override this
+project: innago-property-management
+
+# -- Value for the `environment` common label (dev/qa/pre/prod)
+# -- Applied to every resource this chart renders. Omitted entirely when empty.
+# -- Supply this per cluster rather than per service
+environment: ""
+
 # -- Annotations to add to the primary pod
 podAnnotations: {}
 #  vault.security.banzaicloud.io/vault-addr: "http://vault.default.svc:8200" # optional, the address of the Vault service, default value is https://vault:8200. Configure per environment/namespace.
