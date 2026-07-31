@@ -4,6 +4,41 @@ entries:
   - annotations:
       artifacthub.io/category: integration-delivery
       artifacthub.io/changes: |
+        - kind: added
+          description: "Add project, environment and chart-name common labels to every rendered resource"
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://github.com/innago-property-management/helm-charts/tree/main/charts/cronjob
+        - name: Support
+          url: https://github.com/innago-property-management/helm-charts/issues
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: 1.36.1
+    created: "2026-07-31T09:23:26.545501038Z"
+    description: Innago Helm Chart for deploying a CronJob
+    digest: f169ddf0de1e048ee13e7c0cee4a1864e771625ebd14a08bcdd3b3ac27ab2825
+    home: https://innago-property-management.github.io/helm-charts/cronjob
+    icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
+    keywords:
+    - cronjob
+    - kubernetes
+    - scheduling
+    - batch
+    - job
+    maintainers:
+    - email: support@innago.com
+      name: Innago
+    name: cronjob
+    sources:
+    - https://github.com/innago-property-management/helm-charts/tree/main/charts/cronjob
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/cronjob-2.1.0/cronjob-2.1.0.tgz
+    version: 2.1.0
+  - annotations:
+      artifacthub.io/category: integration-delivery
+      artifacthub.io/changes: |
         - kind: fixed
           description: "Fix broken Helm icon URL"
       artifacthub.io/license: Apache-2.0
@@ -600,6 +635,44 @@ entries:
       artifacthub.io/category: integration-delivery
       artifacthub.io/changes: |
         - kind: added
+          description: "Add project, environment and chart-name common labels to every rendered resource"
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://github.com/innago-property-management/helm-charts/tree/main/charts/webapp
+        - name: Support
+          url: https://github.com/innago-property-management/helm-charts/issues
+        - name: Production Guide
+          url: https://github.com/innago-property-management/helm-charts/blob/main/charts/webapp/PRODUCTION.md
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: 2.7.0
+    created: "2026-07-31T09:23:27.442899491Z"
+    description: Innago Helm chart for deploying web applications to Kubernetes with
+      production-ready patterns
+    digest: 33769e65bbb4cc007cdf39ff4a5753382606292967c934dcf57ef6f69ef2b0d6
+    home: https://innago-property-management.github.io/helm-charts/webapp
+    icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
+    keywords:
+    - webapp
+    - kubernetes
+    - deployment
+    - application
+    - container
+    maintainers:
+    - email: support@innago.com
+      name: Innago
+    name: webapp
+    sources:
+    - https://github.com/innago-property-management/helm-charts/tree/main/charts/webapp
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/webapp-2.7.0/webapp-2.7.0.tgz
+    version: 2.7.0
+  - annotations:
+      artifacthub.io/category: integration-delivery
+      artifacthub.io/changes: |
+        - kind: added
           description: "Add VPA (Vertical Pod Autoscaler) template with HPA-aware memory-only mode"
       artifacthub.io/license: Apache-2.0
       artifacthub.io/links: |
@@ -967,4 +1040,4 @@ entries:
     urls:
     - https://github.com/innago-property-management/helm-charts/releases/download/webapp-1.0.0/webapp-1.0.0.tgz
     version: 1.0.0
-generated: "2026-03-26T20:01:27.037169051Z"
+generated: "2026-07-31T09:23:27.443091579Z"
