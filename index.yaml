@@ -717,6 +717,62 @@ entries:
   - annotations:
       artifacthub.io/category: integration-delivery
       artifacthub.io/changes: |
+        - kind: fixed
+          description: "Migration history cleanup now also prunes migration jobs created before 3.1.0, which predate the app.kubernetes.io/component label it selected on"
+        - kind: added
+          description: "Expose migration job backoffLimit/activeDeadlineSeconds and the cleanup hook timings as values instead of hardcoding them"
+        - kind: added
+          description: "Retain only 3 old ReplicaSets via revisionHistoryLimit (configurable; Kubernetes default was 10)"
+        - kind: changed
+          description: "BREAKING: replicaCount and autoscaling.minReplicas are now honoured as written, including 0; the previous silent floor of 2 is gone"
+        - kind: added
+          description: "Keep only the newest migrationJob.historyLimit (default 3) migration jobs via a post-install/post-upgrade cleanup hook"
+        - kind: changed
+          description: "BREAKING: innagoVaultK8sRoleOperator.use now defaults to false; the vault-role ConfigMap is opt-in"
+        - kind: changed
+          description: "BREAKING: the vault-role ConfigMap is a normal release resource instead of a pre-install/pre-upgrade hook, so it is removed on uninstall"
+        - kind: added
+          description: "Add standard chart labels to the vault-role ConfigMap"
+        - kind: fixed
+          description: "Make the networkPolicy, metrics/serviceMonitor, vpa and innagoVaultK8sRoleOperator gates nil-safe and default to disabled"
+        - kind: fixed
+          description: "Avoid a double hyphen in the vault-role ConfigMap name when the release fullname is truncated"
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://github.com/innago-property-management/helm-charts/tree/main/charts/webapp
+        - name: Support
+          url: https://github.com/innago-property-management/helm-charts/issues
+        - name: Production Guide
+          url: https://github.com/innago-property-management/helm-charts/blob/main/charts/webapp/PRODUCTION.md
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: 2.6.3
+    created: "2026-09-03T10:24:08.763606872Z"
+    description: Innago Helm chart for deploying web applications to Kubernetes with
+      production-ready patterns
+    digest: 6d2b7a638e47b5b6188f6b59cfce91b10ccc03e2197e047266b1b9d538d7f13d
+    home: https://innago-property-management.github.io/helm-charts/webapp
+    icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
+    keywords:
+    - webapp
+    - kubernetes
+    - deployment
+    - application
+    - container
+    maintainers:
+    - email: support@innago.com
+      name: Innago
+    name: webapp
+    sources:
+    - https://github.com/innago-property-management/helm-charts/tree/main/charts/webapp
+    type: application
+    urls:
+    - https://github.com/innago-property-management/helm-charts/releases/download/webapp-3.2.1/webapp-3.2.1.tgz
+    version: 3.2.1
+  - annotations:
+      artifacthub.io/category: integration-delivery
+      artifacthub.io/changes: |
         - kind: added
           description: "Expose migration job backoffLimit/activeDeadlineSeconds and the cleanup hook timings as values instead of hardcoding them"
         - kind: added
@@ -1271,4 +1327,4 @@ entries:
     urls:
     - https://github.com/innago-property-management/helm-charts/releases/download/webapp-1.0.0/webapp-1.0.0.tgz
     version: 1.0.0
-generated: "2026-09-03T10:10:39.725153359Z"
+generated: "2026-09-03T10:24:08.763733269Z"
