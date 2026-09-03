@@ -29,6 +29,8 @@ annotations:
     - name: Production Guide
       url: https://github.com/innago-property-management/helm-charts/blob/main/charts/webapp/PRODUCTION.md
   artifacthub.io/changes: |
+    - kind: fixed
+      description: "Migration history cleanup now also prunes jobs created by chart versions before 3.2.0, which lacked the component label"
     - kind: added
       description: "Expose migration job backoffLimit/activeDeadlineSeconds and the cleanup hook timings as values instead of hardcoding them"
     - kind: added

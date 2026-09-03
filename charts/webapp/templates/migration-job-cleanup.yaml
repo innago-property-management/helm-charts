@@ -46,7 +46,11 @@ spec:
             - |
               set -eu
               keep={{ int .Values.migrationJob.historyLimit }}
-              selector='app.kubernetes.io/component=migrations,app.kubernetes.io/instance={{ .Release.Name }}'
+              # Matches migration jobs from every chart version: releases before 3.2.0
+              # did not label them app.kubernetes.io/component=migrations, so select on
+              # the app labels they have always carried and exclude this cleanup job.
+              # A "key!=value" selector also matches objects with no such label at all.
+              selector='app.kubernetes.io/name={{ include "WebApp.fullname" . | lower }},app.kubernetes.io/instance={{ .Release.Name }},app.kubernetes.io/component!=migrations-cleanup'
               # Oldest first, so the newest $keep jobs are the tail of the list.
               found=$(kubectl get jobs -n {{ .Release.Namespace }} -l "$selector" \
                 --sort-by=.metadata.creationTimestamp -o name)
