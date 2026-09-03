@@ -19,8 +19,8 @@ metadata:
       {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-  backoffLimit: 3
-  activeDeadlineSeconds: 300
+  backoffLimit: {{ if kindIs "invalid" .Values.migrationJob.backoffLimit }}3{{ else }}{{ int .Values.migrationJob.backoffLimit }}{{ end }}
+  activeDeadlineSeconds: {{ if kindIs "invalid" .Values.migrationJob.activeDeadlineSeconds }}300{{ else }}{{ int .Values.migrationJob.activeDeadlineSeconds }}{{ end }}
   template:
     metadata:
       annotations:

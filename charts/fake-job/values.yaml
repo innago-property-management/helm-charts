@@ -1,4 +1,19 @@
 
+# -- Number of pod replicas
+# -- This chart runs at most a single instance: only 0 or 1 are meaningful.
+#    0 scales the deployment to zero; values above 1 are clamped to 1.
+# -- When the release shares a values file with the webapp chart, the count follows
+#    the webapp: autoscaling.minReplicas governs when autoscaling.enabled is true,
+#    otherwise replicaCount does. Either way, >= 1 means 1 here and 0 means 0.
+replicaCount: 1
+
+# -- Number of old ReplicaSets to retain for rollback
+# -- Kubernetes keeps 10 by default
+revisionHistoryLimit: 3
+
+# -- Container port exposed by the workload, named "http"
+httpContainerPort: 80
+
 image:
   repository: nginx
   pullPolicy: IfNotPresent
@@ -57,3 +72,6 @@ affinity: {}
 extraEnv: []
   # - name: BACKGROUNDJOB__ENABLED
   #   value: true
+
+# -- envFrom sources (ConfigMaps/Secrets) for the main container
+containerEnvFrom: []

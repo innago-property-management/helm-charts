@@ -5,7 +5,24 @@ metadata:
   labels:
     {{- include "fake-job.labels" . | nindent 4 }}
 spec:
-  replicas: 1
+  {{- /*
+  This chart runs at most a single instance, and it follows the webapp it belongs to:
+  the *-job Argo CD applications read the same value-overrides file as their webapp
+  counterpart, so whichever knob governs the webapp decides whether this runs or not.
+    webapp >= 1 replica  -> 1
+    webapp == 0 replicas -> 0
+  autoscaling.minReplicas is the governing knob when autoscaling is enabled, otherwise
+  replicaCount is. Values above 1 are clamped rather than rejected, because the shared
+  value file legitimately gives the webapp more than one replica.
+  */}}
+  {{- $desired := .Values.replicaCount -}}
+  {{- $autoscaling := default dict .Values.autoscaling -}}
+  {{- if $autoscaling.enabled -}}
+  {{- $desired = $autoscaling.minReplicas -}}
+  {{- end }}
+  replicas: {{ if kindIs "invalid" $desired }}1{{ else }}{{ max 0 (min 1 (int $desired)) }}{{ end }}
+  {{- /* Number of old ReplicaSets kept for rollback (Kubernetes keeps 10 by default). */}}
+  revisionHistoryLimit: {{ if kindIs "invalid" .Values.revisionHistoryLimit }}3{{ else }}{{ int .Values.revisionHistoryLimit }}{{ end }}
   selector:
     matchLabels:
       {{- include "fake-job.selectorLabels" . | nindent 6 }}
