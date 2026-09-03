@@ -4,9 +4,15 @@
 
 # -- Number of replicas when HPA is disabled
 # -- Only used when autoscaling.enabled=false
-# -- Minimum value is 2 for high availability
+# -- Honoured exactly as written, including 0 to scale the deployment to zero
+# -- Production recommendation: 2 or more for high availability
 # -- For production, use HPA instead of fixed replica count
 replicaCount: 2
+
+# -- Number of old ReplicaSets to retain for rollback
+# -- Kubernetes keeps 10 by default, which clutters the namespace over time
+# -- See https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+revisionHistoryLimit: 3
 
 # -- Deployment strategy configuration
 # -- See https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
@@ -252,7 +258,11 @@ resources:
 autoscaling:
   # -- Enable HPA (disables fixed replicaCount)
   enabled: no
-  # -- Minimum number of replicas (recommended: 2+ for HA)
+  # -- Minimum number of replicas
+  # -- 0 is allowed, but scaling an HPA to zero requires the HPAScaleToZero
+  #    feature gate to be enabled on the cluster; without it the API server
+  #    rejects minReplicas: 0
+  # -- Production recommendation: 2+ for HA
   minReplicas: 2
   # -- Maximum number of replicas (set based on expected peak load)
   maxReplicas: 4
@@ -600,6 +610,13 @@ migrationJob:
     # -- Allows independent versioning of migrations
     tag: ""
 
+  # -- Number of retries before the migration job is marked as failed
+  backoffLimit: 3
+
+  # -- Maximum duration in seconds for the migration job to complete
+  # -- The job is terminated if it exceeds this time
+  activeDeadlineSeconds: 300
+
   # -- Number of finished migration jobs to keep in the namespace
   # -- Each migration image produces a differently named Job (the name carries a
   #    hash of the image), and Kubernetes has no history limit for standalone Jobs,
@@ -619,6 +636,15 @@ migrationJob:
       requests:
         cpu: 10m
         memory: 32Mi
+
+  # -- Retries before the cleanup hook is marked as failed
+  cleanupBackoffLimit: 1
+
+  # -- Maximum duration in seconds for the cleanup hook to complete
+  cleanupActiveDeadlineSeconds: 120
+
+  # -- Seconds after the cleanup hook finishes before Kubernetes deletes it
+  cleanupTtlSecondsAfterFinished: 300
 
   # -- Job annotations
   # -- NOTE: ttlSecondsAfterFinished is a Job spec field, not an annotation.

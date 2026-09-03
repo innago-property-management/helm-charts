@@ -1,6 +1,6 @@
 # webapp
 
-![Version: 3.1.0](https://img.shields.io/badge/Version-3.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.3](https://img.shields.io/badge/AppVersion-2.6.3-informational?style=flat-square)
+![Version: 3.2.0](https://img.shields.io/badge/Version-3.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.3](https://img.shields.io/badge/AppVersion-2.6.3-informational?style=flat-square)
 
 Innago Helm chart for deploying web applications to Kubernetes with production-ready patterns
 
@@ -28,7 +28,7 @@ Innago Helm chart for deploying web applications to Kubernetes with production-r
 | autoscaling.behavior | object | `{}` | See https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#scaling-policies |
 | autoscaling.enabled | string | `"no"` | Enable HPA (disables fixed replicaCount) |
 | autoscaling.maxReplicas | int | `4` | Maximum number of replicas (set based on expected peak load) |
-| autoscaling.minReplicas | int | `2` | Minimum number of replicas (recommended: 2+ for HA) |
+| autoscaling.minReplicas | int | `2` | Minimum number of replicas. 0 is allowed, but scaling an HPA to zero requires the HPAScaleToZero feature gate to be enabled on the cluster; without it the API server rejects minReplicas: 0. Production recommendation: 2+ for HA |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | Example: 80 means scale up when average CPU > 80% |
 | autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Requires memory requests to be set |
 | configMaps | list | `[]` | The ConfigMap name will be prefixed with the release fullname |
@@ -85,10 +85,15 @@ Innago Helm chart for deploying web applications to Kubernetes with production-r
 | metrics.serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor |
 | metrics.serviceMonitor.relabelings | list | `[]` | See https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config |
 | metrics.serviceMonitor.scrapeTimeout | string | `"10s"` | Scrape timeout |
+| migrationJob.activeDeadlineSeconds | int | `300` | Maximum duration in seconds for the migration job to complete. The job is terminated if it exceeds this time |
 | migrationJob.annotations | object | `{}` | Example: Set TTL for automatic cleanup    ttlSecondsAfterFinished: "86400"  # Delete job after 24 hours |
-| migrationJob.command | string | `nil` | Example for EF Core: ["dotnet", "ef", "database", "update"] |
+| migrationJob.backoffLimit | int | `3` | Number of retries before the migration job is marked as failed |
+| migrationJob.cleanupActiveDeadlineSeconds | int | `120` | Maximum duration in seconds for the cleanup hook to complete |
+| migrationJob.cleanupBackoffLimit | int | `1` | Retries before the cleanup hook is marked as failed |
 | migrationJob.cleanupImage | object | `{"pullPolicy":"IfNotPresent","repository":"alpine/kubectl","resources":{"requests":{"cpu":"10m","memory":"32Mi"}},"tag":"1.34.1"}` | Image used by the migration history cleanup hook (must provide kubectl and a shell) Production recommendation: Mirror this image to your private registry |
 | migrationJob.cleanupImage.resources | object | `{"requests":{"cpu":"10m","memory":"32Mi"}}` | Resource requests for the cleanup container |
+| migrationJob.cleanupTtlSecondsAfterFinished | int | `300` | Seconds after the cleanup hook finishes before Kubernetes deletes it |
+| migrationJob.command | string | `nil` | Example for EF Core: ["dotnet", "ef", "database", "update"] |
 | migrationJob.containerEnvFrom | list | `[]` | Load environment variables from ConfigMaps or Secrets |
 | migrationJob.enabled | bool | `false` | Creates a Kubernetes Job to run database migrations before app deployment |
 | migrationJob.environmentVariables | list | `[]` | Use Vault syntax for secrets: vault:/secret/data/path#key |
@@ -123,8 +128,9 @@ Innago Helm chart for deploying web applications to Kubernetes with production-r
 | podDisruptionBudget.unhealthyPodEvictionPolicy | string | `"IfHealthyBudget"` | The policy for evicting unhealthy pods. |
 | podLabels | object | `{}` | Labels to add to pods These labels are added in addition to standard app.kubernetes.io labels Common use cases: - Cost allocation: team, cost-center, environment - Monitoring: prometheus.io/*, datadog/* - Policy enforcement: policy.*/*, security/* - Service mesh: version, traffic routing labels |
 | podSecurityContext | object | `{}` | See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
-| replicaCount | int | `2` | For production, use HPA instead of fixed replica count |
+| replicaCount | int | `2` | Only used when autoscaling.enabled=false. Honoured exactly as written, including 0 to scale the deployment to zero. Production recommendation: 2 or more for high availability |
 | resources | object | `{"requests":{"cpu":"100m","memory":"128Mi"}}` | see https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/  Strategy Recommendations: 1. Development: Set requests only (allows VPA to tune limits) 2. Production (no VPA): Set both requests and limits based on profiling 3. Production (with VPA): Set requests only, let VPA manage limits  QoS Classes: - Guaranteed: requests == limits (predictable, highest priority) - Burstable: requests < limits (flexible, medium priority) - BestEffort: no requests/limits (lowest priority, avoid in production)  Sizing Guidelines: - Requests: Based on P95 actual usage from profiling - Limits: 1.5-2x requests for burst capacity - Memory: Set limit to prevent runaway growth causing node pressure - CPU: Consider omitting limit (avoid throttling) unless strict isolation needed  Example sizing by workload: - Small app (1-10 req/sec): cpu: 100m, memory: 128Mi - Medium app (10-100 req/sec): cpu: 500m, memory: 512Mi - Large app (100+ req/sec): cpu: 1000m, memory: 1Gi |
+| revisionHistoryLimit | int | `3` | Number of old ReplicaSets to retain for rollback. Kubernetes keeps 10 by default, which clutters the namespace over time |
 | service.annotations | object | `{}` | Service annotations for cloud provider integrations Example for AWS NLB:   service.beta.kubernetes.io/aws-load-balancer-type: "nlb"   service.beta.kubernetes.io/aws-load-balancer-internal: "true" Example for GCP Internal Load Balancer:   cloud.google.com/load-balancer-type: "Internal" Example for Azure Internal LB:   service.beta.kubernetes.io/azure-load-balancer-internal: "true" |
 | service.enableHttps | bool | `false` | Adds a port named "https" targeting the container's https port |
 | service.httpsPort | int | `443` | HTTPS service port (when enableHttps=true) |

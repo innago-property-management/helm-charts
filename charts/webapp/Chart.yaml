@@ -2,7 +2,7 @@ apiVersion: v2
 name: webapp
 description: Innago Helm chart for deploying web applications to Kubernetes with production-ready patterns
 type: application
-version: 3.1.0
+version: 3.2.0
 appVersion: "2.6.3"
 icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
 home: https://innago-property-management.github.io/helm-charts/webapp
@@ -29,6 +29,12 @@ annotations:
     - name: Production Guide
       url: https://github.com/innago-property-management/helm-charts/blob/main/charts/webapp/PRODUCTION.md
   artifacthub.io/changes: |
+    - kind: added
+      description: "Expose migration job backoffLimit/activeDeadlineSeconds and the cleanup hook timings as values instead of hardcoding them"
+    - kind: added
+      description: "Retain only 3 old ReplicaSets via revisionHistoryLimit (configurable; Kubernetes default was 10)"
+    - kind: changed
+      description: "BREAKING: replicaCount and autoscaling.minReplicas are now honoured as written, including 0; the previous silent floor of 2 is gone"
     - kind: added
       description: "Keep only the newest migrationJob.historyLimit (default 3) migration jobs via a post-install/post-upgrade cleanup hook"
     - kind: changed

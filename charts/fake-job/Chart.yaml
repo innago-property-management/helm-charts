@@ -2,7 +2,7 @@ apiVersion: v2
 name: fake-job
 description: Innago Helm Chart for deploying a long-running background job worker as a Deployment
 type: application
-version: 1.0.3
+version: 1.0.4
 appVersion: "1.16.0"
 icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
 home: https://innago-property-management.github.io/helm-charts/fake-job
@@ -31,3 +31,9 @@ annotations:
       description: "Import fake-job chart into the innago helm-charts repository"
     - kind: added
       description: "Add chart metadata, README and post-install notes"
+    - kind: added
+      description: "Retain only 3 old ReplicaSets via revisionHistoryLimit (Kubernetes default was 10)"
+    - kind: added
+      description: "Make replicaCount, revisionHistoryLimit, httpContainerPort and containerEnvFrom configurable from values"
+    - kind: added
+      description: "Clamp replicas to 0..1, following the paired webapp: autoscaling.minReplicas when autoscaling is enabled, otherwise replicaCount"

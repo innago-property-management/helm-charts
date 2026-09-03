@@ -11,8 +11,11 @@ metadata:
     {{- toYaml .Values.deploymentAnnotations | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ max 2 .Values.replicaCount }}
+  {{- /* No floor: replicaCount is honoured as written, including 0 to scale to zero. */}}
+  replicas: {{ if kindIs "invalid" .Values.replicaCount }}2{{ else }}{{ int .Values.replicaCount }}{{ end }}
   {{- end }}
+  {{- /* Number of old ReplicaSets kept for rollback (Kubernetes keeps 10 by default). */}}
+  revisionHistoryLimit: {{ if kindIs "invalid" .Values.revisionHistoryLimit }}3{{ else }}{{ int .Values.revisionHistoryLimit }}{{ end }}
   strategy:
     type: {{ .Values.strategy.type }}
     {{- if eq .Values.strategy.type "RollingUpdate" }}

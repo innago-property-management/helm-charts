@@ -10,8 +10,10 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ include "WebApp.fullname" . | lower }}
-  minReplicas: {{ max 2 .Values.autoscaling.minReplicas }}
-  maxReplicas: {{ max 2 .Values.autoscaling.minReplicas .Values.autoscaling.maxReplicas }}
+  {{- /* No floor: minReplicas 0 requires the HPAScaleToZero feature gate on the cluster. */}}
+  minReplicas: {{ int .Values.autoscaling.minReplicas }}
+  {{- /* maxReplicas must be >= 1 per the HPA API, and never below minReplicas. */}}
+  maxReplicas: {{ max 1 (int .Values.autoscaling.minReplicas) (int .Values.autoscaling.maxReplicas) }}
   metrics:
     - type: Resource
       resource:
