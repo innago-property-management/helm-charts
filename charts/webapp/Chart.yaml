@@ -2,7 +2,7 @@ apiVersion: v2
 name: webapp
 description: Innago Helm chart for deploying web applications to Kubernetes with production-ready patterns
 type: application
-version: 2.6.3
+version: 3.0.0
 appVersion: "2.6.3"
 icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
 home: https://innago-property-management.github.io/helm-charts/webapp
@@ -29,5 +29,13 @@ annotations:
     - name: Production Guide
       url: https://github.com/innago-property-management/helm-charts/blob/main/charts/webapp/PRODUCTION.md
   artifacthub.io/changes: |
+    - kind: changed
+      description: "BREAKING: innagoVaultK8sRoleOperator.use now defaults to false; the vault-role ConfigMap is opt-in"
+    - kind: changed
+      description: "BREAKING: the vault-role ConfigMap is a normal release resource instead of a pre-install/pre-upgrade hook, so it is removed on uninstall"
     - kind: added
-      description: "Add VPA (Vertical Pod Autoscaler) template with HPA-aware memory-only mode"
+      description: "Add standard chart labels to the vault-role ConfigMap"
+    - kind: fixed
+      description: "Make the networkPolicy, metrics/serviceMonitor, vpa and innagoVaultK8sRoleOperator gates nil-safe and default to disabled"
+    - kind: fixed
+      description: "Avoid a double hyphen in the vault-role ConfigMap name when the release fullname is truncated"

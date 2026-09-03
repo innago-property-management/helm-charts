@@ -193,7 +193,10 @@ containerEnvironmentVariables:
 
 ### Using innago-vault-k8s-role-operator
 
-The `innago-vault-k8s-role-operator` automatically creates Vault roles and policies based on your ServiceAccount:
+The `innago-vault-k8s-role-operator` automatically creates Vault roles and policies based on your ServiceAccount.
+
+This integration is **disabled by default** (`innagoVaultK8sRoleOperator.use: false`); opt in only when
+the operator is running in the cluster. Without the operator present, the ConfigMap is created but nothing acts on it.
 
 ```yaml
 # Enable automatic role creation

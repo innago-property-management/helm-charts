@@ -1,6 +1,6 @@
 # webapp
 
-![Version: 2.6.2](https://img.shields.io/badge/Version-2.6.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.2](https://img.shields.io/badge/AppVersion-2.6.2-informational?style=flat-square)
+![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.3](https://img.shields.io/badge/AppVersion-2.6.3-informational?style=flat-square)
 
 Innago Helm chart for deploying web applications to Kubernetes with production-ready patterns
 
@@ -67,7 +67,7 @@ Innago Helm chart for deploying web applications to Kubernetes with production-r
 | ingress.tls | list | `[]` | Secret can be created manually or via cert-manager |
 | initContainers | list | `[]` | Common use cases: database migrations, configuration setup, dependency checks |
 | innagoVaultK8sRoleOperator.additionalPolicies | list | `[]` | an array of additional policy names. you would use this if dynamic secrets for a database, messaging system, etc. are in use. |
-| innagoVaultK8sRoleOperator.use | bool | `true` | whether a config map to trigger vault role and policy should be created. if the https://github.com/innago-property-management/innago-vault-k8s-role-operator is present in the cluster, including this will create a config map which will then be used by the operator to create a policy and role for the service account used by your app. |
+| innagoVaultK8sRoleOperator.use | bool | `false` | whether a config map to trigger vault role and policy should be created. Disabled by default: opt in only when the https://github.com/innago-property-management/innago-vault-k8s-role-operator is present in the cluster. When enabled, this creates a config map which the operator then uses to create a policy and role for the service account used by your app. |
 | lifecycle | object | `{"preStop":{"enabled":true,"sleepSeconds":5},"terminationGracePeriodSeconds":30}` | Lifecycle hooks and termination configuration |
 | lifecycle.preStop | object | `{"enabled":true,"sleepSeconds":5}` | preStop hook configuration |
 | lifecycle.preStop.enabled | bool | `true` | Enable preStop hook for graceful shutdown |

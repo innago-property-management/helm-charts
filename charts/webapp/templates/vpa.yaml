@@ -1,4 +1,4 @@
-{{- if .Values.vpa.enabled }}
+{{- if (default dict .Values.vpa).enabled }}
 {{- /* Validate updateMode - "Auto" is deprecated */ -}}
 {{- $validModes := list "Off" "Initial" "InPlaceOrRecreate" -}}
 {{- if eq .Values.vpa.updateMode "Auto" }}

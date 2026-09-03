@@ -1,0 +1,33 @@
+apiVersion: v2
+name: fake-job
+description: Innago Helm Chart for deploying a long-running background job worker as a Deployment
+type: application
+version: 1.0.3
+appVersion: "1.16.0"
+icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
+home: https://innago-property-management.github.io/helm-charts/fake-job
+sources:
+  - https://github.com/innago-property-management/helm-charts/tree/main/charts/fake-job
+maintainers:
+  - name: "Innago"
+    email: "support@innago.com"
+keywords:
+  - job
+  - worker
+  - background
+  - deployment
+  - kubernetes
+annotations:
+  artifacthub.io/category: "integration-delivery"
+  artifacthub.io/license: "Apache-2.0"
+  artifacthub.io/prerelease: "false"
+  artifacthub.io/links: |
+    - name: Documentation
+      url: https://github.com/innago-property-management/helm-charts/tree/main/charts/fake-job
+    - name: Support
+      url: https://github.com/innago-property-management/helm-charts/issues
+  artifacthub.io/changes: |
+    - kind: added
+      description: "Import fake-job chart into the innago helm-charts repository"
+    - kind: added
+      description: "Add chart metadata, README and post-install notes"

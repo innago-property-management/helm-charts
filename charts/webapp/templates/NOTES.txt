@@ -34,7 +34,8 @@ Check migration status:
   kubectl logs -l app.kubernetes.io/name={{ include "WebApp.fullname" . | lower }}-migrations -n {{ .Release.Namespace }} --tail=50
 {{- end }}
 
-{{- if and .Values.metrics.enabled .Values.metrics.serviceMonitor.enabled }}
+{{- $metrics := default dict .Values.metrics }}
+{{- if and $metrics.enabled (default dict $metrics.serviceMonitor).enabled }}
 
 ** Monitoring Enabled **
 ServiceMonitor created for Prometheus Operator
@@ -44,11 +45,12 @@ Verify ServiceMonitor:
   kubectl get servicemonitor {{ include "WebApp.fullname" . | lower }} -n {{ .Release.Namespace }}
 {{- end }}
 
-{{- if .Values.networkPolicy.enabled }}
+{{- $networkPolicy := default dict .Values.networkPolicy }}
+{{- if $networkPolicy.enabled }}
 
 ** NetworkPolicy Enabled **
 Network access restricted to configured selectors
-{{- if .Values.networkPolicy.egress.enabled }}
+{{- if (default dict $networkPolicy.egress).enabled }}
 Egress rules are enforced - only allowed destinations are reachable
 {{- end }}
 

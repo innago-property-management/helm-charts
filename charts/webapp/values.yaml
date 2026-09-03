@@ -686,10 +686,11 @@ topologySpreadConstraints:
 
 innagoVaultK8sRoleOperator:
   # -- whether a config map to trigger vault role and policy should be created.
-  # if the https://github.com/innago-property-management/innago-vault-k8s-role-operator is present in the cluster,
-  # including this will create a config map which will then be used by the operator
+  # Disabled by default: opt in only when the
+  # https://github.com/innago-property-management/innago-vault-k8s-role-operator is present in the cluster.
+  # When enabled, this creates a config map which the operator then uses
   # to create a policy and role for the service account used by your app.
-  use: true
+  use: false
   # -- an array of additional policy names.
   # you would use this if dynamic secrets for a database, messaging system, etc. are in use.
   additionalPolicies: []
