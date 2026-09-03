@@ -47,6 +47,14 @@ Kubernetes admission webhook to rewrite container image references for registry 
 - **Category**: Integration & Delivery
 - **Features**: Image rewriting, registry caching, admission controller
 
+### [fake-job](./charts/fake-job)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/innago)](https://artifacthub.io/packages/helm/innago/fake-job)
+
+Innago Helm Chart for deploying a long-running background job worker as a Deployment.
+
+- **Category**: Integration & Delivery
+- **Features**: Deployment-based worker, health probes, ServiceAccount, env/envFrom injection, scheduling controls
+
 ## Installation
 
 ### Add Helm Repository
@@ -73,6 +81,9 @@ helm install vault-operator innago/innago-vault-k8s-role-operator
 
 # Install registry webhook
 helm install registry-webhook innago/registry-container-webhook
+
+# Install fake-job
+helm install my-fake-job innago/fake-job
 ```
 
 ## OCI Registry

@@ -1,0 +1,35 @@
+Thank you for installing {{ .Chart.Name }}!
+
+Your Deployment "{{ include "fake-job.fullname" . }}" has been deployed.
+
+Configuration:
+  Namespace: {{ .Release.Namespace }}
+  Image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+  Container port: {{ .Values.httpContainerPort | default 80 }}
+  ServiceAccount: {{ include "fake-job.serviceAccountName" . }}
+
+To check rollout status:
+  kubectl rollout status deployment/{{ include "fake-job.fullname" . }} -n {{ .Release.Namespace }}
+
+To view the pods:
+  kubectl get pods -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+To view logs:
+  kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }} --tail=50 -f
+
+{{- if not .Values.resources }}
+
+WARNING: No resource requests or limits configured!
+  This can lead to resource exhaustion. Set resources in production.
+{{- end }}
+
+{{- if eq .Values.image.tag "latest" }}
+
+WARNING: Using 'latest' image tag!
+  This is not recommended for production. Use explicit version tags.
+{{- end }}
+
+NOTE: This chart creates no Service. The container port is exposed for probes only.
+
+For more information, visit:
+  https://github.com/innago-property-management/helm-charts/tree/main/charts/fake-job
