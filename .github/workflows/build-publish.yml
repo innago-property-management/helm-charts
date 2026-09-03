@@ -66,7 +66,13 @@ jobs:
             helm dependency update "$dir"
           fi
         done
+    - name: Lint charts
+      run: helm lint charts/*/
     - name: Run chart-releaser
+      # Publishing must only happen from main. Running this on pull_request
+      # created GitHub releases from PR branches and raced the main-branch run
+      # for the gh-pages index.yaml push.
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f #1.7.0
       env:
         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
@@ -93,13 +99,27 @@ jobs:
         fi
         git checkout main
     - name: Push chart to GHCR
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
         shopt -s nullglob
+        failed=()
         for pkg in .cr-release-packages/*.tgz; do
           if [ -z "${pkg:-}" ]; then
             break
           fi
-          helm push "${pkg}" oci://ghcr.io/${{ github.repository }}
+          # Do not abort the loop: a chart whose GHCR package does not exist yet
+          # is rejected with "403 denied: permission_denied: write_package",
+          # which previously stopped every remaining chart from being pushed.
+          helm push "${pkg}" oci://ghcr.io/${{ github.repository }} || failed+=("${pkg}")
         done
+        if [ ${#failed[@]} -gt 0 ]; then
+          for pkg in "${failed[@]}"; do
+            echo "::error::failed to push ${pkg} to ghcr.io/${{ github.repository }}"
+          done
+          echo "A new chart needs its GHCR package created once by a user with" \
+               "write:packages, then the repository granted Write under the" \
+               "package's 'Manage Actions access' settings."
+          exit 1
+        fi
       env:
           HELM_EXPERIMENTAL_OCI: 1

@@ -1,6 +1,6 @@
 # webapp
 
-![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.3](https://img.shields.io/badge/AppVersion-2.6.3-informational?style=flat-square)
+![Version: 3.1.0](https://img.shields.io/badge/Version-3.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.3](https://img.shields.io/badge/AppVersion-2.6.3-informational?style=flat-square)
 
 Innago Helm chart for deploying web applications to Kubernetes with production-ready patterns
 
@@ -87,9 +87,12 @@ Innago Helm chart for deploying web applications to Kubernetes with production-r
 | metrics.serviceMonitor.scrapeTimeout | string | `"10s"` | Scrape timeout |
 | migrationJob.annotations | object | `{}` | Example: Set TTL for automatic cleanup    ttlSecondsAfterFinished: "86400"  # Delete job after 24 hours |
 | migrationJob.command | string | `nil` | Example for EF Core: ["dotnet", "ef", "database", "update"] |
+| migrationJob.cleanupImage | object | `{"pullPolicy":"IfNotPresent","repository":"alpine/kubectl","resources":{"requests":{"cpu":"10m","memory":"32Mi"}},"tag":"1.34.1"}` | Image used by the migration history cleanup hook (must provide kubectl and a shell) Production recommendation: Mirror this image to your private registry |
+| migrationJob.cleanupImage.resources | object | `{"requests":{"cpu":"10m","memory":"32Mi"}}` | Resource requests for the cleanup container |
 | migrationJob.containerEnvFrom | list | `[]` | Load environment variables from ConfigMaps or Secrets |
 | migrationJob.enabled | bool | `false` | Creates a Kubernetes Job to run database migrations before app deployment |
 | migrationJob.environmentVariables | list | `[]` | Use Vault syntax for secrets: vault:/secret/data/path#key |
+| migrationJob.historyLimit | int | `3` | Number of finished migration jobs to keep in the namespace. Each migration image produces a differently named Job, and Kubernetes has no history limit for standalone Jobs, so without this every migration ever run stays in the namespace. After each install/upgrade a cleanup hook deletes all but the newest N. Set to 0 to keep every migration job and skip the cleanup hook entirely. |
 | migrationJob.image.pullPolicy | string | `"IfNotPresent"` |  |
 | migrationJob.image.repository | string | `""` | Should contain your database migration tooling (e.g., dotnet ef, flyway, liquibase) |
 | migrationJob.image.tag | string | `""` | Allows independent versioning of migrations |

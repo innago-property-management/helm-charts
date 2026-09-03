@@ -1,0 +1,64 @@
+{{- /*
+Migration jobs are named after a hash of the migration image, so every new
+migration image leaves another finished Job in the namespace. Kubernetes has no
+history limit for standalone Jobs (only CronJobs do), so this hook trims them
+to migrationJob.historyLimit after each install/upgrade.
+*/ -}}
+{{- if and .Values.migrationJob.enabled (gt (int .Values.migrationJob.historyLimit) 0) -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ printf "%s-migrations-cleanup" (include "WebApp.fullname" .) | trunc 63 | trimSuffix "-" | lower }}
+  labels:
+    {{- include "WebApp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: migrations-cleanup
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: 1
+  activeDeadlineSeconds: 120
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        {{- include "WebApp.labels" . | nindent 8 }}
+        app.kubernetes.io/component: migrations-cleanup
+    spec:
+      serviceAccountName: {{ include "WebApp.serviceAccountName" . | lower }}
+      restartPolicy: Never
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: cleanup
+          image: "{{ .Values.migrationJob.cleanupImage.repository }}:{{ .Values.migrationJob.cleanupImage.tag }}"
+          imagePullPolicy: {{ .Values.migrationJob.cleanupImage.pullPolicy }}
+          {{- with .Values.migrationJob.cleanupImage.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              keep={{ int .Values.migrationJob.historyLimit }}
+              selector='app.kubernetes.io/component=migrations,app.kubernetes.io/instance={{ .Release.Name }}'
+              # Oldest first, so the newest $keep jobs are the tail of the list.
+              found=$(kubectl get jobs -n {{ .Release.Namespace }} -l "$selector" \
+                --sort-by=.metadata.creationTimestamp -o name)
+              count=$(printf '%s' "$found" | grep -c . || true)
+              stale=$((count - keep))
+              echo "found $count migration job(s), keeping newest $keep"
+              if [ "$stale" -le 0 ]; then
+                echo "nothing to remove"
+                exit 0
+              fi
+              printf '%s\n' "$found" | head -n "$stale" | while read -r job; do
+                echo "deleting $job"
+                kubectl delete -n {{ .Release.Namespace }} "$job" --ignore-not-found --wait=false
+              done
+{{- end -}}
