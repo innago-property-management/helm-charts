@@ -8,6 +8,7 @@ metadata:
   name: {{ include "WebApp.migrationJobName" . }}
   labels:
     {{- include "WebApp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: migrations
   annotations:
     {{- if not .Values.migrationJob.waitForItInInitContainer }}
     "helm.sh/hook": pre-install,pre-upgrade
