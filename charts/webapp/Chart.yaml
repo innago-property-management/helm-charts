@@ -2,7 +2,7 @@ apiVersion: v2
 name: webapp
 description: Innago Helm chart for deploying web applications to Kubernetes with production-ready patterns
 type: application
-version: 3.2.0
+version: 3.2.1
 appVersion: "2.6.3"
 icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
 home: https://innago-property-management.github.io/helm-charts/webapp
@@ -30,7 +30,7 @@ annotations:
       url: https://github.com/innago-property-management/helm-charts/blob/main/charts/webapp/PRODUCTION.md
   artifacthub.io/changes: |
     - kind: fixed
-      description: "Migration history cleanup now also prunes jobs created by chart versions before 3.2.0, which lacked the component label"
+      description: "Migration history cleanup now also prunes migration jobs created before 3.1.0, which predate the app.kubernetes.io/component label it selected on"
     - kind: added
       description: "Expose migration job backoffLimit/activeDeadlineSeconds and the cleanup hook timings as values instead of hardcoding them"
     - kind: added
