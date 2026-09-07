@@ -21,13 +21,19 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
-    {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- /*
+    Memory is scaled on by default. Setting targetMemoryUtilizationPercentage to
+    null, 0 or false in a values override drops this metric and leaves the HPA
+    scaling on CPU alone. The metric needs a memory request on the container;
+    without one the HPA reports <unknown> for memory and stops scaling entirely.
+    */}}
+    {{- with .Values.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
+          averageUtilization: {{ int . }}
     {{- end }}
   {{- if .Values.autoscaling.behavior }}
   behavior:

@@ -1,6 +1,6 @@
 # webapp
 
-![Version: 3.2.2](https://img.shields.io/badge/Version-3.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.3](https://img.shields.io/badge/AppVersion-2.6.3-informational?style=flat-square)
+![Version: 3.3.0](https://img.shields.io/badge/Version-3.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.3](https://img.shields.io/badge/AppVersion-2.6.3-informational?style=flat-square)
 
 Innago Helm chart for deploying web applications to Kubernetes with production-ready patterns
 
@@ -30,7 +30,7 @@ Innago Helm chart for deploying web applications to Kubernetes with production-r
 | autoscaling.maxReplicas | int | `4` | Maximum number of replicas (set based on expected peak load) |
 | autoscaling.minReplicas | int | `2` | Minimum number of replicas. 0 is allowed, but scaling an HPA to zero requires the HPAScaleToZero feature gate to be enabled on the cluster; without it the API server rejects minReplicas: 0. Production recommendation: 2+ for HA |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | Example: 80 means scale up when average CPU > 80% |
-| autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Requires memory requests to be set |
+| autoscaling.targetMemoryUtilizationPercentage | int | `80` | Target memory utilization percentage (scale up when exceeded). Memory scaling is ENABLED by default, alongside CPU. Requires a memory request on the container, which the chart sets by default. To scale on CPU only, set this to null, 0 or false in the values override |
 | configMaps | list | `[]` | The ConfigMap name will be prefixed with the release fullname |
 | configVersion | string | `""` | Only needed if you manage ConfigMaps outside of Helm |
 | containerEnvFrom | list | `[]` | Example: Load all variables from a ConfigMap or Secret |
