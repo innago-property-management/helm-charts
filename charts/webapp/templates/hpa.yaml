@@ -14,13 +14,26 @@ spec:
   minReplicas: {{ int .Values.autoscaling.minReplicas }}
   {{- /* maxReplicas must be >= 1 per the HPA API, and never below minReplicas. */}}
   maxReplicas: {{ max 1 (int .Values.autoscaling.minReplicas) (int .Values.autoscaling.maxReplicas) }}
+  {{- /*
+  Both targets are independently switchable: set either to null, 0 or false to drop
+  that metric. At least one must survive — an HPA with an empty metrics list silently
+  falls back to a default 80% CPU target, so refuse the combination outright rather
+  than autoscale on something nobody asked for.
+  */}}
+  {{- $cpuTarget := .Values.autoscaling.targetCPUUtilizationPercentage -}}
+  {{- $memoryTarget := .Values.autoscaling.targetMemoryUtilizationPercentage -}}
+  {{- if and (not $cpuTarget) (not $memoryTarget) }}
+  {{- fail "autoscaling.enabled requires at least one of autoscaling.targetCPUUtilizationPercentage or autoscaling.targetMemoryUtilizationPercentage; disabling both would leave the HPA with no metrics and Kubernetes would default it to 80% CPU" }}
+  {{- end }}
   metrics:
+    {{- with $cpuTarget }}
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ int . }}
+    {{- end }}
     {{- /*
     Memory is scaled on by default. Setting targetMemoryUtilizationPercentage to
     null, 0 or false in a values override drops this metric and leaves the HPA
@@ -37,7 +50,7 @@ spec:
     resources.requests.memory by default and that survives a partial resources
     override.
     */}}
-    {{- with .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- with $memoryTarget }}
     - type: ContainerResource
       containerResource:
         name: memory
