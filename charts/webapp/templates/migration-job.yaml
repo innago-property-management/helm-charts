@@ -11,9 +11,18 @@ metadata:
     app.kubernetes.io/component: migrations
   annotations:
     {{- if not .Values.migrationJob.waitForItInInitContainer }}
+    {{- /*
+    Helm hooks drive plain `helm install`/`helm upgrade`. Argo CD ignores them
+    because the Argo CD hook below takes priority: a Sync hook at wave -5 runs
+    inside the sync phase, after the ServiceAccount at wave -10 and before the
+    Deployment at the default wave 0. PreSync would run before the ServiceAccount
+    exists, which is why the account used to be a hook itself.
+    */}}
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-weight": "-5"
     "helm.sh/hook-delete-policy": before-hook-creation
+    "argocd.argoproj.io/hook": Sync
+    "argocd.argoproj.io/sync-wave": "-5"
     {{- end }}
     {{- with .Values.migrationJob.annotations }}
       {{- toYaml . | nindent 4 }}

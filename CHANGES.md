@@ -13,7 +13,8 @@ release; this file collects it in one place with the reasoning behind each chang
 
 | webapp | Date | Theme |
 |--------|------|-------|
-| [3.4.0](#webapp-340) | unreleased | CPU metric can be switched off for memory-only scaling |
+| [3.5.0](#webapp-350) | unreleased | ServiceAccount stops being recreated on every sync |
+| [3.4.0](#webapp-340) | 2026-09-07 | CPU metric can be switched off for memory-only scaling |
 | [3.3.0](#webapp-330) | 2026-09-07 | HPA scales on memory as well as CPU |
 | [3.2.2](#webapp-322) | 2026-09-07 | Stop deleting the ServiceAccount on every sync |
 | [3.2.1](#webapp-321) | 2026-09-03 | Migration cleanup also prunes pre-3.1.0 jobs |
@@ -28,9 +29,54 @@ release; this file collects it in one place with the reasoning behind each chang
 
 ---
 
-## webapp 3.4.0
+## webapp 3.5.0
 
 **Unreleased.**
+
+### Fixed
+
+- **The ServiceAccount, Role and RoleBinding are no longer recreated on every sync.**
+  They carried `helm.sh/hook: pre-install,pre-upgrade`, which Argo CD maps to a PreSync
+  hook — and **`BeforeHookCreation` is Argo CD's default hook-delete-policy**, so it
+  deleted and recreated all three on every single sync. Removing only the Helm
+  `hook-delete-policy` in 3.2.2 therefore changed nothing; the recreation continued.
+  Observed in `innago-merlin` on chart 3.4.0: all three objects carried a
+  `creationTimestamp` minutes old, refreshed on each sync.
+
+  Two consequences of that churn:
+
+  - Recreating a ServiceAccount rotates its UID, which invalidates projected tokens
+    already held by running pods — the same tokens Vault's Kubernetes auth uses.
+  - Any sync interrupted between the delete and the create leaves the Deployment unable
+    to schedule pods at all (`error looking up service account`), which is how 6 of 76
+    qa deployments ended up at 0/2.
+
+  All three are now ordinary tracked resources with no hook annotations.
+
+### Changed
+
+- **Ordering is expressed with sync waves instead of hook phases.**
+
+  | Resource | Ordering |
+  |----------|----------|
+  | ServiceAccount, Role, RoleBinding | `argocd.argoproj.io/sync-wave: "-10"` |
+  | migration job | `argocd.argoproj.io/hook: Sync` at wave `-5` |
+  | Deployment and everything else | default wave `0` |
+
+  The migration job needs the account, so it cannot run in PreSync any more — PreSync
+  completes before the Sync phase where the account is now created, which on a fresh
+  install would deadlock: the job fails, the sync aborts, and the account is never
+  created. Running it as an Argo CD `Sync` hook at wave `-5` keeps it after the
+  account and before the Deployment.
+
+  The job keeps its `helm.sh/hook` annotations for plain `helm install`/`helm upgrade`.
+  Argo CD ignores them because [Argo CD hooks take priority over Helm
+  hooks](https://argo-cd.readthedocs.io/en/stable/user-guide/helm/) — if any Argo CD
+  hook is defined, all Helm hooks on that resource are ignored.
+
+---
+
+## webapp 3.4.0
 
 ### Added
 
