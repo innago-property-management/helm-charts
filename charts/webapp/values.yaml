@@ -269,11 +269,17 @@ autoscaling:
   # -- Target CPU utilization percentage (scale up when exceeded)
   # -- Example: 80 means scale up when average CPU > 80%
   targetCPUUtilizationPercentage: 80
-  # -- Target memory utilization percentage (optional)
-  # -- Uncomment to enable memory-based scaling in addition to CPU
-  # -- Requires memory requests to be set
-  targetMemoryUtilizationPercentage: null
-  #  targetMemoryUtilizationPercentage: 80
+  # -- Target memory utilization percentage (scale up when exceeded)
+  # -- Memory scaling is ENABLED by default, alongside CPU: a pod that is memory
+  #    bound rather than CPU bound would otherwise never trigger a scale-up.
+  # -- Requires a memory request on the application container. The chart sets
+  #    resources.requests.memory by default, so this works unless that is removed.
+  # -- Scoped to the application container (a ContainerResource metric), so sidecars
+  #    added through additionalContainers do not need memory requests of their own.
+  # -- To scale on CPU only, disable it explicitly in the values override:
+  #      autoscaling:
+  #        targetMemoryUtilizationPercentage: null   # or 0 / false
+  targetMemoryUtilizationPercentage: 80
   # -- HPA scaling behavior (v2 API)
   # -- Controls the rate of scaling up and down
   # -- See https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#scaling-policies
