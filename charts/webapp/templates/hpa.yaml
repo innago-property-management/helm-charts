@@ -24,13 +24,24 @@ spec:
     {{- /*
     Memory is scaled on by default. Setting targetMemoryUtilizationPercentage to
     null, 0 or false in a values override drops this metric and leaves the HPA
-    scaling on CPU alone. The metric needs a memory request on the container;
-    without one the HPA reports <unknown> for memory and stops scaling entirely.
+    scaling on CPU alone.
+
+    ContainerResource, not Resource: a Resource metric sums requests across every
+    container in the pod, so one sidecar added through additionalContainers without
+    a memory request makes the metric <unknown> — and an unavailable metric stops
+    the HPA scaling at all, including on CPU. Scoping it to the application
+    container keeps sidecars out of the calculation. ContainerResource is GA from
+    Kubernetes 1.30.
+
+    The application container still needs a memory request; the chart sets
+    resources.requests.memory by default and that survives a partial resources
+    override.
     */}}
     {{- with .Values.autoscaling.targetMemoryUtilizationPercentage }}
-    - type: Resource
-      resource:
+    - type: ContainerResource
+      containerResource:
         name: memory
+        container: {{ $.Chart.Name | lower }}
         target:
           type: Utilization
           averageUtilization: {{ int . }}

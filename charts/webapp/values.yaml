@@ -272,8 +272,10 @@ autoscaling:
   # -- Target memory utilization percentage (scale up when exceeded)
   # -- Memory scaling is ENABLED by default, alongside CPU: a pod that is memory
   #    bound rather than CPU bound would otherwise never trigger a scale-up.
-  # -- Requires a memory request on the container. The chart sets
+  # -- Requires a memory request on the application container. The chart sets
   #    resources.requests.memory by default, so this works unless that is removed.
+  # -- Scoped to the application container (a ContainerResource metric), so sidecars
+  #    added through additionalContainers do not need memory requests of their own.
   # -- To scale on CPU only, disable it explicitly in the values override:
   #      autoscaling:
   #        targetMemoryUtilizationPercentage: null   # or 0 / false

@@ -45,11 +45,20 @@ release; this file collects it in one place with the reasoning behind each chang
     targetMemoryUtilizationPercentage: null   # or 0 / false
   ```
 
-  The metric requires a memory request on the container. The chart sets
+  The metric is a **`ContainerResource`** metric scoped to the application container,
+  not a pod-wide `Resource` metric. A `Resource` metric sums requests across every
+  container in the pod, so a single sidecar added through `additionalContainers`
+  without a memory request would make the metric `<unknown>` — and an unavailable
+  metric stops the HPA scaling **entirely**, including on CPU. Scoping it to the
+  application container keeps sidecars out of the calculation.
+  `ContainerResource` is GA from Kubernetes 1.30; all Innago clusters run 1.34.
+
+  The application container still needs a memory request. The chart sets
   `resources.requests.memory: 128Mi` by default and that survives a partial
   `resources` override, so this works unless the request is deliberately removed.
-  Without a memory request the HPA reports `<unknown>` for memory and stops scaling
-  **entirely**, including on CPU.
+
+  CPU remains a pod-wide `Resource` metric, unchanged, so existing HPA behaviour is
+  not altered.
 
 ---
 

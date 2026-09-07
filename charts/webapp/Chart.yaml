@@ -30,7 +30,7 @@ annotations:
       url: https://github.com/innago-property-management/helm-charts/blob/main/charts/webapp/PRODUCTION.md
   artifacthub.io/changes: |
     - kind: changed
-      description: "HPA now scales on memory as well as CPU by default (autoscaling.targetMemoryUtilizationPercentage: 80); set it to null, 0 or false for CPU-only scaling"
+      description: "HPA now scales on memory as well as CPU by default (autoscaling.targetMemoryUtilizationPercentage: 80), as a ContainerResource metric scoped to the application container so sidecars cannot invalidate it; set it to null, 0 or false for CPU-only scaling"
     - kind: fixed
       description: "ServiceAccount/Role/RoleBinding no longer carry helm.sh/hook-delete-policy: before-hook-creation, which made Argo CD delete the ServiceAccount on every sync and left pods unschedulable when a sync did not finish"
     - kind: fixed
