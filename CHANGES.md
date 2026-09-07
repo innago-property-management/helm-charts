@@ -13,7 +13,8 @@ release; this file collects it in one place with the reasoning behind each chang
 
 | webapp | Date | Theme |
 |--------|------|-------|
-| [3.3.0](#webapp-330) | unreleased | HPA scales on memory as well as CPU |
+| [3.4.0](#webapp-340) | unreleased | CPU metric can be switched off for memory-only scaling |
+| [3.3.0](#webapp-330) | 2026-09-07 | HPA scales on memory as well as CPU |
 | [3.2.2](#webapp-322) | 2026-09-07 | Stop deleting the ServiceAccount on every sync |
 | [3.2.1](#webapp-321) | 2026-09-03 | Migration cleanup also prunes pre-3.1.0 jobs |
 | [3.2.0](#webapp-320) | 2026-09-03 | ReplicaSet retention, replica floor removed, values-driven job knobs |
@@ -27,9 +28,33 @@ release; this file collects it in one place with the reasoning behind each chang
 
 ---
 
-## webapp 3.3.0
+## webapp 3.4.0
 
 **Unreleased.**
+
+### Added
+
+- **CPU scaling can be switched off, for memory-only autoscaling.** Set
+  `autoscaling.targetCPUUtilizationPercentage` to `null`, `0` or `false` and the CPU
+  metric is dropped, leaving the HPA scaling on memory alone. The two targets are now
+  symmetric — either can be disabled the same way:
+
+  | `targetCPUUtilizationPercentage` | `targetMemoryUtilizationPercentage` | HPA metrics |
+  |---|---|---|
+  | `80` | `80` | CPU + memory (default) |
+  | `null` / `0` / `false` | `80` | memory only |
+  | `80` | `null` / `0` / `false` | CPU only |
+  | disabled | disabled | **rendering fails** |
+
+  Disabling both is rejected with an explicit message rather than rendering an HPA with
+  an empty `metrics` list, because Kubernetes silently defaults such an HPA to an 80%
+  CPU target — autoscaling on something nobody configured. The check only applies when
+  `autoscaling.enabled` is true, so clearing both targets on a release that does not
+  autoscale is still fine.
+
+---
+
+## webapp 3.3.0
 
 ### Changed
 
@@ -59,6 +84,7 @@ release; this file collects it in one place with the reasoning behind each chang
 
   CPU remains a pod-wide `Resource` metric, unchanged, so existing HPA behaviour is
   not altered.
+
 
 ---
 

@@ -268,6 +268,11 @@ autoscaling:
   maxReplicas: 4
   # -- Target CPU utilization percentage (scale up when exceeded)
   # -- Example: 80 means scale up when average CPU > 80%
+  # -- To scale on memory only, disable it explicitly in the values override:
+  #      autoscaling:
+  #        targetCPUUtilizationPercentage: null   # or 0 / false
+  # -- At least one of the CPU and memory targets must remain set; disabling both
+  #    fails rendering rather than letting Kubernetes default the HPA to 80% CPU.
   targetCPUUtilizationPercentage: 80
   # -- Target memory utilization percentage (scale up when exceeded)
   # -- Memory scaling is ENABLED by default, alongside CPU: a pod that is memory
