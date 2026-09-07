@@ -2,7 +2,7 @@ apiVersion: v2
 name: webapp
 description: Innago Helm chart for deploying web applications to Kubernetes with production-ready patterns
 type: application
-version: 3.4.0
+version: 3.5.0
 appVersion: "2.6.3"
 icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
 home: https://innago-property-management.github.io/helm-charts/webapp
@@ -29,6 +29,10 @@ annotations:
     - name: Production Guide
       url: https://github.com/innago-property-management/helm-charts/blob/main/charts/webapp/PRODUCTION.md
   artifacthub.io/changes: |
+    - kind: fixed
+      description: "ServiceAccount/Role/RoleBinding are no longer Helm hooks, so Argo CD stops deleting and recreating them on every sync (BeforeHookCreation is Argo CD's default hook-delete-policy, so removing only the Helm delete-policy in 3.2.2 was not enough)"
+    - kind: changed
+      description: "Ordering now uses sync waves: ServiceAccount/Role/RoleBinding at wave -10, the migration job as an Argo CD Sync hook at wave -5, the Deployment at wave 0"
     - kind: added
       description: "autoscaling.targetCPUUtilizationPercentage can now be set to null, 0 or false for memory-only scaling; disabling both CPU and memory fails rendering instead of silently defaulting to 80% CPU"
     - kind: changed
