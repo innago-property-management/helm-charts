@@ -592,6 +592,24 @@ containerEnvFrom: []
 #      name: my-secret  # All keys become environment variables
 
 
+# -- Override the container's ENTRYPOINT. Empty uses the image's own.
+# Beyond the usual reasons to override an entrypoint, setting this lets the
+# bank-vaults webhook inject vault-env WITHOUT reading the image manifest from
+# the registry. That lookup asks for linux/amd64 specifically, so an image
+# published only for linux/arm64 fails it -- and because the webhook's
+# failurePolicy is Ignore, the pod is then admitted UNMUTATED: no vault-env,
+# and every "vault:..." value reaches the app as a literal string.
+containerCommand: []
+#  - dotnet
+#  - MyApp.dll
+
+# -- Arguments passed to containerCommand (or to the image's ENTRYPOINT when
+# containerCommand is empty). Equivalent to a Dockerfile CMD.
+containerArgs: []
+#  - --urls
+#  - http://0.0.0.0:8080
+
+
 migrationJob:
   # -- Enable database migration job
   # -- Creates a Kubernetes Job to run database migrations before app deployment
