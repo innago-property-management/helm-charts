@@ -2,7 +2,7 @@ apiVersion: v2
 name: cronjob
 description: Innago Helm Chart for deploying a CronJob
 type: application
-version: 2.0.2
+version: 2.1.0
 appVersion: "1.36.1"
 icon: https://innago-property-management.github.io/helm-charts/assets/icons/helm.svg
 home: https://innago-property-management.github.io/helm-charts/cronjob
@@ -27,5 +27,9 @@ annotations:
     - name: Support
       url: https://github.com/innago-property-management/helm-charts/issues
   artifacthub.io/changes: |
+    - kind: added
+      description: "timeZone value sets spec.timeZone on the CronJob"
+    - kind: added
+      description: "restartPolicy value (default OnFailure, unchanged)"
     - kind: fixed
-      description: "Fix broken Helm icon URL"
+      description: "job.backoffLimit: 0 is rendered instead of being dropped"

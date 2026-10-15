@@ -1,6 +1,6 @@
 # cronjob
 
-![Version: 2.0.2](https://img.shields.io/badge/Version-2.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.1](https://img.shields.io/badge/AppVersion-1.36.1-informational?style=flat-square)
+![Version: 2.0.2](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.36.1](https://img.shields.io/badge/AppVersion-1.36.1-informational?style=flat-square)
 
 Innago Helm Chart for deploying a CronJob
 
@@ -42,7 +42,7 @@ Innago Helm Chart for deploying a CronJob
 | initContainers | list | `[]` | Init containers to run before the main job container See https://kubernetes.io/docs/concepts/workloads/pods/init-containers/ |
 | job | object | `{"activeDeadlineSeconds":600,"backoffLimit":3}` | Job-level configuration (applied to each job created) |
 | job.activeDeadlineSeconds | int | `600` | Maximum duration in seconds for job to complete Job will be terminated if it exceeds this time |
-| job.backoffLimit | int | `3` | Number of retries before marking job as failed |
+| job.backoffLimit | int | `3` | Number of retries before marking job as failed (0 is honoured) |
 | metrics | object | `{"enabled":false,"path":"/metrics","port":8080,"serviceMonitor":{"enabled":false,"interval":"30s","labels":{},"namespace":"","scrapeTimeout":"10s"}}` | Metrics configuration |
 | metrics.enabled | bool | `false` | Enable metrics endpoint (if job supports it) |
 | metrics.path | string | `"/metrics"` | Metrics endpoint path |
@@ -64,12 +64,14 @@ Innago Helm Chart for deploying a CronJob
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
 | podSecurityContext | object | `{"fsGroup":65534,"runAsGroup":65534,"runAsNonRoot":true,"runAsUser":65534,"seccompProfile":{"type":"RuntimeDefault"}}` | Pod-level security context See https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| restartPolicy | string | `"OnFailure"` | Pod restart policy: OnFailure or Never. Never + job.backoffLimit 0 = a failed run is not retried |
 | resources | object | `{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"128Mi"}}` | Resource requests and limits See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
 | schedule | string | `"0 */2 * * *"` | Cron schedule in standard cron format Format: "minute hour day month weekday" Examples:   "*/5 * * * *"     - Every 5 minutes   "0 */2 * * *"     - Every 2 hours   "0 0 * * *"       - Daily at midnight   "0 0 * * 0"       - Weekly on Sunday Tip: Use https://crontab.guru for help |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `""` |  |
 | tolerations | list | `[]` |  |
+| timeZone | string | `""` | IANA time zone the schedule is evaluated in (e.g. "America/New_York"). Empty = the kube-controller-manager's zone (UTC on EKS) |
 | ttlSecondsAfterFinished | string | `nil` |  |
 | volumeMounts | list | `[]` | Volume mounts for the main container See https://kubernetes.io/docs/concepts/storage/volumes/ |
 | volumes | list | `[]` | Volumes to mount in the job pod See https://kubernetes.io/docs/concepts/storage/volumes/ |

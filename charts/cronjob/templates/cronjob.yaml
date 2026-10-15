@@ -17,6 +17,9 @@ metadata:
   name: {{ include "CronJob.fullname" . | lower }}
 spec:
   schedule: {{ .Values.schedule | replace "'" "" | replace "\"" "" | quote}}
+  {{- with .Values.timeZone }}
+  timeZone: {{ . | quote }}
+  {{- end }}
   {{- if .Values.cronjob.concurrencyPolicy }}
   concurrencyPolicy: {{ .Values.cronjob.concurrencyPolicy }}
   {{- end }}
@@ -35,7 +38,8 @@ spec:
       labels:
         {{- include "CronJob.labels" . | nindent 8 }}
     spec:
-      {{- if .Values.job.backoffLimit }}
+      {{- /* kindIs "invalid" = unset; a plain `if` would drop an explicit 0 */}}
+      {{- if not (kindIs "invalid" .Values.job.backoffLimit) }}
       backoffLimit: {{ .Values.job.backoffLimit }}
       {{- end }}
       {{- if .Values.job.activeDeadlineSeconds }}
@@ -123,4 +127,4 @@ spec:
           volumes:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          restartPolicy: OnFailure
+          restartPolicy: {{ .Values.restartPolicy | default "OnFailure" }}
