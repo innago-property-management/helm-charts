@@ -18,6 +18,14 @@ image:
 # Tip: Use https://crontab.guru for help
 schedule: "0 */2 * * *"
 
+# -- IANA time zone the schedule is evaluated in (e.g. "America/New_York").
+# Empty = the kube-controller-manager's zone (UTC on EKS)
+timeZone: ""
+
+# -- Pod restart policy: OnFailure or Never.
+# Never + job.backoffLimit 0 = a failed run is not retried
+restartPolicy: OnFailure
+
 # -- Command to run in the container (overrides ENTRYPOINT)
 command:
   - /bin/sh
@@ -50,7 +58,7 @@ cronjob:
 
 # -- Job-level configuration (applied to each job created)
 job:
-  # -- Number of retries before marking job as failed
+  # -- Number of retries before marking job as failed (0 is honoured)
   backoffLimit: 3
 
   # -- Maximum duration in seconds for job to complete
